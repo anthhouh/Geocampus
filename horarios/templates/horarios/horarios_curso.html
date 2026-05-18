@@ -1,0 +1,118 @@
+{% extends 'base_app.html' %}
+
+{% block title %}Horarios de Cursos - La Dolorosa{% endblock %}
+
+{% block content %}
+<div class="max-w-container-max mx-auto space-y-lg">
+
+    <!-- Header & Filter Form -->
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm">
+        <h2 class="font-h2 text-h2 text-on-surface mb-md flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">calendar_month</span>
+            Consultar Horarios de Clases
+        </h2>
+
+        <form method="get" action="{% url 'horarios:horarios_curso' %}" class="grid grid-cols-1 md:grid-cols-3 gap-md items-end">
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-md text-label-md text-on-surface" for="curso">Filtrar por Curso</label>
+                <select name="curso" id="curso" class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+                    <option value="">Todos los cursos</option>
+                    {% for c in cursos %}
+                        <option value="{{ c.id }}" {% if request.GET.curso == c.id|stringformat:"s" %}selected{% endif %}>{{ c.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-md text-label-md text-on-surface" for="paralelo">Filtrar por Paralelo</label>
+                <select name="paralelo" id="paralelo" class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+                    <option value="">Todos los paralelos</option>
+                    {% for ident in identificadores %}
+                        <option value="{{ ident }}" {% if request.GET.paralelo == ident %}selected{% endif %}>Paralelo "{{ ident }}"</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="w-full py-2 px-lg bg-primary text-on-primary rounded-lg font-button text-button shadow-sm hover:shadow-md hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] transition-all duration-200">
+                Buscar
+            </button>
+        </form>
+    </div>
+
+    <!-- Schedule Grid -->
+    {% if request.GET.curso or request.GET.paralelo %}
+        {% if grupos %}
+            <div class="space-y-md mt-lg">
+                {% for grupo in grupos %}
+                <details class="group/accordion bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden" open>
+                    <summary class="p-lg font-h3 text-h3 text-on-surface cursor-pointer flex items-center justify-between list-none">
+                        <div class="flex items-center gap-sm">
+                            <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">
+                                {{ grupo.titulo|first|upper }}
+                            </div>
+                            <span>Horario de {{ grupo.titulo }}</span>
+                        </div>
+                        <span class="material-symbols-outlined transition-transform group-open/accordion:rotate-180">expand_more</span>
+                    </summary>
+                    
+                    <div class="p-lg border-t border-outline-variant overflow-x-auto bg-surface-container-low/30">
+                        <div class="schedule-grid">
+                            <div style="grid-column: 1; grid-row: 1;"></div>
+                            <div class="day-header" style="grid-column: 2; grid-row: 1;">Lu</div>
+                            <div class="day-header" style="grid-column: 3; grid-row: 1;">Ma</div>
+                            <div class="day-header" style="grid-column: 4; grid-row: 1;">Mi</div>
+                            <div class="day-header" style="grid-column: 5; grid-row: 1;">Ju</div>
+                            <div class="day-header" style="grid-column: 6; grid-row: 1;">Vi</div>
+
+                            <div class="time-slot" style="grid-column: 1; grid-row: 2;"><strong>1</strong><span>07:00</span><span>07:45</span></div>
+                            <div class="time-slot" style="grid-column: 1; grid-row: 3;"><strong>2</strong><span>07:45</span><span>08:30</span></div>
+                            <div class="time-slot" style="grid-column: 1; grid-row: 4;"><strong>3</strong><span>08:30</span><span>09:15</span></div>
+                            <div class="time-slot" style="grid-column: 1; grid-row: 5;"><strong>4</strong><span>09:15</span><span>10:00</span></div>
+
+                            <div class="time-slot" style="grid-column: 1; grid-row: 6;"><strong>R</strong><span>10:00</span><span>10:25</span></div>
+                            <div class="schedule-recreo">RECREO</div>
+
+                            <div class="time-slot" style="grid-column: 1; grid-row: 7;"><strong>5</strong><span>10:25</span><span>11:05</span></div>
+                            <div class="time-slot" style="grid-column: 1; grid-row: 8;"><strong>6</strong><span>11:05</span><span>11:45</span></div>
+                            <div class="time-slot" style="grid-column: 1; grid-row: 9;"><strong>7</strong><span>11:45</span><span>12:25</span></div>
+                            <div class="time-slot" style="grid-column: 1; grid-row: 10;"><strong>8</strong><span>12:25</span><span>13:05</span></div>
+                            <div class="time-slot" style="grid-column: 1; grid-row: 11;"><strong>9</strong><span>13:05</span><span>13:45</span></div>
+
+                            {% for item in grupo.horarios_grid %}
+                                <div class="schedule-item" style="
+                                    grid-column: {{ item.grid_col }};
+                                    grid-row: {{ item.grid_row_start }} / {{ item.grid_row_end }};
+                                    background-color: {{ item.color_bg }};
+                                    border: 2px solid {{ item.color_border }};
+                                    color: {{ item.color_text }};
+                                ">
+                                    <strong style="font-size:0.78rem; display:block; line-height:1.2;">{{ item.horario.asignatura.nombre }}</strong>
+                                    <small style="opacity:0.85; font-size:0.68rem;">{{ item.horario.docente.usuario.get_full_name|default:item.horario.docente.usuario.username }}</small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </details>
+                {% endfor %}
+            </div>
+            
+            <div class="mt-md px-lg py-sm text-right text-on-surface-variant font-body-sm text-body-sm">
+                {{ grupos|length }} horario{{ grupos|length|pluralize }} encontrado{{ grupos|length|pluralize }}
+            </div>
+        {% else %}
+            <!-- Empty state -->
+            <div class="flex flex-col items-center justify-center py-16 text-on-surface-variant bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm mt-lg">
+                <span class="material-symbols-outlined text-[56px] mb-3 opacity-40">search_off</span>
+                <p class="font-body-md text-body-md">No se encontraron horarios para los filtros seleccionados.</p>
+                <p class="font-body-sm text-body-sm opacity-60 mt-1">Prueba cambiando el curso o el paralelo.</p>
+            </div>
+        {% endif %}
+    {% else %}
+    <div class="flex flex-col items-center justify-center py-16 text-on-surface-variant bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm mt-lg">
+        <span class="material-symbols-outlined text-[56px] mb-3 opacity-40">event_note</span>
+        <p class="font-body-md text-body-md">Selecciona un curso y/o paralelo para visualizar su horario.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

@@ -1,0 +1,136 @@
+{% extends 'base_app.html' %}
+
+{% block title %}Horario de {{ docente.usuario.get_full_name|default:docente.usuario.username }} - La Dolorosa{% endblock %}
+
+{% block content %}
+<div class="max-w-container-max mx-auto space-y-xl">
+
+    <!-- Back button -->
+    <div>
+        <a href="{% url 'horarios:index' %}"
+           class="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary font-label-md text-label-md transition-colors duration-200 group">
+            <span class="material-symbols-outlined text-[20px] group-hover:-translate-x-1 transition-transform duration-200">arrow_back</span>
+            Volver al Directorio
+        </a>
+    </div>
+
+    <!-- Profile Header -->
+    <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
+        <!-- Banner -->
+        <div class="h-28 bg-gradient-to-r from-primary to-secondary opacity-80 relative"></div>
+
+        <div class="px-xl pb-xl relative">
+            <!-- Avatar -->
+            <div class="absolute -top-12 left-xl w-24 h-24 rounded-full border-4 border-surface shadow-md
+                        bg-primary-container text-on-primary-container flex items-center justify-center text-4xl font-bold">
+                {{ docente.usuario.first_name|first|default:docente.usuario.username|first|upper }}
+            </div>
+
+            <!-- Status badge (top-right) -->
+            <div class="flex justify-end pt-3">
+                <span class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border
+                    {% if docente.disponible %}
+                        text-[#2E7D32] bg-[#E8F5E9] border-[#4CAF50]/30
+                    {% else %}
+                        text-[#C62828] bg-[#FFEBEE] border-[#E53935]/30
+                    {% endif %}">
+                    <span class="w-2 h-2 rounded-full {% if docente.disponible %}bg-[#4CAF50]{% else %}bg-[#E53935]{% endif %}"></span>
+                    {% if docente.disponible %}Disponible{% else %}Ocupado{% endif %}
+                </span>
+            </div>
+
+            <!-- Info -->
+            <div class="mt-10">
+                <h2 class="font-h2 text-h2 text-on-surface">
+                    {{ docente.usuario.get_full_name|default:docente.usuario.username }}
+                </h2>
+                <p class="font-body-md text-body-md text-primary mt-0.5">
+                    {{ docente.especialidad|default:"Docente" }}
+                </p>
+
+                <div class="mt-md flex flex-wrap gap-md">
+                    <!-- Ubicación -->
+                    <div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm
+                                bg-surface-container-low px-md py-sm rounded-lg border border-outline-variant">
+                        <span class="material-symbols-outlined text-[18px] text-primary">location_on</span>
+                        {{ docente.ubicacion_actual|default:"Ubicación no reportada" }}
+                    </div>
+
+                    <!-- Email -->
+                    <div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm
+                                bg-surface-container-low px-md py-sm rounded-lg border border-outline-variant">
+                        <span class="material-symbols-outlined text-[18px] text-primary">mail</span>
+                        {{ docente.usuario.email|default:"Sin correo" }}
+                    </div>
+
+                    {% if es_propio %}
+                    <!-- Enlace a mi panel (solo si es el propio docente) -->
+                    <a href="{% url 'horarios:dashboard_docente' %}"
+                       class="flex items-center gap-2 bg-primary text-on-primary px-md py-sm rounded-lg
+                              font-button text-button hover:bg-primary/90 transition-colors shadow-sm">
+                        <span class="material-symbols-outlined text-[18px]">dashboard</span>
+                        Ir a mi panel
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Grid -->
+    <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
+        <div class="p-lg border-b border-outline-variant bg-surface-bright flex items-center gap-sm">
+            <span class="material-symbols-outlined text-primary">calendar_month</span>
+            <h3 class="font-h3 text-h3 text-on-surface">Horario Semanal</h3>
+        </div>
+
+        <div class="p-lg overflow-x-auto">
+            {% if horarios_grid %}
+            <div class="schedule-grid">
+                <div style="grid-column: 1; grid-row: 1;"></div>
+                <div class="day-header" style="grid-column: 2; grid-row: 1;">Lu</div>
+                <div class="day-header" style="grid-column: 3; grid-row: 1;">Ma</div>
+                <div class="day-header" style="grid-column: 4; grid-row: 1;">Mi</div>
+                <div class="day-header" style="grid-column: 5; grid-row: 1;">Ju</div>
+                <div class="day-header" style="grid-column: 6; grid-row: 1;">Vi</div>
+
+                <div class="time-slot" style="grid-column: 1; grid-row: 2;"><strong>1</strong><span>07:00</span><span>07:45</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 3;"><strong>2</strong><span>07:45</span><span>08:30</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 4;"><strong>3</strong><span>08:30</span><span>09:15</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 5;"><strong>4</strong><span>09:15</span><span>10:00</span></div>
+
+                <div class="time-slot" style="grid-column: 1; grid-row: 6;"><strong>R</strong><span>10:00</span><span>10:25</span></div>
+                <div class="schedule-recreo">RECREO</div>
+
+                <div class="time-slot" style="grid-column: 1; grid-row: 7;"><strong>5</strong><span>10:25</span><span>11:05</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 8;"><strong>6</strong><span>11:05</span><span>11:45</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 9;"><strong>7</strong><span>11:45</span><span>12:25</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 10;"><strong>8</strong><span>12:25</span><span>13:05</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 11;"><strong>9</strong><span>13:05</span><span>13:45</span></div>
+
+                {% for item in horarios_grid %}
+                <div class="schedule-item" style="
+                        grid-column: {{ item.grid_col }};
+                        grid-row: {{ item.grid_row_start }} / {{ item.grid_row_end }};
+                        background-color: {{ item.color_bg }};
+                        border: 2px solid {{ item.color_border }};
+                        color: {{ item.color_text }};
+                    ">
+                    <strong style="font-size:0.78rem; display:block; line-height:1.2;">{{ item.horario.materia }}</strong>
+                    <small style="opacity:0.85; font-size:0.68rem;">{{ item.horario.curso.nombre }} "{{ item.horario.paralelo.identificador }}"</small>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% else %}
+            <div class="flex flex-col items-center justify-center py-16 text-on-surface-variant">
+                <span class="material-symbols-outlined text-[56px] mb-3 opacity-40">event_busy</span>
+                <p class="font-body-md text-body-md">Este docente aún no tiene horarios registrados.</p>
+                <p class="font-body-sm text-body-sm opacity-60 mt-1">Intenta más tarde o contacta al administrador.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

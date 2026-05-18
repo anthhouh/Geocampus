@@ -1,0 +1,130 @@
+{% extends 'horarios/gestion/base_gestion.html' %}
+
+{% block title %}Gestión de Horarios — La Dolorosa{% endblock %}
+
+{% block gestion_content %}
+
+<!-- Header + Create button -->
+<div class="flex items-center justify-between flex-wrap gap-md">
+    <h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">{% if es_docentes %}badge{% else %}calendar_month{% endif %}</span>
+        {{ titulo_seccion }}
+    </h3>
+</div>
+
+<!-- Filters -->
+<form method="get" class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md shadow-sm grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-md items-end">
+    {% if not es_docentes %}
+    <div class="flex flex-col gap-xs">
+        <label class="font-label-md text-label-md text-on-surface-variant text-xs uppercase">Docente</label>
+        <select name="docente" class="w-full px-3 py-2 bg-surface border border-outline-variant rounded-lg text-sm focus:outline-none focus:border-primary">
+            <option value="">Todos</option>
+            {% for d in docentes %}
+            <option value="{{ d.id }}" {% if filtros.docente == d.id|stringformat:"s" %}selected{% endif %}>
+                {{ d.usuario.get_full_name|default:d.usuario.username }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    {% endif %}
+    <div class="flex flex-col gap-xs">
+        <label class="font-label-md text-label-md text-on-surface-variant text-xs uppercase">Curso</label>
+        <select name="curso" class="w-full px-3 py-2 bg-surface border border-outline-variant rounded-lg text-sm focus:outline-none focus:border-primary">
+            <option value="">Todos</option>
+            {% for c in cursos %}
+            <option value="{{ c.id }}" {% if filtros.curso == c.id|stringformat:"s" %}selected{% endif %}>{{ c.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="flex flex-col gap-xs">
+        <label class="font-label-md text-label-md text-on-surface-variant text-xs uppercase">Día</label>
+        <select name="dia" class="w-full px-3 py-2 bg-surface border border-outline-variant rounded-lg text-sm focus:outline-none focus:border-primary">
+            <option value="">Todos</option>
+            {% for val, label in dias %}
+            <option value="{{ val }}" {% if filtros.dia == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="flex gap-sm">
+        <button type="submit" class="flex-1 py-2 bg-primary text-on-primary rounded-lg font-button text-button hover:bg-primary/90 transition-colors">Filtrar</button>
+        <a href="{{ request.path }}" class="flex items-center justify-center px-3 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+        </a>
+    </div>
+</form>
+
+<!-- Grouped Accordion List -->
+<div class="space-y-md">
+    {% for grupo in grupos %}
+    <details class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm group/accordion">
+        <summary class="p-lg font-h3 text-h3 text-on-surface cursor-pointer flex items-center justify-between list-none">
+            <div class="flex items-center gap-sm">
+                <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">
+                    {{ grupo.titulo|first|upper }}
+                </div>
+                <span>{{ grupo.titulo }}</span>
+            </div>
+            <span class="material-symbols-outlined transition-transform group-open/accordion:rotate-180">expand_more</span>
+        </summary>
+        
+        <div class="p-lg border-t border-outline-variant overflow-x-auto bg-surface-container-low/30">
+            <div class="schedule-grid" id="grid-{{ grupo.id }}">
+                <div style="grid-column: 1; grid-row: 1;"></div>
+                <div class="day-header" style="grid-column: 2; grid-row: 1;">Lu</div>
+                <div class="day-header" style="grid-column: 3; grid-row: 1;">Ma</div>
+                <div class="day-header" style="grid-column: 4; grid-row: 1;">Mi</div>
+                <div class="day-header" style="grid-column: 5; grid-row: 1;">Ju</div>
+                <div class="day-header" style="grid-column: 6; grid-row: 1;">Vi</div>
+
+                <div class="time-slot" style="grid-column: 1; grid-row: 2;"><strong>1</strong><span>07:00</span><span>07:45</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 3;"><strong>2</strong><span>07:45</span><span>08:30</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 4;"><strong>3</strong><span>08:30</span><span>09:15</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 5;"><strong>4</strong><span>09:15</span><span>10:00</span></div>
+
+                <div class="time-slot" style="grid-column: 1; grid-row: 6;"><strong>R</strong><span>10:00</span><span>10:25</span></div>
+                <div class="schedule-recreo">RECREO</div>
+
+                <div class="time-slot" style="grid-column: 1; grid-row: 7;"><strong>5</strong><span>10:25</span><span>11:05</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 8;"><strong>6</strong><span>11:05</span><span>11:45</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 9;"><strong>7</strong><span>11:45</span><span>12:25</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 10;"><strong>8</strong><span>12:25</span><span>13:05</span></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 11;"><strong>9</strong><span>13:05</span><span>13:45</span></div>
+
+                <!-- Celdas vacías interactuables -->
+                {% for vacio in grupo.celdas_vacias %}
+                    <div class="empty-slot" 
+                         style="grid-column: {{ vacio.grid_col }}; grid-row: {{ vacio.grid_row }};"
+                         onclick="abrirModalHorario('', '{{ vacio.dia }}', '{{ vacio.hora_inicio }}', '{{ vacio.hora_fin }}', '', {% if es_docentes %} '{{ grupo.docente_id }}', '', '' {% else %} '', '{{ grupo.curso_id }}', '{{ grupo.paralelo_id }}' {% endif %})">
+                        <span class="material-symbols-outlined plus-icon">add</span>
+                    </div>
+                {% endfor %}
+                {% for item in grupo.horarios_grid %}
+                    {% include 'horarios/gestion/schedule_item.html' with item=item es_docentes=es_docentes %}
+                {% endfor %}
+            </div>
+        </div>
+    </details>
+    {% empty %}
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-xl flex flex-col items-center justify-center text-center">
+        <span class="material-symbols-outlined text-[48px] text-on-surface-variant/40 mb-3">event_busy</span>
+        <h4 class="font-h3 text-h3 text-on-surface mb-1">No hay horarios registrados</h4>
+        <p class="font-body-sm text-body-sm text-on-surface-variant max-w-md">
+            No se encontraron horarios con los filtros actuales. Prueba cambiando los filtros o crea un nuevo horario.
+        </p>
+    </div>
+    {% endfor %}
+</div>
+
+{% if hay_resultados %}
+<div class="mt-md px-lg py-sm text-right text-on-surface-variant font-body-sm text-body-sm">
+    {{ grupos|length }} grupo{{ grupos|length|pluralize }} encontrado{{ grupos|length|pluralize }}
+</div>
+{% endif %}
+
+{% include 'horarios/includes/schedule_modals.html' %}
+
+{% endblock %}
+
+{% block scripts %}
+{% include 'horarios/includes/schedule_scripts.html' %}
+{% endblock %}

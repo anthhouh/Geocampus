@@ -1,0 +1,159 @@
+{% extends 'base_app.html' %}
+
+{% block title %}Dashboard Docente - La Dolorosa{% endblock %}
+
+{% block content %}
+<div class="max-w-container-max mx-auto space-y-xl">
+    <!-- Page Header & Status -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+        <div>
+            <h2 class="font-h2 text-h2 text-on-surface mb-xs">Buenos días, {{ user.get_full_name|default:user.username }}</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant">Aquí está su resumen académico de hoy.</p>
+        </div>
+        <!-- Status Toggle -->
+        <div class="bg-surface-container-lowest p-xs rounded-full border border-outline-variant flex items-center shadow-sm"
+            id="status-container">
+            <button onclick="toggleEstado(true)"
+                class="px-md py-sm rounded-full {% if docente.disponible %}bg-[#E8F5E9] text-[#2E7D32]{% else %}text-on-surface-variant hover:bg-surface-container-low{% endif %} font-label-md text-label-md flex items-center gap-2 shadow-sm transition-all">
+                <span
+                    class="w-2 h-2 rounded-full {% if docente.disponible %}bg-[#4CAF50]{% else %}bg-outline-variant{% endif %}"></span>
+                Disponible
+            </button>
+            <button onclick="toggleEstado(false)"
+                class="px-md py-sm rounded-full {% if not docente.disponible %}bg-[#FFEBEE] text-[#C62828]{% else %}text-on-surface-variant hover:bg-surface-container-low{% endif %} font-label-md text-label-md flex items-center gap-2 transition-all">
+                <span
+                    class="w-2 h-2 rounded-full {% if not docente.disponible %}bg-[#E53935]{% else %}bg-outline-variant{% endif %}"></span>
+                Ocupado
+            </button>
+        </div>
+    </div>
+
+    <!-- Layout Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+
+        <!-- Profile Summary (Right Column equivalent in Stitch) -->
+        <div class="md:col-span-3 flex flex-col gap-lg">
+            <div
+                class="bg-surface-container-lowest rounded-xl border border-outline-variant p-xl flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow">
+                <div class="relative mb-md">
+                    <div
+                        class="w-24 h-24 rounded-full border-4 border-surface shadow-sm bg-primary flex items-center justify-center text-on-primary text-4xl font-bold">
+                        {{ user.first_name|first|default:user.username|first|upper }}
+                    </div>
+                    <div class="absolute bottom-0 right-0 w-6 h-6 {% if docente.disponible %}bg-[#4CAF50]{% else %}bg-[#E53935]{% endif %} border-2 border-surface rounded-full"
+                        id="status-indicator"></div>
+                </div>
+                <h3 class="font-h3 text-h3 text-on-surface">{{ user.get_full_name|default:user.username }}</h3>
+                <p class="font-body-sm text-body-sm text-primary mb-lg">Docente de La Dolorosa</p>
+
+                <div class="w-full border-t border-outline-variant pt-lg mt-2">
+                    <p class="font-label-md text-label-md text-on-surface-variant uppercase text-xs mb-1">Ubicación
+                        Actual</p>
+                    <input type="text" id="ubicacion-input" value="{{ docente.ubicacion_actual|default:'' }}"
+                        class="w-full text-center px-2 py-1 bg-surface border border-outline-variant rounded focus:outline-none focus:border-primary text-sm mb-2"
+                        placeholder="Ej: Laboratorio 1">
+                    <button onclick="actualizarUbicacion()"
+                        class="text-primary font-button text-button hover:bg-primary/5 px-4 py-1 rounded-lg transition-colors border border-primary/20 w-full">Guardar
+                        Ubicación</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Grid (Left Column equivalent in Stitch) -->
+        <div class="md:col-span-9 flex flex-col gap-lg">
+            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+                <div class="p-lg border-b border-outline-variant flex justify-between items-center bg-surface-bright">
+                    <h3 class="font-h3 text-h3 text-on-surface flex items-center gap-sm">
+                        <span class="material-symbols-outlined text-primary">calendar_month</span>
+                        Mi Horario de Clases
+                    </h3>
+                    <button onclick="abrirModalHorario('', '', '', '', '', '{{ docente.id }}', '', '')"
+                        class="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg font-button text-button hover:bg-primary/90 transition-colors shadow-sm">
+                        <span class="material-symbols-outlined text-sm">add</span>
+                        Añadir
+                    </button>
+                </div>
+                <div class="p-lg overflow-x-auto">
+                    <!-- Componente Schedule Grid -->
+                    <div class="schedule-grid" id="grid-docente_{{ docente.id }}">
+                        <div style="grid-column: 1; grid-row: 1;"></div>
+
+                        <div class="day-header" style="grid-column: 2; grid-row: 1;">Lu</div>
+                        <div class="day-header" style="grid-column: 3; grid-row: 1;">Ma</div>
+                        <div class="day-header" style="grid-column: 4; grid-row: 1;">Mi</div>
+                        <div class="day-header" style="grid-column: 5; grid-row: 1;">Ju</div>
+                        <div class="day-header" style="grid-column: 6; grid-row: 1;">Vi</div>
+
+                        <div class="time-slot" style="grid-column: 1; grid-row: 2;"><strong>1</strong><span>07:00</span><span>07:45</span></div>
+                        <div class="time-slot" style="grid-column: 1; grid-row: 3;"><strong>2</strong><span>07:45</span><span>08:30</span></div>
+                        <div class="time-slot" style="grid-column: 1; grid-row: 4;"><strong>3</strong><span>08:30</span><span>09:15</span></div>
+                        <div class="time-slot" style="grid-column: 1; grid-row: 5;"><strong>4</strong><span>09:15</span><span>10:00</span></div>
+
+                        <div class="time-slot" style="grid-column: 1; grid-row: 6;"><strong>R</strong><span>10:00</span><span>10:25</span></div>
+                        <div class="schedule-recreo">RECREO</div>
+
+                        <div class="time-slot" style="grid-column: 1; grid-row: 7;"><strong>5</strong><span>10:25</span><span>11:05</span></div>
+                        <div class="time-slot" style="grid-column: 1; grid-row: 8;"><strong>6</strong><span>11:05</span><span>11:45</span></div>
+                        <div class="time-slot" style="grid-column: 1; grid-row: 9;"><strong>7</strong><span>11:45</span><span>12:25</span></div>
+                        <div class="time-slot" style="grid-column: 1; grid-row: 10;"><strong>8</strong><span>12:25</span><span>13:05</span></div>
+                        <div class="time-slot" style="grid-column: 1; grid-row: 11;"><strong>9</strong><span>13:05</span><span>13:45</span></div>
+
+                        <!-- Celdas vacías interactuables -->
+                        {% for vacio in celdas_vacias %}
+                            <div class="empty-slot" 
+                                 style="grid-column: {{ vacio.grid_col }}; grid-row: {{ vacio.grid_row }};"
+                                 onclick="abrirModalHorario('', '{{ vacio.dia }}', '{{ vacio.hora_inicio }}', '{{ vacio.hora_fin }}', '', '{{ docente.id }}', '', '')">
+                                <span class="material-symbols-outlined plus-icon">add</span>
+                            </div>
+                        {% endfor %}
+                        {% for item in horarios_grid %}
+                            {% include 'horarios/gestion/schedule_item.html' with item=item es_docentes=True %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% include 'horarios/includes/schedule_modals.html' %}
+{% endblock %}
+
+{% block scripts %}
+{% include 'horarios/includes/schedule_scripts.html' %}
+<script>
+    function toggleEstado(estado) {
+        const ubicacion = document.getElementById('ubicacion-input').value;
+        enviarActualizacion(estado, ubicacion);
+    }
+
+    function actualizarUbicacion() {
+        const ubicacion = document.getElementById('ubicacion-input').value;
+        enviarActualizacion(null, ubicacion);
+    }
+
+    function enviarActualizacion(disponible, ubicacion) {
+        const payload = {};
+        if (disponible !== null) payload.disponible = disponible;
+        if (ubicacion !== null) payload.ubicacion_actual = ubicacion;
+
+        fetch("{% url 'horarios:cambiar_estado' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    window.location.reload();
+                } else {
+                    alert("Error al actualizar: " + data.error);
+                }
+            });
+    }
+</script>
+{% endblock %}

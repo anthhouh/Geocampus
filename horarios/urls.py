@@ -1,0 +1,48 @@
+from django.urls import path
+from . import views
+
+app_name = 'horarios'
+
+urlpatterns = [
+    # Públicas / comunes
+    path('', views.index, name='index'),
+    path('login/', views.login_view, name='login'),
+    path('registro/', views.registro_view, name='registro'),
+    path('logout/', views.logout_view, name='logout'),
+
+    # Docente
+    path('dashboard/', views.dashboard_docente, name='dashboard_docente'),
+    path('api/cambiar-estado/', views.cambiar_estado, name='cambiar_estado'),
+    path('anadir-horario/', views.añadir_horario, name='anadir_horario'),
+
+    # Horarios de curso (estudiantes)
+    path('horarios/', views.horarios_curso, name='horarios_curso'),
+
+    # Horario público de un docente
+    path('docentes/<int:docente_id>/horario/', views.horario_docente, name='horario_docente'),
+
+    # ── Panel de gestión (solo admin) ─────────────────────────────────────
+    path('gestion/',                                    views.gestion_dashboard,        name='gestion_dashboard'),
+    path('gestion/horarios/',                           views.gestion_horarios,         name='gestion_horarios'),
+    path('gestion/horarios/docentes/',                  views.gestion_horarios_docentes,name='gestion_horarios_docentes'),
+    path('gestion/horarios/cursos/',                    views.gestion_horarios_cursos,  name='gestion_horarios_cursos'),
+    path('gestion/horarios/api/guardar/',               views.api_guardar_horario,      name='api_guardar_horario'),
+    path('gestion/horarios/crear/',                     views.gestion_crear_horario,    name='gestion_crear_horario'),
+    path('gestion/horarios/<int:horario_id>/editar/',   views.gestion_editar_horario,   name='gestion_editar_horario'),
+    path('gestion/horarios/<int:horario_id>/eliminar/', views.gestion_eliminar_horario, name='gestion_eliminar_horario'),
+    path('gestion/docentes/',                           views.gestion_docentes,         name='gestion_docentes'),
+    path('gestion/docentes/crear/',                     views.gestion_crear_docente,    name='gestion_crear_docente'),
+    path('gestion/docentes/<int:docente_id>/editar/',   views.gestion_editar_docente,   name='gestion_editar_docente'),
+    path('gestion/docentes/<int:docente_id>/eliminar/', views.gestion_eliminar_docente, name='gestion_eliminar_docente'),
+    path('gestion/cursos/',                             views.gestion_cursos,           name='gestion_cursos'),
+    path('gestion/cursos/crear/',                       views.gestion_crear_curso,      name='gestion_crear_curso'),
+    path('gestion/cursos/<int:curso_id>/editar/',       views.gestion_editar_curso,     name='gestion_editar_curso'),
+    path('gestion/cursos/<int:curso_id>/eliminar/',     views.gestion_eliminar_curso,   name='gestion_eliminar_curso'),
+    path('gestion/paralelos/crear/',                    views.gestion_crear_paralelo,   name='gestion_crear_paralelo'),
+    path('gestion/paralelos/<int:paralelo_id>/editar/', views.gestion_editar_paralelo,  name='gestion_editar_paralelo'),
+    path('gestion/paralelos/<int:paralelo_id>/eliminar/', views.gestion_eliminar_paralelo, name='gestion_eliminar_paralelo'),
+    path('gestion/asignaturas/',                             views.gestion_asignaturas,           name='gestion_asignaturas'),
+    path('gestion/asignaturas/crear/',                       views.gestion_crear_asignatura,      name='gestion_crear_asignatura'),
+    path('gestion/asignaturas/<int:asignatura_id>/editar/',       views.gestion_editar_asignatura,     name='gestion_editar_asignatura'),
+    path('gestion/asignaturas/<int:asignatura_id>/eliminar/',     views.gestion_eliminar_asignatura,   name='gestion_eliminar_asignatura'),
+]

@@ -1,0 +1,126 @@
+{% extends 'horarios/gestion/base_gestion.html' %}
+
+{% block title %}{{ titulo }} — La Dolorosa{% endblock %}
+
+{% block gestion_content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
+        <div class="px-xl py-lg border-b border-outline-variant bg-surface-bright flex items-center gap-3">
+            <a href="{% url 'horarios:gestion_horarios' %}" class="text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            </a>
+            <h3 class="font-h3 text-h3 text-on-surface">{{ titulo }}</h3>
+        </div>
+        <div class="p-xl">
+            <form method="post">
+                {% csrf_token %}
+                <div class="space-y-lg">
+
+                    <!-- Docente -->
+                    <div class="flex flex-col gap-xs">
+                        <label class="font-label-md text-label-md text-on-surface" for="{{ form.docente.id_for_label }}">Docente *</label>
+                        {{ form.docente }}
+                        {% if form.docente.errors %}<p class="text-xs text-error mt-1">{{ form.docente.errors|join:", " }}</p>{% endif %}
+                    </div>
+
+                    <!-- Materia -->
+                    <div class="flex flex-col gap-xs">
+                        <label class="font-label-md text-label-md text-on-surface" for="{{ form.materia.id_for_label }}">Materia *</label>
+                        {{ form.materia }}
+                        {% if form.materia.errors %}<p class="text-xs text-error mt-1">{{ form.materia.errors|join:", " }}</p>{% endif %}
+                    </div>
+
+                    <!-- Curso + Paralelo (en fila) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-md text-label-md text-on-surface" for="{{ form.curso.id_for_label }}">Curso *</label>
+                            {{ form.curso }}
+                            {% if form.curso.errors %}<p class="text-xs text-error mt-1">{{ form.curso.errors|join:", " }}</p>{% endif %}
+                        </div>
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-md text-label-md text-on-surface" for="{{ form.paralelo.id_for_label }}">Paralelo *</label>
+                            {{ form.paralelo }}
+                            {% if form.paralelo.errors %}<p class="text-xs text-error mt-1">{{ form.paralelo.errors|join:", " }}</p>{% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Tipo -->
+                    <div class="flex flex-col gap-xs">
+                        <label class="font-label-md text-label-md text-on-surface" for="{{ form.tipo.id_for_label }}">Tipo de Horario *</label>
+                        {{ form.tipo }}
+                        <p class="text-xs text-on-surface-variant">"Docente" → panel personal del profesor. "Clase" → horario público de cursos.</p>
+                        {% if form.tipo.errors %}<p class="text-xs text-error mt-1">{{ form.tipo.errors|join:", " }}</p>{% endif %}
+                    </div>
+
+                    <!-- Día -->
+                    <div class="flex flex-col gap-xs">
+                        <label class="font-label-md text-label-md text-on-surface" for="{{ form.dia.id_for_label }}">Día *</label>
+                        {{ form.dia }}
+                        {% if form.dia.errors %}<p class="text-xs text-error mt-1">{{ form.dia.errors|join:", " }}</p>{% endif %}
+                    </div>
+
+                    <!-- Hora inicio + fin -->
+                    <div class="grid grid-cols-2 gap-md">
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-md text-label-md text-on-surface" for="{{ form.hora_inicio.id_for_label }}">Hora inicio *</label>
+                            {{ form.hora_inicio }}
+                            {% if form.hora_inicio.errors %}<p class="text-xs text-error mt-1">{{ form.hora_inicio.errors|join:", " }}</p>{% endif %}
+                        </div>
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-md text-label-md text-on-surface" for="{{ form.hora_fin.id_for_label }}">Hora fin *</label>
+                            {{ form.hora_fin }}
+                            {% if form.hora_fin.errors %}<p class="text-xs text-error mt-1">{{ form.hora_fin.errors|join:", " }}</p>{% endif %}
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flex gap-md mt-xl pt-lg border-t border-outline-variant">
+                    <a href="{% url 'horarios:gestion_horarios' %}"
+                       class="flex-1 py-sm text-center border border-outline-variant rounded-lg text-on-surface hover:bg-surface-container-low font-button text-button transition-colors">
+                        Cancelar
+                    </a>
+                    <button type="submit"
+                            class="flex-1 py-sm bg-primary text-on-primary rounded-lg font-button text-button hover:bg-primary/90 shadow-sm transition-colors">
+                        {{ accion }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const paralelosData = {{ paralelos_json|safe }};
+
+document.getElementById('id_curso').addEventListener('change', function () {
+    const cursoId = this.value;
+    const paraleloSelect = document.getElementById('id_paralelo');
+    const currentVal = paraleloSelect.value;
+    paraleloSelect.innerHTML = '<option value="">---------</option>';
+    if (cursoId && paralelosData[cursoId]) {
+        paralelosData[cursoId].forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.id;
+            opt.textContent = p.nombre;
+            if (String(p.id) === String(currentVal)) opt.selected = true;
+            paraleloSelect.appendChild(opt);
+        });
+    }
+});
+
+// Trigger on load for edit mode
+document.getElementById('id_curso').dispatchEvent(new Event('change'));
+// Restore selected paralelo after cascade rebuild (edit mode)
+{% if horario %}
+setTimeout(() => {
+    const paraleloSelect = document.getElementById('id_paralelo');
+    for (let opt of paraleloSelect.options) {
+        if (opt.value === '{{ horario.paralelo_id }}') { opt.selected = true; break; }
+    }
+}, 50);
+{% endif %}
+</script>
+{% endblock %}

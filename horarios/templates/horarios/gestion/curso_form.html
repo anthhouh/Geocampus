@@ -1,0 +1,42 @@
+{% extends 'horarios/gestion/base_gestion.html' %}
+{% block title %}{{ titulo }} — La Dolorosa{% endblock %}
+
+{% block gestion_content %}
+<div class="max-w-md mx-auto">
+    <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
+        <div class="px-xl py-lg border-b border-outline-variant bg-surface-bright flex items-center gap-3">
+            <a href="{% url 'horarios:gestion_cursos' %}" class="text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            </a>
+            <h3 class="font-h3 text-h3 text-on-surface">{{ titulo }}</h3>
+        </div>
+        <div class="p-xl">
+            <form method="post">
+                {% csrf_token %}
+                <div class="space-y-lg">
+                    <div class="flex flex-col gap-xs">
+                        <label class="font-label-md text-label-md text-on-surface" for="{{ form.nombre.id_for_label }}">Nombre del Curso *</label>
+                        {{ form.nombre }}
+                        {% if form.nombre.errors %}<p class="text-xs text-error mt-1">{{ form.nombre.errors|join:", " }}</p>{% endif %}
+                    </div>
+                    <div class="flex flex-col gap-xs">
+                        <label class="font-label-md text-label-md text-on-surface" for="{{ form.nivel.id_for_label }}">Nivel (opcional)</label>
+                        {{ form.nivel }}
+                        {% if form.nivel.errors %}<p class="text-xs text-error mt-1">{{ form.nivel.errors|join:", " }}</p>{% endif %}
+                    </div>
+                </div>
+                <div class="flex gap-md mt-xl pt-lg border-t border-outline-variant">
+                    <a href="{% url 'horarios:gestion_cursos' %}"
+                       class="flex-1 py-sm text-center border border-outline-variant rounded-lg text-on-surface hover:bg-surface-container-low font-button text-button transition-colors">
+                        Cancelar
+                    </a>
+                    <button type="submit"
+                            class="flex-1 py-sm bg-primary text-on-primary rounded-lg font-button text-button hover:bg-primary/90 shadow-sm transition-colors">
+                        {{ accion }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

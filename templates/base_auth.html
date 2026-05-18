@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block layout %}
+<!-- Split Layout Container -->
+<main class="w-full flex min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed">
+    <!-- Left Panel: Editorial/Brand Imagery (Hidden on small screens) -->
+    <section
+        class="hidden lg:flex lg:w-1/2 relative bg-surface-container-high overflow-hidden items-center justify-center">
+        <!-- Background Image -->
+        <div class="absolute inset-0 bg-cover bg-center z-0"
+            style="background-image: url('/media/Images/2021-06-09.jpg');"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent z-10"></div>
+
+        <!-- Minimalist Brand Badge Overlay -->
+        <div class="relative z-20 self-end mb-[32px] ml-[32px] bg-white/90 backdrop-blur-md p-lg rounded-xl shadow-lg max-w-sm border border-outline-variant/20"
+            style="margin-bottom: 2rem; margin-left: 2rem;">
+            <div class="flex items-center gap-sm mb-sm">
+                <span class="material-symbols-outlined text-primary text-[32px]"
+                    style="font-variation-settings: 'FILL' 1;">school</span>
+                <h2 class="font-h3 text-h3 text-on-surface">La Dolorosa</h2>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Sistema oficial de gestión académica y control
+                de horarios.</p>
+        </div>
+    </section>
+
+    <!-- Right Panel: Canvas -->
+    <section class="w-full lg:w-1/2 flex items-center justify-center p-lg sm:p-[32px] bg-surface">
+        {% block auth_content %}{% endblock %}
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,274 @@
+<script>
+const paralelosData = {{ paralelos_json|safe|default:"{}" }};
+
+document.getElementById('form-horario').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Guardando...';
+    submitBtn.disabled = true;
+    
+    fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'error') {
+            mostrarToast(data.message, 'error');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        } else if (data.status === 'success') {
+            mostrarToast(data.message, 'success');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            cerrarModalHorario();
+            
+            if (data.html && data.grupo_id) {
+                const grid = document.getElementById('grid-' + data.grupo_id);
+                const existingItem = document.getElementById('schedule-item-' + data.horario_id);
+                
+                if (existingItem) {
+                    // Update existing
+                    existingItem.outerHTML = data.html;
+                } else if (grid) {
+                    // Append new
+                    grid.insertAdjacentHTML('beforeend', data.html);
+                }
+                
+                // Add pop-in animation to the new/updated element
+                const newItem = document.getElementById('schedule-item-' + data.horario_id);
+                if (newItem) {
+                    newItem.style.animation = 'none';
+                    newItem.offsetHeight; // trigger reflow
+                    newItem.style.animation = 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                }
+            } else {
+                setTimeout(() => window.location.reload(), 1000);
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        mostrarToast('Error de conexión o de servidor', 'error');
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    });
+});
+
+document.getElementById('form-eliminar').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Eliminando...';
+    submitBtn.disabled = true;
+    
+    fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'error') {
+            mostrarToast(data.message, 'error');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        } else if (data.status === 'success') {
+            mostrarToast(data.message, 'success');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            cerrarModal();
+            const idToDelete = document.getElementById('modal-eliminar').dataset.idEliminar;
+            if (idToDelete) {
+                const item = document.getElementById(`schedule-item-${idToDelete}`);
+                if (item) {
+                    // Animación de desvanecimiento
+                    item.style.transition = 'all 0.3s ease';
+                    item.style.transform = 'scale(0.9)';
+                    item.style.opacity = '0';
+                    setTimeout(() => item.remove(), 300);
+                }
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        mostrarToast('Error de conexión o de servidor', 'error');
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    });
+});
+
+function mostrarToast(mensaje, tipo = 'error') {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 w-full max-w-md px-4 pointer-events-none';
+        document.body.appendChild(container);
+    }
+    
+    const toast = document.createElement('div');
+    const isError = tipo === 'error';
+    toast.className = `p-4 rounded-xl shadow-lg border flex items-start gap-3 transform transition-all duration-300 -translate-y-10 opacity-0 pointer-events-auto
+                       ${isError ? 'bg-[#FFEBEE] border-[#FFCDD2] text-[#B71C1C]' : 'bg-[#E8F5E9] border-[#C8E6C9] text-[#1B5E20]'}`;
+    
+    const icon = isError ? 'error' : 'check_circle';
+    const iconColor = isError ? 'text-[#D32F2F]' : 'text-[#388E3C]';
+    
+    toast.innerHTML = `
+        <span class="material-symbols-outlined ${iconColor} mt-0.5">${icon}</span>
+        <div class="flex-1 font-body-sm text-sm">
+            ${mensaje}
+        </div>
+        <button onclick="this.parentElement.remove()" class="text-current opacity-60 hover:opacity-100 transition-opacity">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+    `;
+    
+    container.appendChild(toast);
+    
+    // Animación de entrada
+    requestAnimationFrame(() => {
+        toast.classList.remove('-translate-y-10', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+    });
+    
+    // Quitar luego de 6 segundos
+    setTimeout(() => {
+        if (document.body.contains(toast)) {
+            toast.classList.remove('translate-y-0', 'opacity-100');
+            toast.classList.add('-translate-y-10', 'opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }
+    }, 6000);
+}
+
+function actualizarParalelosModal(selectedParaleloId = null) {
+    const cursoSelect = document.getElementById('h_curso_select');
+    const paraleloSelect = document.getElementById('h_paralelo_select');
+    if (!cursoSelect || !paraleloSelect) return;
+    
+    paraleloSelect.innerHTML = '<option value="">Seleccione un paralelo...</option>';
+    const cursoId = cursoSelect.value;
+    if (cursoId && paralelosData[cursoId]) {
+        paralelosData[cursoId].forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.id;
+            opt.textContent = p.nombre;
+            if (selectedParaleloId && p.id.toString() === selectedParaleloId.toString()) {
+                opt.selected = true;
+            }
+            paraleloSelect.appendChild(opt);
+        });
+    }
+}
+
+function abrirModalHorario(id, dia, inicio, fin, asignatura_id, docente_id, curso_id, paralelo_id) {
+    document.getElementById('h_id').value = id || '';
+    document.getElementById('h_dia').value = dia || '';
+    document.getElementById('h_inicio').value = inicio || '';
+    document.getElementById('h_fin').value = fin || '';
+    document.getElementById('h_asignatura_id').value = asignatura_id || '';
+    
+    {% if es_docentes %}
+        const docInput = document.getElementById('h_docente_id');
+        if (docInput) docInput.value = docente_id || '';
+        
+        const curSelect = document.getElementById('h_curso_select');
+        if (curSelect) {
+            curSelect.value = curso_id || '';
+            actualizarParalelosModal(paralelo_id);
+        }
+    {% else %}
+        const curInput = document.getElementById('h_curso_id');
+        const parInput = document.getElementById('h_paralelo_id');
+        if (curInput) curInput.value = curso_id || '';
+        if (parInput) parInput.value = paralelo_id || '';
+        
+        const docSelect = document.getElementById('h_docente_select');
+        if (docSelect) docSelect.value = docente_id || '';
+    {% endif %}
+
+    document.getElementById('modal-horario-titulo').textContent = id ? 'Editar Horario' : 'Añadir Horario';
+    document.getElementById('modal-horario').classList.remove('hidden');
+    document.getElementById('modal-horario').classList.add('flex');
+}
+
+function cerrarModalHorario() {
+    document.getElementById('modal-horario').classList.add('hidden');
+    document.getElementById('modal-horario').classList.remove('flex');
+}
+function confirmarEliminar(id, materia) {
+    document.getElementById('modal-materia').textContent = materia;
+    document.getElementById('form-eliminar').action = `/api/horarios/${id}/eliminar/`; // Updated to new API path that we will create
+    document.getElementById('modal-eliminar').dataset.idEliminar = id;
+    document.getElementById('modal-eliminar').classList.remove('hidden');
+    document.getElementById('modal-eliminar').classList.add('flex');
+}
+function cerrarModal() {
+    document.getElementById('modal-eliminar').classList.add('hidden');
+    document.getElementById('modal-eliminar').classList.remove('flex');
+}
+document.addEventListener('keydown', e => { 
+    if (e.key === 'Escape') {
+        cerrarModal(); 
+        cerrarModalHorario();
+    }
+});
+</script>
+
+<style>
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.empty-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #cbd5e1; /* Color gris claro/neutro */
+    background-color: rgba(241, 245, 249, 0.5); /* Fondo tenue */
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 45px;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+.empty-slot .plus-icon {
+    font-size: 24px;
+    color: #94a3b8;
+    transition: color 0.2s ease;
+}
+.empty-slot:hover {
+    border-color: #3b82f6; /* Color primario azul */
+    background-color: rgba(59, 130, 246, 0.1);
+}
+.empty-slot:hover .plus-icon {
+    color: #3b82f6;
+}
+/* En modo oscuro, ajustamos los colores sutilmente */
+@media (prefers-color-scheme: dark) {
+    .empty-slot {
+        border-color: #334155;
+        background-color: rgba(30, 41, 59, 0.5);
+    }
+    .empty-slot .plus-icon {
+        color: #475569;
+    }
+    .empty-slot:hover {
+        border-color: #3b82f6;
+        background-color: rgba(59, 130, 246, 0.15);
+    }
+}
+</style>

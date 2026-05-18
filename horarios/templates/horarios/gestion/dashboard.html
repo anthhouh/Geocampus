@@ -1,0 +1,130 @@
+{% extends 'horarios/gestion/base_gestion.html' %}
+
+{% block title %}Panel de Gestión — La Dolorosa{% endblock %}
+
+{% block gestion_content %}
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-md">
+    {% with cards=True %}
+    <!-- Docentes -->
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col items-center text-center shadow-sm">
+        <span class="material-symbols-outlined text-[32px] text-primary mb-xs">person</span>
+        <p class="font-label-md text-label-md text-on-surface-variant text-xs uppercase">Docentes</p>
+        <p class="text-3xl font-bold text-on-surface">{{ total_docentes }}</p>
+        <p class="text-xs text-[#4CAF50] mt-1">{{ docentes_disponibles }} disponibles</p>
+    </div>
+    <!-- Cursos -->
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col items-center text-center shadow-sm">
+        <span class="material-symbols-outlined text-[32px] text-secondary mb-xs">school</span>
+        <p class="font-label-md text-label-md text-on-surface-variant text-xs uppercase">Cursos</p>
+        <p class="text-3xl font-bold text-on-surface">{{ total_cursos }}</p>
+    </div>
+    <!-- Paralelos -->
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col items-center text-center shadow-sm">
+        <span class="material-symbols-outlined text-[32px] text-tertiary mb-xs">grid_view</span>
+        <p class="font-label-md text-label-md text-on-surface-variant text-xs uppercase">Paralelos</p>
+        <p class="text-3xl font-bold text-on-surface">{{ total_paralelos }}</p>
+    </div>
+    <!-- Horarios Docente -->
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col items-center text-center shadow-sm">
+        <span class="material-symbols-outlined text-[32px] text-[#7C4DFF] mb-xs">badge</span>
+        <p class="font-label-md text-label-md text-on-surface-variant text-xs uppercase">H. Docente</p>
+        <p class="text-3xl font-bold text-on-surface">{{ total_h_docente }}</p>
+    </div>
+    <!-- Horarios Clase -->
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col items-center text-center shadow-sm">
+        <span class="material-symbols-outlined text-[32px] text-[#00897B] mb-xs">calendar_month</span>
+        <p class="font-label-md text-label-md text-on-surface-variant text-xs uppercase">H. Clase</p>
+        <p class="text-3xl font-bold text-on-surface">{{ total_h_clase }}</p>
+    </div>
+    <!-- Total Horarios -->
+    <div class="bg-[#1a1a2e] rounded-xl border border-[#e2b96f]/20 p-md flex flex-col items-center text-center shadow-sm">
+        <span class="material-symbols-outlined text-[32px] text-[#e2b96f] mb-xs">event_note</span>
+        <p class="font-label-md text-label-md text-[#e2b96f]/70 text-xs uppercase">Total</p>
+        <p class="text-3xl font-bold text-white">{{ total_h_docente|add:total_h_clase }}</p>
+    </div>
+    {% endwith %}
+</div>
+
+<!-- Quick Actions -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+    <a href="{% url 'horarios:gestion_crear_horario' %}"
+       class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg flex items-center gap-md hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
+        <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+            <span class="material-symbols-outlined text-primary text-[24px]">add_circle</span>
+        </div>
+        <div>
+            <p class="font-label-md text-label-md text-on-surface font-semibold">Crear Horario</p>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Añadir un nuevo horario</p>
+        </div>
+        <span class="material-symbols-outlined text-on-surface-variant ml-auto group-hover:translate-x-1 transition-transform">chevron_right</span>
+    </a>
+    <a href="{% url 'horarios:gestion_docentes' %}"
+       class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg flex items-center gap-md hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
+        <div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
+            <span class="material-symbols-outlined text-secondary text-[24px]">manage_accounts</span>
+        </div>
+        <div>
+            <p class="font-label-md text-label-md text-on-surface font-semibold">Gestionar Docentes</p>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Editar especialidades</p>
+        </div>
+        <span class="material-symbols-outlined text-on-surface-variant ml-auto group-hover:translate-x-1 transition-transform">chevron_right</span>
+    </a>
+    <a href="{% url 'horarios:gestion_cursos' %}"
+       class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg flex items-center gap-md hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
+        <div class="w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center group-hover:bg-tertiary/20 transition-colors">
+            <span class="material-symbols-outlined text-tertiary text-[24px]">school</span>
+        </div>
+        <div>
+            <p class="font-label-md text-label-md text-on-surface font-semibold">Cursos &amp; Paralelos</p>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Administrar estructura</p>
+        </div>
+        <span class="material-symbols-outlined text-on-surface-variant ml-auto group-hover:translate-x-1 transition-transform">chevron_right</span>
+    </a>
+</div>
+
+<!-- Recent Schedules -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+    <div class="px-lg py-md border-b border-outline-variant flex justify-between items-center bg-surface-bright">
+        <h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">history</span>
+            Últimos Horarios Registrados
+        </h3>
+        <a href="{% url 'horarios:gestion_horarios' %}" class="text-primary font-label-md text-label-md hover:underline flex items-center gap-1">
+            Ver todos <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+        </a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="border-b border-outline-variant bg-surface-container-low">
+                    <th class="px-lg py-sm text-left font-label-md text-label-md text-on-surface-variant">Docente</th>
+                    <th class="px-lg py-sm text-left font-label-md text-label-md text-on-surface-variant">Materia</th>
+                    <th class="px-lg py-sm text-left font-label-md text-label-md text-on-surface-variant hidden md:table-cell">Curso / Paralelo</th>
+                    <th class="px-lg py-sm text-left font-label-md text-label-md text-on-surface-variant hidden lg:table-cell">Día</th>
+                    <th class="px-lg py-sm text-left font-label-md text-label-md text-on-surface-variant">Tipo</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant">
+                {% for h in ultimos_horarios %}
+                <tr class="hover:bg-surface-container-low transition-colors">
+                    <td class="px-lg py-sm text-on-surface">{{ h.docente.usuario.get_full_name|default:h.docente.usuario.username }}</td>
+                    <td class="px-lg py-sm text-on-surface font-medium">{{ h.materia }}</td>
+                    <td class="px-lg py-sm text-on-surface-variant hidden md:table-cell">{{ h.curso.nombre }} "{{ h.paralelo.identificador }}"</td>
+                    <td class="px-lg py-sm text-on-surface-variant hidden lg:table-cell">{{ h.get_dia_display }}</td>
+                    <td class="px-lg py-sm">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-bold
+                            {% if h.tipo == 'docente' %}bg-[#E3F2FD] text-[#1565C0]{% else %}bg-[#F3E5F5] text-[#6A1B9A]{% endif %}">
+                            {{ h.get_tipo_display }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="px-lg py-xl text-center text-on-surface-variant">No hay horarios registrados.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

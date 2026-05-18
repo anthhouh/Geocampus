@@ -1,0 +1,97 @@
+{% extends 'horarios/gestion/base_gestion.html' %}
+
+{% block title %}Editar Docente — La Dolorosa{% endblock %}
+
+{% block gestion_content %}
+<div class="max-w-lg mx-auto">
+    <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
+        <div class="px-xl py-lg border-b border-outline-variant bg-surface-bright flex items-center gap-3">
+            <a href="{% url 'horarios:gestion_docentes' %}" class="text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            </a>
+            <div class="flex items-center gap-md">
+                {% if docente %}
+                <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">
+                    {{ docente.usuario.first_name|first|default:docente.usuario.username|first|upper }}
+                </div>
+                <div>
+                    <h3 class="font-h3 text-h3 text-on-surface leading-tight">{{ docente.usuario.get_full_name|default:docente.usuario.username }}</h3>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">{{ docente.usuario.email }}</p>
+                </div>
+                {% else %}
+                <h3 class="font-h3 text-h3 text-on-surface leading-tight">{{ titulo }}</h3>
+                {% endif %}
+            </div>
+        </div>
+        <div class="p-xl">
+            <form method="post">
+                {% csrf_token %}
+                <div class="space-y-lg">
+                    {% if not docente %}
+                    <!-- User Fields -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-md text-label-md text-on-surface" for="{{ form.first_name.id_for_label }}">Nombres *</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}<p class="text-xs text-error mt-1">{{ form.first_name.errors|join:", " }}</p>{% endif %}
+                        </div>
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-md text-label-md text-on-surface" for="{{ form.last_name.id_for_label }}">Apellidos *</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}<p class="text-xs text-error mt-1">{{ form.last_name.errors|join:", " }}</p>{% endif %}
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-xs">
+                        <label class="font-label-md text-label-md text-on-surface" for="{{ form.email.id_for_label }}">Correo Institucional *</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}<p class="text-xs text-error mt-1">{{ form.email.errors|join:", " }}</p>{% endif %}
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-md text-label-md text-on-surface" for="{{ form.username.id_for_label }}">Nombre de Usuario *</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}<p class="text-xs text-error mt-1">{{ form.username.errors|join:", " }}</p>{% endif %}
+                        </div>
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-md text-label-md text-on-surface" for="{{ form.password.id_for_label }}">Contraseña *</label>
+                            {{ form.password }}
+                            {% if form.password.errors %}<p class="text-xs text-error mt-1">{{ form.password.errors|join:", " }}</p>{% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!-- Especialidad -->
+                    <div class="flex flex-col gap-xs">
+                        <label class="font-label-md text-label-md text-on-surface" for="{{ form.especialidad.id_for_label }}">Especialidad</label>
+                        {{ form.especialidad }}
+                        {% if form.especialidad.errors %}<p class="text-xs text-error mt-1">{{ form.especialidad.errors|join:", " }}</p>{% endif %}
+                    </div>
+                    <!-- Ubicación -->
+                    <div class="flex flex-col gap-xs">
+                        <label class="font-label-md text-label-md text-on-surface" for="{{ form.ubicacion_actual.id_for_label }}">Ubicación actual</label>
+                        {{ form.ubicacion_actual }}
+                        {% if form.ubicacion_actual.errors %}<p class="text-xs text-error mt-1">{{ form.ubicacion_actual.errors|join:", " }}</p>{% endif %}
+                    </div>
+                    <!-- Disponible -->
+                    <div class="flex items-center gap-md p-md rounded-xl border border-outline-variant bg-surface-container-low">
+                        {{ form.disponible }}
+                        <label class="font-label-md text-label-md text-on-surface cursor-pointer" for="{{ form.disponible.id_for_label }}">
+                            Marcar como Disponible
+                        </label>
+                    </div>
+                    {% if form.disponible.errors %}<p class="text-xs text-error">{{ form.disponible.errors|join:", " }}</p>{% endif %}
+                </div>
+                <div class="flex gap-md mt-xl pt-lg border-t border-outline-variant">
+                    <a href="{% url 'horarios:gestion_docentes' %}"
+                       class="flex-1 py-sm text-center border border-outline-variant rounded-lg text-on-surface hover:bg-surface-container-low font-button text-button transition-colors">
+                        Cancelar
+                    </a>
+                    <button type="submit"
+                            class="flex-1 py-sm bg-primary text-on-primary rounded-lg font-button text-button hover:bg-primary/90 shadow-sm transition-colors">
+                        {{ accion }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

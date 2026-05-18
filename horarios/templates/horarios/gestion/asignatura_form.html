@@ -1,0 +1,52 @@
+{% extends 'horarios/gestion/base_gestion.html' %}
+
+{% block title %}{{ titulo }} — La Dolorosa{% endblock %}
+
+{% block gestion_content %}
+<div class="max-w-2xl mx-auto">
+    <div class="flex items-center gap-md mb-lg">
+        <a href="{% url 'horarios:gestion_asignaturas' %}" 
+           class="w-10 h-10 rounded-full flex items-center justify-center border border-outline-variant text-on-surface-variant hover:bg-surface-container-low transition-colors" title="Volver">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <h3 class="font-h3 text-h3 text-on-surface">{{ titulo }}</h3>
+    </div>
+
+    <form method="post" class="bg-surface-container-lowest border border-outline-variant shadow-sm rounded-xl p-xl space-y-md">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+        <div class="bg-error-container text-on-error-container p-sm rounded-lg text-sm border border-error/20 mb-md">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        {% for field in form %}
+        <div class="flex flex-col gap-xs">
+            <label for="{{ field.id_for_label }}" class="font-label-md text-label-md text-on-surface flex items-center justify-between">
+                {{ field.label }}
+                {% if field.field.required %}<span class="text-error text-xs">*Requerido</span>{% endif %}
+            </label>
+            {{ field }}
+            {% if field.help_text %}
+            <span class="text-xs text-on-surface-variant">{{ field.help_text }}</span>
+            {% endif %}
+            {% if field.errors %}
+            <span class="text-xs text-error font-medium">{{ field.errors|join:", " }}</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <div class="pt-md border-t border-outline-variant flex justify-end gap-sm mt-lg">
+            <a href="{% url 'horarios:gestion_asignaturas' %}" 
+               class="px-lg py-sm border border-outline-variant rounded-lg text-on-surface hover:bg-surface-container-low font-button text-button transition-colors">
+                Cancelar
+            </a>
+            <button type="submit" 
+                    class="px-lg py-sm bg-primary text-on-primary rounded-lg hover:bg-primary/90 font-button text-button transition-colors shadow-sm">
+                {{ accion }}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

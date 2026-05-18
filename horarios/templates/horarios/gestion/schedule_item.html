@@ -1,0 +1,33 @@
+<div id="schedule-item-{{ item.horario.id }}" class="schedule-item relative group/item" style="
+    grid-column: {{ item.grid_col }};
+    grid-row: {{ item.grid_row_start }} / {{ item.grid_row_end }};
+    background-color: {{ item.color_bg }};
+    border: 2px solid {{ item.color_border }};
+    color: {{ item.color_text }};
+    z-index: 10;
+">
+    <strong style="font-size:0.78rem; display:block; line-height:1.2;">{{ item.horario.asignatura.nombre }}</strong>
+    <small style="opacity:0.85; font-size:0.68rem; display:block; margin-top:2px;">
+        {% if es_docentes %}
+            {{ item.horario.curso.nombre }} "{{ item.horario.paralelo.identificador }}"
+        {% else %}
+            {{ item.horario.docente.usuario.get_full_name|default:item.horario.docente.usuario.username }}
+        {% endif %}
+    </small>
+    
+    <!-- Hover Actions (Edit/Delete) -->
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-[1px] opacity-0 group-hover/item:opacity-100 flex items-center justify-center gap-2 transition-all duration-200 rounded-sm pointer-events-none group-hover/item:pointer-events-auto">
+        <div class="bg-surface rounded-lg shadow-lg overflow-hidden flex flex-col min-w-[100px] border border-outline-variant">
+            <button type="button" onclick="abrirModalHorario('{{ item.horario.id }}', '{{ item.horario.dia }}', '{{ item.horario.hora_inicio|time:'H:i' }}', '{{ item.horario.hora_fin|time:'H:i' }}', '{{ item.horario.asignatura_id }}', '{{ item.horario.docente_id }}', '{{ item.horario.curso_id }}', '{{ item.horario.paralelo_id }}')" 
+                    class="w-full text-left px-3 py-2 text-sm text-primary hover:bg-surface-container-low transition-colors flex items-center gap-2 border-b border-outline-variant">
+                <span class="material-symbols-outlined text-[16px]">edit</span>
+                Editar
+            </button>
+            <button type="button" onclick="confirmarEliminar('{{ item.horario.id }}', '{{ item.horario.asignatura.nombre|escapejs }}')" 
+                    class="w-full text-left px-3 py-2 text-sm text-error hover:bg-surface-container-low transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-[16px]">delete</span>
+                Eliminar
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,105 @@
+{% extends 'base_app.html' %}
+
+{% block title %}Añadir Horario - La Dolorosa{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-xl">
+    <div class="flex items-center gap-md mb-lg">
+        <a href="{% url 'horarios:dashboard_docente' %}" class="w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <h2 class="font-h2 text-h2 text-on-surface">Añadir Clase al Horario</h2>
+    </div>
+
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-xl shadow-sm">
+        <form method="post" class="space-y-lg">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                
+                <div class="flex flex-col gap-xs">
+                    <label for="id_curso" class="font-label-md text-label-md text-on-surface-variant">Curso</label>
+                    {{ form.curso }}
+                </div>
+                
+                <div class="flex flex-col gap-xs">
+                    <label for="id_paralelo" class="font-label-md text-label-md text-on-surface-variant">Paralelo</label>
+                    <select id="id_paralelo" name="paralelo" class="w-full px-4 py-2 bg-surface border border-outline-variant rounded-lg focus:outline-none focus:border-primary">
+                        <option value="">— Selecciona un curso primero —</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col gap-xs md:col-span-2">
+                    <label for="id_materia" class="font-label-md text-label-md text-on-surface-variant">Materia</label>
+                    {{ form.materia }}
+                </div>
+                
+                <div class="flex flex-col gap-xs md:col-span-2">
+                    <label for="id_dia" class="font-label-md text-label-md text-on-surface-variant">Día</label>
+                    {{ form.dia }}
+                </div>
+
+                <div class="flex flex-col gap-xs">
+                    <label for="id_hora_inicio" class="font-label-md text-label-md text-on-surface-variant">Hora de Inicio</label>
+                    {{ form.hora_inicio }}
+                </div>
+                
+                <div class="flex flex-col gap-xs">
+                    <label for="id_hora_fin" class="font-label-md text-label-md text-on-surface-variant">Hora de Fin</label>
+                    {{ form.hora_fin }}
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-md pt-md border-t border-outline-variant">
+                <a href="{% url 'horarios:dashboard_docente' %}" class="px-lg py-md rounded-lg font-button text-button text-primary hover:bg-primary/5 transition-colors">
+                    Cancelar
+                </a>
+                <button type="submit" class="px-lg py-md rounded-lg font-button text-button bg-primary text-on-primary hover:bg-primary/90 transition-colors shadow-sm">
+                    Guardar Horario
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const paralelosPorCurso = {{ paralelos_json|safe }};
+
+    const cursoSelect = document.getElementById('id_curso');
+    const paraleloSelect = document.getElementById('id_paralelo');
+
+    function actualizarParalelos() {
+        const cursoId = cursoSelect.value;
+        const opciones = paralelosPorCurso[cursoId] || [];
+
+        // Limpiar y rellenar
+        paraleloSelect.innerHTML = '';
+
+        if (opciones.length === 0) {
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = '— Sin paralelos disponibles —';
+            paraleloSelect.appendChild(opt);
+        } else {
+            opciones.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = p.nombre;
+                paraleloSelect.appendChild(opt);
+            });
+        }
+    }
+
+    cursoSelect.addEventListener('change', actualizarParalelos);
+
+    // Inicializar si ya hay un curso seleccionado (ej: recarga con error de formulario)
+    if (cursoSelect.value) {
+        actualizarParalelos();
+        {% if form.paralelo.value %}
+        paraleloSelect.value = '{{ form.paralelo.value }}';
+        {% endif %}
+    }
+</script>
+{% endblock %}

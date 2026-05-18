@@ -1,0 +1,84 @@
+{% extends 'base_app.html' %}
+
+{% block content %}
+<div class="max-w-container-max mx-auto space-y-lg">
+
+    <!-- Admin Header Badge -->
+    <div class="flex items-center justify-between flex-wrap gap-md">
+        <div class="flex items-center gap-md">
+            <div class="w-10 h-10 rounded-xl bg-[#1a1a2e] flex items-center justify-center shadow-md">
+                <span class="material-symbols-outlined text-[20px] text-[#e2b96f]">admin_panel_settings</span>
+            </div>
+            <div>
+                <h2 class="font-h2 text-h2 text-on-surface leading-tight">Panel de Gestión</h2>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Acceso restringido · {{ user.get_full_name|default:user.username }}</p>
+            </div>
+        </div>
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1a1a2e] text-[#e2b96f] text-xs font-bold border border-[#e2b96f]/30">
+            <span class="material-symbols-outlined text-[14px]">lock</span>
+            ADMIN
+        </span>
+    </div>
+
+    <!-- Sub-Navigation -->
+    <nav class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-sm flex items-center gap-xs flex-wrap">
+        <a href="{% url 'horarios:gestion_dashboard' %}"
+           class="flex items-center gap-2 px-md py-sm rounded-lg font-label-md text-label-md transition-all duration-150
+                  {% if request.resolver_match.url_name == 'gestion_dashboard' %}bg-[#1a1a2e] text-[#e2b96f]{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %}">
+            <span class="material-symbols-outlined text-[18px]">dashboard</span>
+            Resumen
+        </a>
+        <a href="{% url 'horarios:gestion_horarios_docentes' %}"
+           class="flex items-center gap-2 px-md py-sm rounded-lg font-label-md text-label-md transition-all duration-150
+                  {% if request.resolver_match.url_name == 'gestion_horarios_docentes' %}bg-[#1a1a2e] text-[#e2b96f]{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %}">
+            <span class="material-symbols-outlined text-[18px]">badge</span>
+            Horarios Docentes
+        </a>
+        <a href="{% url 'horarios:gestion_horarios_cursos' %}"
+           class="flex items-center gap-2 px-md py-sm rounded-lg font-label-md text-label-md transition-all duration-150
+                  {% if request.resolver_match.url_name == 'gestion_horarios_cursos' %}bg-[#1a1a2e] text-[#e2b96f]{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %}">
+            <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+            Horarios Cursos
+        </a>
+        <a href="{% url 'horarios:gestion_docentes' %}"
+           class="flex items-center gap-2 px-md py-sm rounded-lg font-label-md text-label-md transition-all duration-150
+                  {% if 'gestion_docente' in request.resolver_match.url_name %}bg-[#1a1a2e] text-[#e2b96f]{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %}">
+            <span class="material-symbols-outlined text-[18px]">person</span>
+            Docentes
+        </a>
+        <a href="{% url 'horarios:gestion_cursos' %}"
+           class="flex items-center gap-2 px-md py-sm rounded-lg font-label-md text-label-md transition-all duration-150
+                  {% if 'gestion_curso' in request.resolver_match.url_name or 'gestion_paralelo' in request.resolver_match.url_name %}bg-[#1a1a2e] text-[#e2b96f]{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %}">
+            <span class="material-symbols-outlined text-[18px]">school</span>
+            Cursos &amp; Paralelos
+        </a>
+        <a href="{% url 'horarios:gestion_asignaturas' %}"
+           class="flex items-center gap-2 px-md py-sm rounded-lg font-label-md text-label-md transition-all duration-150
+                  {% if 'gestion_asignatura' in request.resolver_match.url_name %}bg-[#1a1a2e] text-[#e2b96f]{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %}">
+            <span class="material-symbols-outlined text-[18px]">book</span>
+            Asignaturas
+        </a>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="space-y-sm">
+        {% for msg in messages %}
+        <div class="flex items-center gap-3 px-md py-sm rounded-lg border
+            {% if msg.tags == 'success' %}bg-[#E8F5E9] border-[#4CAF50]/30 text-[#2E7D32]
+            {% elif msg.tags == 'error' %}bg-[#FFEBEE] border-[#E53935]/30 text-[#C62828]
+            {% else %}bg-surface-container-low border-outline-variant text-on-surface{% endif %}">
+            <span class="material-symbols-outlined text-[18px]">
+                {% if msg.tags == 'success' %}check_circle{% elif msg.tags == 'error' %}error{% else %}info{% endif %}
+            </span>
+            {{ msg }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Page content -->
+    {% block gestion_content %}{% endblock %}
+
+</div>
+{% endblock %}

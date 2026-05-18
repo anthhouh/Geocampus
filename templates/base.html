@@ -1,0 +1,248 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>{% block title %}Gestión de Horarios - EduManager{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Manrope:wght@600;700&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#a5c8ff", "outline": "#717783", "on-error": "#ffffff",
+                        "surface-variant": "#e0e2ea", "outline-variant": "#c1c6d4", "on-primary": "#ffffff",
+                        "tertiary": "#944700", "on-tertiary": "#ffffff", "on-background": "#181c21",
+                        "secondary-fixed": "#ffdad6", "on-secondary": "#ffffff", "primary": "#005dac",
+                        "on-secondary-fixed-variant": "#930010", "surface-container-highest": "#e0e2ea",
+                        "surface": "#f9f9ff", "secondary": "#b6171e", "on-primary-fixed": "#001c3a",
+                        "inverse-primary": "#a5c8ff", "inverse-surface": "#2d3037", "on-primary-fixed-variant": "#004786",
+                        "on-primary-container": "#fffdff", "primary-container": "#1976d2", "tertiary-container": "#ba5b00",
+                        "background": "#f9f9ff", "inverse-on-surface": "#eff0f9", "on-error-container": "#93000a",
+                        "secondary-container": "#da3433", "surface-bright": "#f9f9ff", "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#005faf", "error": "#ba1a1a", "secondary-fixed-dim": "#ffb3ac",
+                        "tertiary-fixed-dim": "#ffb688", "on-surface": "#181c21", "on-tertiary-fixed": "#311300",
+                        "surface-dim": "#d8dae2", "on-secondary-container": "#fffbff", "surface-container-high": "#e6e8f0",
+                        "primary-fixed": "#d4e3ff", "tertiary-fixed": "#ffdbc7", "on-secondary-fixed": "#410003",
+                        "on-tertiary-container": "#fffeff", "error-container": "#ffdad6", "surface-container": "#ecedf6",
+                        "surface-container-low": "#f2f3fc", "on-surface-variant": "#414752", "on-tertiary-fixed-variant": "#733600"
+                    },
+                    "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    "spacing": { "sm": "8px", "lg": "24px", "xl": "32px", "md": "16px", "base": "4px", "xs": "4px", "container-max": "1440px", "margin": "32px", "gutter": "24px" },
+                    "fontFamily": { "h1": ["Manrope"], "body-lg": ["Inter"], "label-md": ["Inter"], "body-sm": ["Inter"], "body-md": ["Inter"], "h3": ["Manrope"], "h2": ["Manrope"], "button": ["Inter"] },
+                    "fontSize": {
+                        "h1": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "h3": ["24px", { "lineHeight": "32px", "letterSpacing": "0", "fontWeight": "600" }],
+                        "h2": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "button": ["15px", { "lineHeight": "20px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        
+        /* ── Schedule Grid: estilo planilla clásica ───────────────── */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 52px repeat(5, 1fr);
+            grid-template-rows: 36px repeat(11, minmax(50px, auto));
+            gap: 0;
+            background: #fff;
+            border: 1px solid #b0b7c3;
+            border-radius: 0.6rem;
+            overflow: hidden;
+            min-width: 1200px;
+        }
+        /* Celda vacía generada por JS */
+        .grid-cell {
+            background: #fff;
+            border-right: 1px solid #d4d8e2;
+            border-bottom: 1px solid #d4d8e2;
+            z-index: 0;
+        }
+        /* Cabecera de días */
+        .day-header {
+            text-align: center; font-weight: 700;
+            color: #414752; padding: 6px 4px;
+            border-right: 1px solid #b0b7c3;
+            border-bottom: 2px solid #b0b7c3;
+            background: #eef0f8;
+            font-family: 'Manrope', sans-serif;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.82rem;
+        }
+        /* Columna de horas */
+        .time-slot {
+            font-size: 0.6rem; color: #717783;
+            text-align: center;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 0;
+            border-right: 2px solid #b0b7c3;
+            border-bottom: 1px solid #d4d8e2;
+            padding: 2px 3px;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.3;
+            background: #f5f6fb;
+        }
+        .time-slot strong { color: #181c21; font-size: 0.7rem; line-height: 1.1; display: block; }
+        .time-slot span    { display: block; white-space: nowrap; }
+        /* Recreo */
+        .schedule-recreo {
+            grid-column: 2 / -1; grid-row: 6;
+            background: #eef0f8;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; color: #717783;
+            letter-spacing: 3px; text-transform: uppercase; font-size: 0.75rem;
+            border-top: 1px solid #b0b7c3; border-bottom: 1px solid #b0b7c3;
+            z-index: 1;
+        }
+        /* Bloque de asignatura */
+        .schedule-item {
+            border-radius: 4px;
+            padding: 4px 3px;
+            margin: 2px;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            transition: transform 0.15s;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            z-index: 2; position: relative;
+        }
+        .schedule-item:hover { transform: scale(1.03); z-index: 10; box-shadow: 0 3px 8px rgba(0,0,0,0.18); }
+        .schedule-item strong { font-size: 0.82rem; display: block; line-height: 1.2; font-weight: 700; }
+        .schedule-item small  { opacity: 0.9; font-size: 0.68rem; font-weight: 500; }
+        
+        /* Toast Notifications (Centered Modal Style) */
+        .toast-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.3); backdrop-filter: blur(2px);
+            z-index: 9998; opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .toast-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
+
+        .toast-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999; pointer-events: none;
+        }
+
+        .toast {
+            pointer-events: auto;
+            padding: 24px; border-radius: 16px; background: #fff;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2), 0 8px 10px -6px rgba(0,0,0,0.1);
+            border-top: 6px solid #005dac;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            font-family: 'Inter', sans-serif; font-size: 16px;
+            min-width: 320px; max-width: 90vw; text-align: center;
+            position: relative;
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+        }
+        .toast.toast-error { border-top-color: #ba1a1a; }
+        .toast.toast-success { border-top-color: #10b981; }
+        .toast.toast-warning { border-top-color: #f59e0b; }
+        
+        .toast .toast-close {
+            position: absolute; top: 8px; right: 8px;
+            cursor: pointer; color: #717783;
+            background: transparent; border: none; padding: 6px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s, color 0.2s;
+        }
+        .toast .toast-close:hover { background: #f2f3fc; color: #181c21; }
+        
+        .toast.toast-hiding {
+            animation: popOut 0.3s ease forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        @keyframes popOut {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.9) translateY(20px); opacity: 0; }
+        }
+    </style>
+    <script>
+        // Rellena las celdas vacías del grid para crear las líneas de planilla
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.schedule-grid').forEach(function (grid) {
+                var rows = [2, 3, 4, 5, 7, 8, 9, 10, 11];
+                var cols = [2, 3, 4, 5, 6];
+                rows.forEach(function (row) {
+                    cols.forEach(function (col) {
+                        var cell = document.createElement('div');
+                        cell.className = 'grid-cell';
+                        cell.style.gridColumn = col;
+                        cell.style.gridRow = row;
+                        grid.appendChild(cell);
+                    });
+                });
+            });
+        });
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen">
+    {% if messages %}
+        <div class="toast-overlay active" id="toast-overlay"></div>
+        <div class="toast-container" id="toast-container">
+            {% for message in messages %}
+                <div class="toast toast-{{ message.tags }}">
+                    <button class="toast-close material-symbols-outlined" onclick="closeToast(this)">close</button>
+                    {% if message.tags == 'warning' %}
+                        <span class="material-symbols-outlined" style="font-size: 36px; color: #f59e0b;">warning</span>
+                    {% elif message.tags == 'error' %}
+                        <span class="material-symbols-outlined" style="font-size: 36px; color: #ba1a1a;">error</span>
+                    {% elif message.tags == 'success' %}
+                        <span class="material-symbols-outlined" style="font-size: 36px; color: #10b981;">check_circle</span>
+                    {% else %}
+                        <span class="material-symbols-outlined" style="font-size: 36px; color: #005dac;">info</span>
+                    {% endif %}
+                    <span style="font-weight: 500; color: #181c21; margin-top: 4px;">{{ message }}</span>
+                </div>
+            {% endfor %}
+        </div>
+        <script>
+            function closeToast(btn) {
+                const toast = btn ? btn.closest('.toast') : document.querySelector('.toast');
+                if (!toast) return;
+                const overlay = document.getElementById('toast-overlay');
+                
+                toast.classList.add('toast-hiding');
+                if (overlay) overlay.classList.remove('active');
+                
+                setTimeout(() => {
+                    toast.remove();
+                    const container = document.getElementById('toast-container');
+                    if (container && container.children.length === 0) {
+                        container.remove();
+                        if (overlay) overlay.remove();
+                    }
+                }, 300);
+            }
+
+            document.getElementById('toast-overlay').addEventListener('click', function() {
+                closeToast();
+            });
+        </script>
+    {% endif %}
+
+    {% block layout %}{% endblock %}
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

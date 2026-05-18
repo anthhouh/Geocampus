@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block layout %}
+<div class="flex-1 flex h-screen overflow-hidden">
+    <!-- Sidebar Overlay (solo móvil) -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity duration-300 opacity-0" onclick="toggleSidebar()"></div>
+
+    <!-- SideNavBar -->
+    <nav id="sidebar" class="bg-surface-container-low dark:bg-surface-container-lowest border-r border-outline-variant dark:border-outline fixed left-0 top-0 h-full w-64 flex flex-col justify-between py-lg z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+        <div>
+            <div class="px-lg mb-xl flex items-center gap-md">
+                <div id="logo-ld" class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold text-xl cursor-pointer select-none">
+                    LD
+                </div>
+                <div>
+                    <h1 class="font-h3 text-h3 font-bold text-primary dark:text-primary-fixed-dim">La Dolorosa</h1>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Gestión de Horarios</p>
+                </div>
+            </div>
+
+            <div class="px-md flex flex-col gap-sm">
+                <!-- Directorio -->
+                <a href="{% url 'horarios:index' %}" class="cursor-pointer flex items-center gap-md px-lg py-sm rounded-lg {% if request.resolver_match.url_name == 'index' %}bg-primary-container text-on-primary-container border-l-4 border-primary font-semibold{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %} font-label-md text-label-md transition-all duration-200">
+                    <span class="material-symbols-outlined">group</span>
+                    Directorio Docentes
+                </a>
+
+                <!-- Horarios Cursos -->
+                <a href="{% url 'horarios:horarios_curso' %}" class="cursor-pointer flex items-center gap-md px-lg py-sm rounded-lg {% if request.resolver_match.url_name == 'horarios_curso' %}bg-primary-container text-on-primary-container border-l-4 border-primary font-semibold{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %} font-label-md text-label-md transition-all duration-200">
+                    <span class="material-symbols-outlined">school</span>
+                    Horarios de Clases
+                </a>
+
+                <!-- Dashboard (Solo Docentes) -->
+                {% if user.is_authenticated and user.is_docente %}
+                <a href="{% url 'horarios:dashboard_docente' %}" class="cursor-pointer flex items-center gap-md px-lg py-sm rounded-lg {% if request.resolver_match.url_name == 'dashboard_docente' %}bg-primary-container text-on-primary-container border-l-4 border-primary font-semibold{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %} font-label-md text-label-md transition-all duration-200">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                    Mi Panel
+                </a>
+                {% endif %}
+
+                <!-- Gestión Horaria (Acceso Administradores) -->
+                <a href="{% url 'horarios:gestion_dashboard' %}" class="cursor-pointer flex items-center gap-md px-lg py-sm rounded-lg {% if 'gestion' in request.path %}bg-primary-container text-on-primary-container border-l-4 border-primary font-semibold{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %} font-label-md text-label-md transition-all duration-200">
+                    <span class="material-symbols-outlined">admin_panel_settings</span>
+                    Gestión Horaria
+                </a>
+            </div>
+        </div>
+
+        <div class="px-md flex flex-col gap-sm">
+            {% if user.is_authenticated %}
+            <a href="{% url 'horarios:logout' %}" class="cursor-pointer flex items-center gap-md px-lg py-sm rounded-lg text-error hover:bg-error-container hover:text-on-error-container font-label-md text-label-md transition-all duration-200">
+                <span class="material-symbols-outlined">logout</span>
+                Cerrar Sesión
+            </a>
+            {% else %}
+            <a href="{% url 'horarios:login' %}" class="cursor-pointer flex items-center gap-md px-lg py-sm rounded-lg bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container font-label-md text-label-md transition-all duration-200">
+                <span class="material-symbols-outlined">login</span>
+                Iniciar Sesión
+            </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <div id="main-content" class="flex-1 flex flex-col md:ml-64 relative h-full transition-[margin] duration-300 ease-in-out">
+        <!-- TopNavBar -->
+        <header class="sticky top-0 z-40 w-full h-16 flex justify-between items-center px-lg bg-surface dark:bg-surface-dim shadow-sm">
+            <div class="flex items-center gap-md">
+                <button onclick="toggleSidebar()" class="material-symbols-outlined text-primary cursor-pointer hover:bg-surface-container-high p-2 -ml-2 rounded-full transition-colors border-none bg-transparent">menu</button>
+                <span class="font-h3 text-h3 font-bold text-primary dark:text-primary-fixed-dim md:hidden">LD</span>
+            </div>
+            
+            <div class="hidden md:flex items-center w-96 relative invisible">
+                <!-- Search hidden for now -->
+            </div>
+
+            <div class="flex items-center gap-md">
+                {% if user.is_authenticated %}
+                <span class="font-label-md text-on-surface-variant hidden sm:block">Hola, {{ user.first_name|default:user.username }}</span>
+                <div class="w-8 h-8 rounded-full border border-outline-variant ml-2 bg-primary flex items-center justify-center text-on-primary font-bold cursor-pointer">
+                    {{ user.first_name|first|default:user.username|first|upper }}
+                </div>
+                {% endif %}
+            </div>
+        </header>
+
+        <!-- Canvas -->
+        <main class="flex-1 overflow-y-auto p-lg lg:p-xl bg-background">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const overlay = document.getElementById('sidebar-overlay');
+        const isMobile = window.innerWidth < 768;
+
+        if (isMobile) {
+            // Lógica móvil: toggle translation y overlay
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+            } else {
+                sidebar.classList.remove('translate-x-0');
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+        } else {
+            // Lógica desktop: toggle translation y margin-left
+            if (sidebar.classList.contains('md:translate-x-0')) {
+                // Cerrar
+                sidebar.classList.remove('md:translate-x-0');
+                sidebar.classList.add('md:-translate-x-full');
+                mainContent.classList.remove('md:ml-64');
+                mainContent.classList.add('md:ml-0');
+            } else {
+                // Abrir
+                sidebar.classList.remove('md:-translate-x-full');
+                sidebar.classList.add('md:translate-x-0');
+                mainContent.classList.remove('md:ml-0');
+                mainContent.classList.add('md:ml-64');
+            }
+        }
+    }
+</script>
+{% block scripts %}{% endblock %}
+{% endblock %}
