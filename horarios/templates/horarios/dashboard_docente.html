@@ -5,24 +5,21 @@
 {% block content %}
 <div class="max-w-container-max mx-auto space-y-xl">
     <!-- Page Header & Status -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h2 class="font-h2 text-h2 text-on-surface mb-xs">Buenos días, {{ user.get_full_name|default:user.username }}</h2>
-            <p class="font-body-md text-body-md text-on-surface-variant">Aquí está su resumen académico de hoy.</p>
+            <h2 class="font-extrabold text-3xl text-[#0B1A40] mb-1">¡Buenos días, {{ user.get_full_name|default:user.username }}! 👋</h2>
+            <p class="text-sm font-medium text-gray-500">Aquí está tu resumen académico de hoy.</p>
         </div>
         <!-- Status Toggle -->
-        <div class="bg-surface-container-lowest p-xs rounded-full border border-outline-variant flex items-center shadow-sm"
-            id="status-container">
+        <div class="bg-white p-1.5 rounded-full border border-gray-100 flex items-center shadow-sm" id="status-container">
             <button onclick="toggleEstado(true)"
-                class="px-md py-sm rounded-full {% if docente.disponible %}bg-[#E8F5E9] text-[#2E7D32]{% else %}text-on-surface-variant hover:bg-surface-container-low{% endif %} font-label-md text-label-md flex items-center gap-2 shadow-sm transition-all">
-                <span
-                    class="w-2 h-2 rounded-full {% if docente.disponible %}bg-[#4CAF50]{% else %}bg-outline-variant{% endif %}"></span>
+                class="px-4 py-2 rounded-full {% if docente.disponible %}bg-green-50 text-green-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 font-medium{% endif %} text-[13px] flex items-center gap-2 transition-all">
+                <span class="w-2 h-2 rounded-full {% if docente.disponible %}bg-green-500{% else %}bg-gray-300{% endif %}"></span>
                 Disponible
             </button>
             <button onclick="toggleEstado(false)"
-                class="px-md py-sm rounded-full {% if not docente.disponible %}bg-[#FFEBEE] text-[#C62828]{% else %}text-on-surface-variant hover:bg-surface-container-low{% endif %} font-label-md text-label-md flex items-center gap-2 transition-all">
-                <span
-                    class="w-2 h-2 rounded-full {% if not docente.disponible %}bg-[#E53935]{% else %}bg-outline-variant{% endif %}"></span>
+                class="px-4 py-2 rounded-full {% if not docente.disponible %}bg-red-50 text-red-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 font-medium{% endif %} text-[13px] flex items-center gap-2 transition-all">
+                <span class="w-2 h-2 rounded-full {% if not docente.disponible %}bg-red-500{% else %}bg-gray-300{% endif %}"></span>
                 Ocupado
             </button>
         </div>
@@ -31,14 +28,16 @@
     <!-- Layout Grid -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
 
-        <!-- Profile Summary (Right Column equivalent in Stitch) -->
-        <div class="md:col-span-3 flex flex-col gap-lg">
-            <div
-                class="bg-surface-container-lowest rounded-xl border border-outline-variant p-xl flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow">
-                <div class="relative mb-md group">
+        <!-- Profile Summary -->
+        <div class="md:col-span-3 flex flex-col gap-6">
+            <div class="bg-white rounded-[1.5rem] border border-gray-100 flex flex-col items-center text-center shadow-sm overflow-hidden relative pb-6">
+                <!-- Top Gradient Background -->
+                <div class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-100 to-white -z-0"></div>
+                
+                <div class="relative z-10 mt-10 mb-4 group">
                     <form method="post" enctype="multipart/form-data" id="foto-form" class="relative">
                         {% csrf_token %}
-                        <div class="w-24 h-24 rounded-full border-4 border-surface shadow-sm bg-primary flex items-center justify-center text-on-primary text-4xl font-bold overflow-hidden cursor-pointer relative"
+                        <div class="w-28 h-28 rounded-full border-4 border-white shadow-md bg-[#0B4A99] flex items-center justify-center text-white text-5xl font-bold overflow-hidden cursor-pointer relative"
                              onclick="document.getElementById('id_foto_input').click()">
                             {% if docente.foto %}
                                 <img src="{{ docente.foto.url }}" alt="Foto de perfil" class="w-full h-full object-cover">
@@ -53,40 +52,53 @@
                         </div>
                         <input type="file" name="foto" id="id_foto_input" class="hidden" accept="image/*" onchange="document.getElementById('foto-form').submit()">
                     </form>
-                    <div class="absolute bottom-0 right-0 w-6 h-6 {% if docente.disponible %}bg-[#4CAF50]{% else %}bg-[#E53935]{% endif %} border-2 border-surface rounded-full z-10"
-                        id="status-indicator"></div>
+                    <div class="absolute bottom-1 right-2 w-5 h-5 {% if docente.disponible %}bg-green-500{% else %}bg-red-500{% endif %} border-[3px] border-white rounded-full z-10" id="status-indicator"></div>
                 </div>
-                <h3 class="font-h3 text-h3 text-on-surface">{{ user.get_full_name|default:user.username }}</h3>
-                <p class="font-body-sm text-body-sm text-primary mb-lg">Docente de La Dolorosa</p>
+                
+                <h3 class="font-bold text-xl text-[#0B1A40] z-10">{{ user.get_full_name|default:user.username }}</h3>
+                <p class="text-sm font-semibold text-[#3B82F6] mb-6 z-10">Docente de La Dolorosa</p>
 
-                <div class="w-full border-t border-outline-variant pt-lg mt-2">
-                    <p class="font-label-md text-label-md text-on-surface-variant uppercase text-xs mb-1">Ubicación
-                        Actual</p>
+                <div class="w-full px-6 pt-6 border-t border-gray-100/80 z-10">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined text-blue-600 text-[18px]">location_on</span>
+                        <p class="font-bold text-[#0B1A40] text-sm">Ubicación actual</p>
+                    </div>
                     <input type="text" id="ubicacion-input" value="{{ docente.ubicacion_actual|default:'' }}"
-                        class="w-full text-center px-2 py-1 bg-surface border border-outline-variant rounded focus:outline-none focus:border-primary text-sm mb-2"
+                        class="w-full px-4 py-2.5 bg-[#F4F7FB] border border-transparent rounded-xl focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 text-sm font-medium text-gray-700 placeholder:text-blue-400/70 mb-3 transition-all"
                         placeholder="Ej: Laboratorio 1">
                     <button onclick="actualizarUbicacion()"
-                        class="text-primary font-button text-button hover:bg-primary/5 px-4 py-1 rounded-lg transition-colors border border-primary/20 w-full">Guardar
-                        Ubicación</button>
+                        class="text-blue-600 font-bold text-sm bg-white hover:bg-blue-50 px-4 py-2.5 rounded-xl transition-colors border border-blue-200 w-full flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">save</span>
+                        Guardar ubicación
+                    </button>
                 </div>
+            </div>
+
+            <!-- Tip Card -->
+            <div class="bg-[#F4F7FB] rounded-2xl p-5 border border-blue-50">
+                <div class="flex items-center gap-2 mb-2 text-blue-600">
+                    <span class="material-symbols-outlined text-[20px]">lightbulb</span>
+                    <span class="font-bold text-sm">Tip</span>
+                </div>
+                <p class="text-[13px] text-gray-500 font-medium leading-relaxed">Mantén tu ubicación actualizada para que tus estudiantes te encuentren fácilmente.</p>
             </div>
         </div>
 
-        <!-- Schedule Grid (Left Column equivalent in Stitch) -->
-        <div class="md:col-span-9 flex flex-col gap-lg">
-            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden shadow-sm">
-                <div class="p-lg border-b border-outline-variant flex justify-between items-center bg-surface-bright">
-                    <h3 class="font-h3 text-h3 text-on-surface flex items-center gap-sm">
-                        <span class="material-symbols-outlined text-primary">calendar_month</span>
+        <!-- Schedule Grid -->
+        <div class="md:col-span-9 flex flex-col gap-6">
+            <div class="bg-white rounded-[1.5rem] border border-gray-100 overflow-hidden shadow-sm flex flex-col h-full">
+                <div class="p-6 flex justify-between items-center">
+                    <h3 class="font-bold text-xl text-[#0B1A40] flex items-center gap-2">
+                        <span class="material-symbols-outlined text-blue-600 text-[26px]">calendar_month</span>
                         Mi Horario de Clases
                     </h3>
                     <button onclick="abrirModalHorario('', '', '', '', '', '{{ docente.id }}', '', '')"
-                        class="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg font-button text-button hover:bg-primary/90 transition-colors shadow-sm">
-                        <span class="material-symbols-outlined text-sm">add</span>
-                        Añadir
+                        class="flex items-center gap-2 bg-[#0B4A99] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-[#083570] transition-colors shadow-sm">
+                        <span class="material-symbols-outlined text-[18px]">add</span>
+                        Añadir clase
                     </button>
                 </div>
-                <div class="p-lg overflow-x-auto">
+                <div class="px-6 pb-4 overflow-x-auto">
                     <!-- Componente Schedule Grid -->
                     <div class="schedule-grid" id="grid-docente_{{ docente.id }}">
                         <div style="grid-column: 1; grid-row: 1;"></div>
@@ -123,10 +135,61 @@
                             {% include 'horarios/gestion/schedule_item.html' with item=item es_docentes=True %}
                         {% endfor %}
                     </div>
+                    </div>
+                </div>
+                
+                <div class="px-6 py-4 border-t border-gray-50 flex items-center gap-2 text-gray-500 mt-auto bg-gray-50/50">
+                    <span class="material-symbols-outlined text-[18px] text-teal-500">info</span>
+                    <p class="text-xs font-medium">Los horarios se actualizan automáticamente.</p>
                 </div>
             </div>
         </div>
 
+    </div>
+
+    <!-- Bottom Actions -->
+    <div class="pt-4 border-t border-gray-100">
+        <div class="flex flex-col md:flex-row items-center gap-6">
+            <div class="w-full md:w-1/4">
+                <h3 class="font-bold text-lg text-[#0B1A40]">Acciones rápidas</h3>
+                <p class="text-sm font-medium text-gray-500 mt-1">Administra tu horario de forma fácil y rápida.</p>
+            </div>
+            
+            <div class="w-full md:w-3/4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Action 1 -->
+                <div onclick="abrirModalHorario('', '', '', '', '', '{{ docente.id }}', '', '')" class="bg-white rounded-2xl border border-gray-100 p-5 flex items-start gap-4 cursor-pointer hover:shadow-md hover:border-blue-100 transition-all group">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">edit_calendar</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-sm text-[#0B1A40] mb-0.5">Añadir clase</p>
+                        <p class="text-[12px] font-medium text-gray-500 leading-tight">Agrega nuevas clases a tu horario.</p>
+                    </div>
+                </div>
+                
+                <!-- Action 2 -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-5 flex items-start gap-4 cursor-pointer hover:shadow-md hover:border-blue-100 transition-all group">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">edit</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-sm text-[#0B1A40] mb-0.5">Editar horario</p>
+                        <p class="text-[12px] font-medium text-gray-500 leading-tight">Modifica tus clases programadas.</p>
+                    </div>
+                </div>
+                
+                <!-- Action 3 -->
+                <div onclick="window.print()" class="bg-white rounded-2xl border border-gray-100 p-5 flex items-start gap-4 cursor-pointer hover:shadow-md hover:border-blue-100 transition-all group">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">print</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-sm text-[#0B1A40] mb-0.5">Imprimir horario</p>
+                        <p class="text-[12px] font-medium text-gray-500 leading-tight">Descarga e imprime tu horario semanal.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
