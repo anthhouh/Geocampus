@@ -145,6 +145,27 @@ LOGIN_URL = 'horarios:login'
 LOGIN_REDIRECT_URL = 'horarios:index'
 LOGOUT_REDIRECT_URL = 'horarios:login'
 
-# Cloudinary para Media (Fotos, PDFs, etc.) - siempre activo
-# Requiere CLOUDINARY_URL en las variables de entorno (.env local o Vercel)
+# ── Cloudinary (Media Storage) ─────────────────────────────────────────────
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+_cloudinary_url = os.environ.get('CLOUDINARY_URL', '')
+if _cloudinary_url:
+    cloudinary.config(from_url=True)
+else:
+    # Fallback: credenciales individuales si por alguna razon la URL no llega
+    cloudinary.config(
+        cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
+        api_key=os.environ.get('CLOUDINARY_API_KEY', ''),
+        api_secret=os.environ.get('CLOUDINARY_API_SECRET', ''),
+    )
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': cloudinary.config().cloud_name or '',
+    'API_KEY':    cloudinary.config().api_key    or '',
+    'API_SECRET': cloudinary.config().api_secret or '',
+}
+
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+MEDIA_URL = '/media/'
