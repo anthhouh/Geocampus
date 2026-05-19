@@ -25,6 +25,30 @@ class Docente(models.Model):
     disponible = models.BooleanField(default=True)
     ubicacion_actual = models.CharField(max_length=100, blank=True, null=True, help_text="Ej: Laboratorio 1, Sala de Profesores")
 
+    @property
+    def ubicacion_dinamica(self):
+        from django.utils import timezone
+        ahora = timezone.localtime()
+        # Mapeo simple de weekday() a los identificadores usados en la BD
+        dias_map = {0: 'lunes', 1: 'martes', 2: 'miercoles', 3: 'jueves', 4: 'viernes', 5: 'sabado', 6: 'domingo'}
+        dia_actual = dias_map.get(ahora.weekday())
+        hora_actual = ahora.time()
+        
+        # Buscar si el docente tiene un horario en este momento
+        clase_actual = self.horarios.filter(
+            dia=dia_actual,
+            hora_inicio__lte=hora_actual,
+            hora_fin__gte=hora_actual
+        ).first()
+        
+        if clase_actual:
+            if clase_actual.curso and clase_actual.paralelo:
+                return f"{clase_actual.curso.nombre} \"{clase_actual.paralelo.identificador}\""
+            elif clase_actual.curso:
+                return f"{clase_actual.curso.nombre}"
+                
+        return self.ubicacion_actual or "Ubicación no reportada"
+
     def __str__(self):
         nombre = self.usuario.get_full_name()
         if not nombre.strip():

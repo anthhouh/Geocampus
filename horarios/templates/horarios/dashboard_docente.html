@@ -12,14 +12,14 @@
         </div>
         <!-- Status Toggle -->
         <div class="bg-white p-1.5 rounded-full border border-gray-100 flex items-center shadow-sm" id="status-container">
-            <button onclick="toggleEstado(true)"
+            <button onclick="toggleEstado(true)" id="btn-estado-disponible"
                 class="px-4 py-2 rounded-full {% if docente.disponible %}bg-green-50 text-green-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 font-medium{% endif %} text-[13px] flex items-center gap-2 transition-all">
-                <span class="w-2 h-2 rounded-full {% if docente.disponible %}bg-green-500{% else %}bg-gray-300{% endif %}"></span>
+                <span id="dot-estado-disponible" class="w-2 h-2 rounded-full {% if docente.disponible %}bg-green-500{% else %}bg-gray-300{% endif %}"></span>
                 Disponible
             </button>
-            <button onclick="toggleEstado(false)"
+            <button onclick="toggleEstado(false)" id="btn-estado-ocupado"
                 class="px-4 py-2 rounded-full {% if not docente.disponible %}bg-red-50 text-red-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 font-medium{% endif %} text-[13px] flex items-center gap-2 transition-all">
-                <span class="w-2 h-2 rounded-full {% if not docente.disponible %}bg-red-500{% else %}bg-gray-300{% endif %}"></span>
+                <span id="dot-estado-ocupado" class="w-2 h-2 rounded-full {% if not docente.disponible %}bg-red-500{% else %}bg-gray-300{% endif %}"></span>
                 Ocupado
             </button>
         </div>
@@ -226,7 +226,39 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'ok') {
-                    window.location.reload();
+                    if (disponible !== null) {
+                        const btnDisp = document.getElementById('btn-estado-disponible');
+                        const dotDisp = document.getElementById('dot-estado-disponible');
+                        const btnOcup = document.getElementById('btn-estado-ocupado');
+                        const dotOcup = document.getElementById('dot-estado-ocupado');
+                        const indicator = document.getElementById('status-indicator');
+
+                        if (data.disponible) {
+                            btnDisp.className = "px-4 py-2 rounded-full bg-green-50 text-green-700 font-bold text-[13px] flex items-center gap-2 transition-all";
+                            dotDisp.className = "w-2 h-2 rounded-full bg-green-500";
+                            btnOcup.className = "px-4 py-2 rounded-full text-gray-500 hover:bg-gray-50 font-medium text-[13px] flex items-center gap-2 transition-all";
+                            dotOcup.className = "w-2 h-2 rounded-full bg-gray-300";
+                            if(indicator) indicator.className = "absolute bottom-1 right-2 w-5 h-5 bg-green-500 border-[3px] border-white rounded-full z-10";
+                        } else {
+                            btnDisp.className = "px-4 py-2 rounded-full text-gray-500 hover:bg-gray-50 font-medium text-[13px] flex items-center gap-2 transition-all";
+                            dotDisp.className = "w-2 h-2 rounded-full bg-gray-300";
+                            btnOcup.className = "px-4 py-2 rounded-full bg-red-50 text-red-700 font-bold text-[13px] flex items-center gap-2 transition-all";
+                            dotOcup.className = "w-2 h-2 rounded-full bg-red-500";
+                            if(indicator) indicator.className = "absolute bottom-1 right-2 w-5 h-5 bg-red-500 border-[3px] border-white rounded-full z-10";
+                        }
+                    }
+                    if (ubicacion !== null && disponible === null) {
+                        const btn = document.querySelector('button[onclick="actualizarUbicacion()"]');
+                        if (btn) {
+                            const originalHTML = btn.innerHTML;
+                            btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span> Guardado';
+                            btn.classList.add('bg-green-50', 'text-green-600', 'border-green-200');
+                            setTimeout(() => {
+                                btn.innerHTML = originalHTML;
+                                btn.classList.remove('bg-green-50', 'text-green-600', 'border-green-200');
+                            }, 2000);
+                        }
+                    }
                 } else {
                     alert("Error al actualizar: " + data.error);
                 }
