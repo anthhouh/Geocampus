@@ -145,9 +145,6 @@ LOGIN_URL = 'horarios:login'
 LOGIN_REDIRECT_URL = 'horarios:index'
 LOGOUT_REDIRECT_URL = 'horarios:login'
 
-# Configuración de Cloudinary para Media (Fotos, PDFs, etc.)
-if 'CLOUDINARY_URL' in os.environ:
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-elif not DEBUG:
-    # En producción sin Cloudinary configurado, evitar escritura en disco (read-only en Vercel)
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# Cloudinary para Media (Fotos, PDFs, etc.) - siempre activo
+# Requiere CLOUDINARY_URL en las variables de entorno (.env local o Vercel)
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
