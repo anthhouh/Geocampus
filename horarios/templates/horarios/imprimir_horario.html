@@ -1,4 +1,5 @@
 {% load static %}
+{% load horarios_tags %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -325,6 +326,7 @@
                                     <td>
                                         {% if celda %}
                                             <div class="block" style="background-color:{{ celda.color_bg }};border:1px solid {{ celda.color_border }};color:{{ celda.color_text }};">
+                                                <span class="material-symbols-outlined" style="font-size:0.75rem;display:block;line-height:1;margin-bottom:1px;opacity:0.85;">{{ celda.horario.asignatura.nombre|subject_icon }}</span>
                                                 <strong>{{ celda.horario.asignatura.nombre }}</strong>
                                                 <small>{{ celda.horario.curso.nombre }} "{{ celda.horario.paralelo.identificador }}"</small>
                                             </div>

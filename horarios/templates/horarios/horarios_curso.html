@@ -1,4 +1,5 @@
 {% extends 'base_app.html' %}
+{% load horarios_tags %}
 
 {% block title %}Horarios de Cursos - La Dolorosa{% endblock %}
 
@@ -83,9 +84,10 @@
                                     grid-column: {{ item.grid_col }};
                                     grid-row: {{ item.grid_row_start }} / {{ item.grid_row_end }};
                                     background-color: {{ item.color_bg }};
-                                    border: 2px solid {{ item.color_border }};
+                                    border: 1px solid {{ item.color_border }};
                                     color: {{ item.color_text }};
                                 ">
+                                    <span class="material-symbols-outlined" style="font-size:0.9rem; display:block; line-height:1; opacity:0.85; margin-bottom:1px;">{{ item.horario.asignatura.nombre|subject_icon }}</span>
                                     <strong style="font-size:0.78rem; display:block; line-height:1.2;">{{ item.horario.asignatura.nombre }}</strong>
                                     <small style="opacity:0.85; font-size:0.68rem;">{{ item.horario.docente.usuario.get_full_name|default:item.horario.docente.usuario.username }}</small>
                                 </div>
