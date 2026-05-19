@@ -146,25 +146,29 @@ LOGIN_REDIRECT_URL = 'horarios:index'
 LOGOUT_REDIRECT_URL = 'horarios:login'
 
 # ── Cloudinary (Media Storage) ─────────────────────────────────────────────
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
-
-_cloudinary_url = os.environ.get('CLOUDINARY_URL', '')
-if _cloudinary_url:
-    cloudinary.config(from_url=True)
+# Parsear CLOUDINARY_URL manualmente: cloudinary://api_key:api_secret@cloud_name
+from urllib.parse import urlparse as _urlparse
+_cld_raw = os.environ.get('CLOUDINARY_URL', '')
+if _cld_raw:
+    _cld = _urlparse(_cld_raw)
+    _cloud_name  = _cld.hostname  or ''
+    _api_key     = _cld.username  or ''
+    _api_secret  = _cld.password  or ''
 else:
-    # Fallback: credenciales individuales si por alguna razon la URL no llega
-    cloudinary.config(
-        cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
-        api_key=os.environ.get('CLOUDINARY_API_KEY', ''),
-        api_secret=os.environ.get('CLOUDINARY_API_SECRET', ''),
-    )
+    _cloud_name = _api_key = _api_secret = ''
+
+import cloudinary
+cloudinary.config(
+    cloud_name = _cloud_name,
+    api_key    = _api_key,
+    api_secret = _api_secret,
+    secure     = True,
+)
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': cloudinary.config().cloud_name or '',
-    'API_KEY':    cloudinary.config().api_key    or '',
-    'API_SECRET': cloudinary.config().api_secret or '',
+    'CLOUD_NAME': _cloud_name,
+    'API_KEY':    _api_key,
+    'API_SECRET': _api_secret,
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
