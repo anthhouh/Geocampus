@@ -181,7 +181,10 @@
         /* Block */
         .block {
             border-radius: 4px; padding: 3px 4px; margin: 1px;
-            display: flex; flex-direction: column; align-items: center; gap: 0;
+            display: flex; flex-direction: row; align-items: center; gap: 6px; text-align: left; height: 100%;
+        }
+        .block-content {
+            display: flex; flex-direction: column; flex: 1; justify-content: center;
         }
         .block strong { font-size: 0.65rem; font-weight: 700; display: block; line-height: 1.2; }
         .block small   { font-size: 0.55rem; font-weight: 500; opacity: 0.85; }
@@ -326,9 +329,11 @@
                                     <td>
                                         {% if celda %}
                                             <div class="block" style="background-color:{{ celda.color_bg }};border:1px solid {{ celda.color_border }};color:{{ celda.color_text }};">
-                                                <span class="material-symbols-outlined" style="font-size:0.75rem;display:block;line-height:1;margin-bottom:1px;opacity:0.85;">{{ celda.horario.asignatura.nombre|subject_icon }}</span>
-                                                <strong>{{ celda.horario.asignatura.nombre }}</strong>
-                                                <small>{{ celda.horario.curso.nombre }} "{{ celda.horario.paralelo.identificador }}"</small>
+                                                <span class="material-symbols-outlined" style="font-size:1.5rem;opacity:0.85;flex-shrink:0;">{{ celda.horario.asignatura.nombre|subject_icon }}</span>
+                                                <div class="block-content">
+                                                    <strong>{{ celda.horario.asignatura.nombre }}</strong>
+                                                    <small>{{ celda.horario.curso.nombre }} "{{ celda.horario.paralelo.identificador }}"</small>
+                                                </div>
                                             </div>
                                         {% else %}
                                             <span class="empty-cell">—</span>

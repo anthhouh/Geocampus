@@ -87,9 +87,13 @@
                                     border: 1px solid {{ item.color_border }};
                                     color: {{ item.color_text }};
                                 ">
-                                    <span class="material-symbols-outlined" style="font-size:0.9rem; display:block; line-height:1; opacity:0.85; margin-bottom:1px;">{{ item.horario.asignatura.nombre|subject_icon }}</span>
-                                    <strong style="font-size:0.78rem; display:block; line-height:1.2;">{{ item.horario.asignatura.nombre }}</strong>
-                                    <small style="opacity:0.85; font-size:0.68rem;">{{ item.horario.docente.usuario.get_full_name|default:item.horario.docente.usuario.username }}</small>
+                                    <div class="flex items-center gap-1.5 text-left h-full">
+                                        <span class="material-symbols-outlined shrink-0" style="font-size:1.6rem; opacity:0.85;">{{ item.horario.asignatura.nombre|subject_icon }}</span>
+                                        <div>
+                                            <strong style="font-size:0.78rem; display:block; line-height:1.2;">{{ item.horario.asignatura.nombre }}</strong>
+                                            <small style="opacity:0.85; font-size:0.68rem; display:block; margin-top:2px;">{{ item.horario.docente.usuario.get_full_name|default:item.horario.docente.usuario.username }}</small>
+                                        </div>
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>

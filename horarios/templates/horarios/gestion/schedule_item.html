@@ -7,15 +7,19 @@
     color: {{ item.color_text }};
     z-index: 10;
 ">
-    <span class="material-symbols-outlined" style="font-size:0.9rem; display:block; line-height:1; opacity:0.85; margin-bottom:1px;">{{ item.horario.asignatura.nombre|subject_icon }}</span>
-    <strong style="font-size:0.78rem; display:block; line-height:1.2;">{{ item.horario.asignatura.nombre }}</strong>
-    <small style="opacity:0.85; font-size:0.68rem; display:block; margin-top:2px;">
-        {% if es_docentes %}
-            {{ item.horario.curso.nombre }} "{{ item.horario.paralelo.identificador }}"
-        {% else %}
-            {{ item.horario.docente.usuario.get_full_name|default:item.horario.docente.usuario.username }}
-        {% endif %}
-    </small>
+    <div class="flex items-center gap-1.5 text-left h-full">
+        <span class="material-symbols-outlined shrink-0" style="font-size:1.6rem; opacity:0.85;">{{ item.horario.asignatura.nombre|subject_icon }}</span>
+        <div>
+            <strong style="font-size:0.78rem; display:block; line-height:1.2;">{{ item.horario.asignatura.nombre }}</strong>
+            <small style="opacity:0.85; font-size:0.68rem; display:block; margin-top:2px;">
+                {% if es_docentes %}
+                    {{ item.horario.curso.nombre }} "{{ item.horario.paralelo.identificador }}"
+                {% else %}
+                    {{ item.horario.docente.usuario.get_full_name|default:item.horario.docente.usuario.username }}
+                {% endif %}
+            </small>
+        </div>
+    </div>
     
     <!-- Hover Actions (Edit/Delete) -->
     <div class="absolute inset-0 bg-black/60 backdrop-blur-[1px] opacity-0 group-hover/item:opacity-100 flex items-center justify-center gap-2 transition-all duration-200 rounded-sm pointer-events-none group-hover/item:pointer-events-auto">
