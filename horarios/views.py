@@ -610,8 +610,8 @@ def api_guardar_horario(request):
             h.save()
             msg = "Horario actualizado exitosamente."
         else:
-            # Determinamos si el form vino de la pestaña docente o clase guiándonos por el Referer o usamos un default
-            tipo = 'docente' if 'docente' in request.META.get('HTTP_REFERER', '') else 'clase'
+            # Determinamos si el form vino de la pestaña docente o clase
+            tipo = 'docente' if request.POST.get('es_docentes') == '1' else 'clase'
             h = Horario.objects.create(
                 dia=dia,
                 hora_inicio=hora_inicio,
@@ -652,7 +652,7 @@ def api_guardar_horario(request):
             'color_border': colors['border']
         }
         
-        es_docentes = 'docente' in request.META.get('HTTP_REFERER', '')
+        es_docentes = request.POST.get('es_docentes') == '1'
         html = render_to_string('horarios/gestion/schedule_item.html', {'item': item_data, 'es_docentes': es_docentes})
         
         if es_docentes:
