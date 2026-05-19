@@ -4,19 +4,156 @@
 {% block title %}Horarios de Cursos - La Dolorosa{% endblock %}
 
 {% block content %}
-<div class="max-w-container-max mx-auto space-y-lg">
+<style>
+    .mockup-card {
+        background-color: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    }
+    .mockup-header-card {
+        background: transparent;
+    }
+    .mockup-btn-buscar {
+        background-color: #1d4ed8;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 10px 24px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background-color 0.2s;
+    }
+    .mockup-btn-buscar:hover {
+        background-color: #1e40af;
+    }
+    .mockup-input {
+        background-color: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 10px 12px;
+        width: 100%;
+        font-size: 0.9rem;
+        color: #334155;
+    }
+    .mockup-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 1px #3b82f6;
+    }
 
-    <!-- Header & Filter Form -->
-    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm">
-        <h2 class="font-h2 text-h2 text-on-surface mb-md flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">calendar_month</span>
-            Consultar Horarios de Clases
-        </h2>
+    .schedule-grid-mockup {
+        display: grid;
+        grid-template-columns: 70px repeat(5, minmax(140px, 1fr));
+        background-color: #fff;
+        border-left: 1px solid #e2e8f0;
+        border-top: 1px solid #e2e8f0;
+        border-radius: 12px;
+    }
+    .schedule-grid-mockup > div {
+        border-right: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .day-header {
+        background-color: #f8fafc;
+        padding: 12px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #0f172a;
+    }
+    .mockup-time-col {
+        background-color: #ffffff;
+        text-align: center;
+        padding: 10px 4px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .mockup-time-num {
+        font-weight: 800;
+        color: #1e293b;
+        font-size: 0.9rem;
+        margin-bottom: 2px;
+    }
+    .mockup-time-range {
+        font-size: 0.7rem;
+        color: #64748b;
+        line-height: 1.2;
+    }
+    .schedule-recreo-row {
+        grid-column: 2 / -1;
+        background-color: #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #475569;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.05em;
+    }
+    .schedule-item-wrapper {
+        padding: 6px;
+    }
+    .mockup-block {
+        border-radius: 8px;
+        padding: 10px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .mockup-block-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+    }
+    .mockup-block-icon-wrapper {
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .mockup-block-icon {
+        font-size: 1.2rem;
+    }
+    .mockup-block-title {
+        font-weight: 700;
+        font-size: 0.85rem;
+        line-height: 1.2;
+    }
+    .mockup-block-subtitle {
+        font-size: 0.75rem;
+        opacity: 0.85;
+        padding-left: 36px;
+    }
+</style>
 
-        <form method="get" action="{% url 'horarios:horarios_curso' %}" class="grid grid-cols-1 md:grid-cols-3 gap-md items-end">
-            <div class="flex flex-col gap-xs">
-                <label class="font-label-md text-label-md text-on-surface" for="curso">Filtrar por Curso</label>
-                <select name="curso" id="curso" class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+<div class="max-w-[1200px] mx-auto p-4 md:p-6 space-y-6">
+
+    <!-- Header Banner -->
+    <div class="mockup-header-card p-6 flex items-center gap-4">
+        <span class="material-symbols-outlined text-[#1e40af]" style="font-size: 2.5rem;">calendar_month</span>
+        <div>
+            <h1 class="text-2xl font-bold text-[#1e3a8a] mb-1">Consultar Horarios de Clases</h1>
+            <p class="text-[#475569] text-sm">Selecciona las opciones para visualizar el horario.</p>
+        </div>
+    </div>
+
+    <!-- Filter Form -->
+    <div class="mockup-card p-6">
+        <form method="get" action="{% url 'horarios:horarios_curso' %}" class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
+            <div class="md:col-span-5 flex flex-col gap-2">
+                <label class="text-sm font-semibold text-[#1e293b]" for="curso">Filtrar por Curso</label>
+                <select name="curso" id="curso" class="mockup-input">
                     <option value="">Todos los cursos</option>
                     {% for c in cursos %}
                         <option value="{{ c.id }}" {% if request.GET.curso == c.id|stringformat:"s" %}selected{% endif %}>{{ c.nombre }}</option>
@@ -24,9 +161,9 @@
                 </select>
             </div>
 
-            <div class="flex flex-col gap-xs">
-                <label class="font-label-md text-label-md text-on-surface" for="paralelo">Filtrar por Paralelo</label>
-                <select name="paralelo" id="paralelo" class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+            <div class="md:col-span-4 flex flex-col gap-2">
+                <label class="text-sm font-semibold text-[#1e293b]" for="paralelo">Filtrar por Paralelo</label>
+                <select name="paralelo" id="paralelo" class="mockup-input">
                     <option value="">Todos los paralelos</option>
                     {% for ident in identificadores %}
                         <option value="{{ ident }}" {% if request.GET.paralelo == ident %}selected{% endif %}>Paralelo "{{ ident }}"</option>
@@ -34,91 +171,114 @@
                 </select>
             </div>
 
-            <button type="submit" class="w-full py-2 px-lg bg-primary text-on-primary rounded-lg font-button text-button shadow-sm hover:shadow-md hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] transition-all duration-200">
-                Buscar
-            </button>
+            <div class="md:col-span-3">
+                <button type="submit" class="mockup-btn-buscar w-full h-[42px]">
+                    <span class="material-symbols-outlined" style="font-size: 1.3rem;">search</span>
+                    Buscar
+                </button>
+            </div>
         </form>
     </div>
 
-    <!-- Schedule Grid -->
+    <!-- Schedule Display -->
     {% if request.GET.curso or request.GET.paralelo %}
         {% if grupos %}
-            <div class="space-y-md mt-lg">
+            <div class="space-y-8">
                 {% for grupo in grupos %}
-                <details class="group/accordion bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden" open>
-                    <summary class="p-lg font-h3 text-h3 text-on-surface cursor-pointer flex items-center justify-between list-none">
-                        <div class="flex items-center gap-sm">
-                            <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">
-                                {{ grupo.titulo|first|upper }}
+                <details class="mockup-card overflow-hidden group/accordion" open>
+                    <summary class="p-5 cursor-pointer flex items-center justify-between list-none border-b border-[#e2e8f0] bg-white hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-[#3b82f6] text-white flex items-center justify-center shadow-sm">
+                                <span class="material-symbols-outlined" style="font-size: 1.4rem;">visibility</span>
                             </div>
-                            <span>Horario de {{ grupo.titulo }}</span>
+                            <span class="font-bold text-[#1e293b] text-xl">Horario de {{ grupo.titulo }}</span>
                         </div>
-                        <span class="material-symbols-outlined transition-transform group-open/accordion:rotate-180">expand_more</span>
+                        <span class="material-symbols-outlined text-[#64748b] bg-slate-100 p-1 rounded-full transition-transform group-open/accordion:rotate-180">expand_more</span>
                     </summary>
                     
-                    <div class="p-lg border-t border-outline-variant overflow-x-auto bg-surface-container-low/30">
-                        <div class="schedule-grid">
-                            <div style="grid-column: 1; grid-row: 1;"></div>
-                            <div class="day-header" style="grid-column: 2; grid-row: 1;">Lu</div>
-                            <div class="day-header" style="grid-column: 3; grid-row: 1;">Ma</div>
-                            <div class="day-header" style="grid-column: 4; grid-row: 1;">Mi</div>
-                            <div class="day-header" style="grid-column: 5; grid-row: 1;">Ju</div>
-                            <div class="day-header" style="grid-column: 6; grid-row: 1;">Vi</div>
+                    <div class="overflow-x-auto p-6 bg-white">
+                        <div class="rounded-xl overflow-hidden" style="min-width: 800px; border-radius: 12px;">
+                            <div class="schedule-grid-mockup" style="border-radius: 12px; overflow: hidden;">
+                                <div style="grid-column: 1; grid-row: 1; background: #fff;"></div>
+                                <div class="day-header" style="grid-column: 2; grid-row: 1;">Lu</div>
+                                <div class="day-header" style="grid-column: 3; grid-row: 1;">Ma</div>
+                                <div class="day-header" style="grid-column: 4; grid-row: 1;">Mi</div>
+                                <div class="day-header" style="grid-column: 5; grid-row: 1;">Ju</div>
+                                <div class="day-header" style="grid-column: 6; grid-row: 1;">Vi</div>
 
-                            <div class="time-slot" style="grid-column: 1; grid-row: 2;"><strong>1</strong><span>07:00</span><span>07:45</span></div>
-                            <div class="time-slot" style="grid-column: 1; grid-row: 3;"><strong>2</strong><span>07:45</span><span>08:30</span></div>
-                            <div class="time-slot" style="grid-column: 1; grid-row: 4;"><strong>3</strong><span>08:30</span><span>09:15</span></div>
-                            <div class="time-slot" style="grid-column: 1; grid-row: 5;"><strong>4</strong><span>09:15</span><span>10:00</span></div>
+                                <!-- Empties for the grid lines -->
+                                {% for row in "234578901" %}
+                                    <div style="grid-column: 2; grid-row: {{ forloop.counter|add:1 }};"></div>
+                                    <div style="grid-column: 3; grid-row: {{ forloop.counter|add:1 }};"></div>
+                                    <div style="grid-column: 4; grid-row: {{ forloop.counter|add:1 }};"></div>
+                                    <div style="grid-column: 5; grid-row: {{ forloop.counter|add:1 }};"></div>
+                                    <div style="grid-column: 6; grid-row: {{ forloop.counter|add:1 }};"></div>
+                                {% endfor %}
 
-                            <div class="time-slot" style="grid-column: 1; grid-row: 6;"><strong>R</strong><span>10:00</span><span>10:25</span></div>
-                            <div class="schedule-recreo">RECREO</div>
+                                <div class="mockup-time-col" style="grid-column: 1; grid-row: 2;"><span class="mockup-time-num">1</span><span class="mockup-time-range">07:00<br>07:45</span></div>
+                                <div class="mockup-time-col" style="grid-column: 1; grid-row: 3;"><span class="mockup-time-num">2</span><span class="mockup-time-range">07:45<br>08:30</span></div>
+                                <div class="mockup-time-col" style="grid-column: 1; grid-row: 4;"><span class="mockup-time-num">3</span><span class="mockup-time-range">08:30<br>09:15</span></div>
+                                <div class="mockup-time-col" style="grid-column: 1; grid-row: 5;"><span class="mockup-time-num">4</span><span class="mockup-time-range">09:15<br>10:00</span></div>
 
-                            <div class="time-slot" style="grid-column: 1; grid-row: 7;"><strong>5</strong><span>10:25</span><span>11:05</span></div>
-                            <div class="time-slot" style="grid-column: 1; grid-row: 8;"><strong>6</strong><span>11:05</span><span>11:45</span></div>
-                            <div class="time-slot" style="grid-column: 1; grid-row: 9;"><strong>7</strong><span>11:45</span><span>12:25</span></div>
-                            <div class="time-slot" style="grid-column: 1; grid-row: 10;"><strong>8</strong><span>12:25</span><span>13:05</span></div>
-                            <div class="time-slot" style="grid-column: 1; grid-row: 11;"><strong>9</strong><span>13:05</span><span>13:45</span></div>
+                                <div class="mockup-time-col" style="grid-column: 1; grid-row: 6;"><span class="mockup-time-num">R</span><span class="mockup-time-range">10:00<br>10:25</span></div>
+                                <div class="schedule-recreo-row" style="grid-row: 6;">
+                                    <span class="material-symbols-outlined">local_cafe</span>
+                                    RECREO
+                                </div>
 
-                            {% for item in grupo.horarios_grid %}
-                                <div class="schedule-item" style="
-                                    grid-column: {{ item.grid_col }};
-                                    grid-row: {{ item.grid_row_start }} / {{ item.grid_row_end }};
-                                    background-color: {{ item.color_bg }};
-                                    border: 1px solid {{ item.color_border }};
-                                    color: {{ item.color_text }};
-                                ">
-                                    <div class="flex items-center gap-1.5 text-left h-full">
-                                        <span class="material-symbols-outlined shrink-0" style="font-size:1.6rem; opacity:0.85;">{{ item.horario.asignatura.nombre|subject_icon }}</span>
-                                        <div>
-                                            <strong style="font-size:0.78rem; display:block; line-height:1.2;">{{ item.horario.asignatura.nombre }}</strong>
-                                            <small style="opacity:0.85; font-size:0.68rem; display:block; margin-top:2px;">{{ item.horario.docente.usuario.get_full_name|default:item.horario.docente.usuario.username }}</small>
+                                <div class="mockup-time-col" style="grid-column: 1; grid-row: 7;"><span class="mockup-time-num">5</span><span class="mockup-time-range">10:25<br>11:05</span></div>
+                                <div class="mockup-time-col" style="grid-column: 1; grid-row: 8;"><span class="mockup-time-num">6</span><span class="mockup-time-range">11:05<br>11:45</span></div>
+                                <div class="mockup-time-col" style="grid-column: 1; grid-row: 9;"><span class="mockup-time-num">7</span><span class="mockup-time-range">11:45<br>12:25</span></div>
+                                <div class="mockup-time-col" style="grid-column: 1; grid-row: 10;"><span class="mockup-time-num">8</span><span class="mockup-time-range">12:25<br>13:05</span></div>
+                                <div class="mockup-time-col" style="grid-column: 1; grid-row: 11;"><span class="mockup-time-num">9</span><span class="mockup-time-range">13:05<br>13:45</span></div>
+
+                                <!-- Schedule Items -->
+                                {% for item in grupo.horarios_grid %}
+                                    <div class="schedule-item-wrapper" style="grid-column: {{ item.grid_col }}; grid-row: {{ item.grid_row_start }} / {{ item.grid_row_end }};">
+                                        <div class="mockup-block shadow-sm" style="background-color: {{ item.color_bg|default:'#eff6ff' }}; border: 1px solid {{ item.color_border|default:'#bfdbfe' }}; color: {{ item.color_text|default:'#1e3a8a' }};">
+                                            <div class="mockup-block-header">
+                                                <div class="mockup-block-icon-wrapper" style="color: {{ item.color_text|default:'#1e3a8a' }};">
+                                                    <span class="material-symbols-outlined mockup-block-icon">{{ item.horario.asignatura.nombre|subject_icon }}</span>
+                                                </div>
+                                                <div class="mockup-block-title">{{ item.horario.asignatura.nombre }}</div>
+                                            </div>
+                                            <div class="mockup-block-subtitle">
+                                                {{ item.horario.docente.usuario.get_full_name|default:item.horario.docente.usuario.username }}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </details>
                 {% endfor %}
             </div>
-            
-            <div class="mt-md px-lg py-sm text-right text-on-surface-variant font-body-sm text-body-sm">
-                {{ grupos|length }} horario{{ grupos|length|pluralize }} encontrado{{ grupos|length|pluralize }}
-            </div>
         {% else %}
             <!-- Empty state -->
-            <div class="flex flex-col items-center justify-center py-16 text-on-surface-variant bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm mt-lg">
+            <div class="mockup-card flex flex-col items-center justify-center py-16 text-[#64748b] mt-6">
                 <span class="material-symbols-outlined text-[56px] mb-3 opacity-40">search_off</span>
-                <p class="font-body-md text-body-md">No se encontraron horarios para los filtros seleccionados.</p>
-                <p class="font-body-sm text-body-sm opacity-60 mt-1">Prueba cambiando el curso o el paralelo.</p>
+                <p class="font-semibold text-lg text-[#334155]">No se encontraron horarios para los filtros seleccionados.</p>
+                <p class="text-sm mt-1">Prueba cambiando el curso o el paralelo.</p>
             </div>
         {% endif %}
     {% else %}
-    <div class="flex flex-col items-center justify-center py-16 text-on-surface-variant bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm mt-lg">
+    <div class="mockup-card flex flex-col items-center justify-center py-16 text-[#64748b] mt-6">
         <span class="material-symbols-outlined text-[56px] mb-3 opacity-40">event_note</span>
-        <p class="font-body-md text-body-md">Selecciona un curso y/o paralelo para visualizar su horario.</p>
+        <p class="font-semibold text-lg text-[#334155]">Selecciona un curso y/o paralelo para visualizar su horario.</p>
     </div>
     {% endif %}
+
+    <!-- Consejo Bottom Card -->
+    <div class="mockup-card p-6 mt-8 bg-gradient-to-r from-blue-50 to-white flex items-center gap-4 relative overflow-hidden">
+        <div class="w-12 h-12 rounded-full bg-[#1d4ed8] text-white flex items-center justify-center shrink-0 z-10">
+            <span class="material-symbols-outlined" style="font-size: 1.5rem;">lightbulb</span>
+        </div>
+        <div class="z-10">
+            <h3 class="font-bold text-[#1e293b] text-base mb-1">Consejo</h3>
+            <p class="text-sm text-[#475569]">Puedes cambiar los filtros para consultar otros cursos o paralelos.</p>
+        </div>
+    </div>
+
 </div>
 {% endblock %}
-

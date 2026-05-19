@@ -114,18 +114,19 @@
         .info-bar {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
-            border: 1px solid #c8d3e6;
-            border-radius: 8px;
-            padding: 10px 15px;
+            border-top: 1px solid #c8d3e6;
+            border-bottom: 1px solid #c8d3e6;
+            padding: 10px 0;
             margin-bottom: 15px;
-            gap: 10px;
         }
         .info-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            border-right: 1px dashed #c8d3e6;
+            border-right: 1px solid #c8d3e6;
+            padding: 0 15px;
         }
+        .info-item:first-child { padding-left: 5px; }
         .info-item:last-child {
             border-right: none;
         }
@@ -185,10 +186,10 @@
             background: #fff;
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            padding-right: 20px;
-            gap: 10px;
+            justify-content: center;
+            position: relative;
             height: 100%;
+            padding: 0 5px;
         }
 
         .periodo-num {
@@ -202,9 +203,16 @@
             color: #5a7ab0;
             display: block;
             font-weight: 500;
-            margin-top: 1px;
+            margin-top: 2px;
+            line-height: 1.2;
         }
-        .hora-icon { color: #1a4a9e; font-size: 16px; opacity: 0.8; }
+        .hora-icon { 
+            color: #1a4a9e; 
+            font-size: 16px; 
+            opacity: 0.8; 
+            position: absolute;
+            left: 8px;
+        }
 
         /* RECREO */
         tr.recreo-row td { background: #eef2f6; border-top: 1px solid #c8d3e6; border-bottom: 1px solid #c8d3e6; }
@@ -223,7 +231,7 @@
         }
 
         /* Empty */
-        td.empty-cell { color: #9ab0d6; font-size: 1.2rem; font-weight: 300; }
+        td.empty-cell { color: #0d2b5e; font-size: 1.2rem; font-weight: 700; }
 
         /* Block */
         .block {
@@ -413,7 +421,7 @@
                                         <span class="material-symbols-outlined hora-icon">schedule</span>
                                         <div style="text-align: center;">
                                             <span class="periodo-num">R</span>
-                                            <span class="periodo-horas">10:00 - 10:25</span>
+                                            <span class="periodo-horas">10:00 -<br>10:25</span>
                                         </div>
                                     </div>
                                 </td>
@@ -431,7 +439,7 @@
                                         <span class="material-symbols-outlined hora-icon">schedule</span>
                                         <div style="text-align: center;">
                                             <span class="periodo-num">{{ fila.periodo.num }}</span>
-                                            <span class="periodo-horas">{{ fila.periodo.inicio }} - {{ fila.periodo.fin }}</span>
+                                            <span class="periodo-horas">{{ fila.periodo.inicio }} -<br>{{ fila.periodo.fin }}</span>
                                         </div>
                                     </div>
                                 </td>
