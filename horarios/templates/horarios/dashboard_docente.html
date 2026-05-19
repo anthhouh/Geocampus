@@ -85,9 +85,9 @@
         </div>
 
         <!-- Schedule Grid -->
-        <div class="md:col-span-9 flex flex-col gap-6">
-            <div class="bg-white rounded-[1.5rem] border border-gray-100 overflow-hidden shadow-sm flex flex-col h-full">
-                <div class="p-6 flex justify-between items-center">
+        <div class="md:col-span-9 flex flex-col gap-6" id="print-section">
+            <div class="bg-white rounded-[1.5rem] border border-gray-100 overflow-hidden shadow-sm flex flex-col h-full print-container">
+                <div class="p-6 flex justify-between items-center print-header">
                     <h3 class="font-bold text-xl text-[#0B1A40] flex items-center gap-2">
                         <span class="material-symbols-outlined text-blue-600 text-[26px]">calendar_month</span>
                         Mi Horario de Clases
@@ -265,4 +265,39 @@
             });
     }
 </script>
+<style>
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #print-section, #print-section * {
+        visibility: visible;
+    }
+    #print-section {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none !important;
+        border: none !important;
+    }
+    /* Ocultar elementos interactivos en la impresión */
+    #print-section button, 
+    .empty-slot, 
+    .dash-icon, 
+    .plus-icon {
+        display: none !important;
+    }
+    .print-header {
+        padding-top: 0 !important;
+        padding-bottom: 1rem !important;
+    }
+    /* Asegurarse que el grid se vea bien en papel */
+    .schedule-grid {
+        background: white;
+    }
+}
+</style>
 {% endblock %}
