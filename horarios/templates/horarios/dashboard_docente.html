@@ -266,6 +266,10 @@
     }
 </script>
 <style>
+@page {
+    size: landscape;
+    margin: 1cm;
+}
 @media print {
     body * {
         visibility: hidden;
@@ -282,6 +286,11 @@
         padding: 0;
         box-shadow: none !important;
         border: none !important;
+        overflow: visible !important;
+    }
+    /* Eliminar el scroll horizontal que recorta el contenido */
+    .overflow-x-auto, .print-container {
+        overflow: visible !important;
     }
     /* Ocultar elementos interactivos en la impresión */
     #print-section button, 
@@ -294,9 +303,11 @@
         padding-top: 0 !important;
         padding-bottom: 1rem !important;
     }
-    /* Asegurarse que el grid se vea bien en papel */
+    /* Asegurarse que el grid se expanda correctamente */
     .schedule-grid {
         background: white;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }
 </style>
