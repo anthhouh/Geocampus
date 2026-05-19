@@ -209,7 +209,7 @@ function cerrarModalHorario() {
 }
 function confirmarEliminar(id, materia) {
     document.getElementById('modal-materia').textContent = materia;
-    document.getElementById('form-eliminar').action = `/api/horarios/${id}/eliminar/`; // Updated to new API path that we will create
+    document.getElementById('form-eliminar').action = `/gestion/horarios/${id}/eliminar/`;
     document.getElementById('modal-eliminar').dataset.idEliminar = id;
     document.getElementById('modal-eliminar').classList.remove('hidden');
     document.getElementById('modal-eliminar').classList.add('flex');
