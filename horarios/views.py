@@ -260,11 +260,10 @@ def logout_view(request):
 @login_required
 def index(request):
     # Directorio de Docentes y Disponibilidad
-    # Excluir admins/superusuarios del directorio (solo mostrar docentes reales)
-    docentes = Docente.objects.filter(
-        usuario__rol='docente'
-    ).exclude(
-        usuario__is_superuser=True
+    # Mostrar todos los perfiles docentes (incluyendo admins que dan clases),
+    # excepto la cuenta base del sistema 'admin'
+    docentes = Docente.objects.exclude(
+        usuario__username='admin'
     ).order_by('usuario__first_name')
     # Excluir el propio perfil si el usuario autenticado es docente
     if request.user.is_docente():
