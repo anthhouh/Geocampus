@@ -260,8 +260,13 @@ def logout_view(request):
 @login_required
 def index(request):
     # Directorio de Docentes y Disponibilidad
-    # Excluir el propio perfil del usuario autenticado (si es docente)
-    docentes = Docente.objects.all().order_by('usuario__first_name')
+    # Excluir admins/superusuarios del directorio (solo mostrar docentes reales)
+    docentes = Docente.objects.filter(
+        usuario__rol='docente'
+    ).exclude(
+        usuario__is_superuser=True
+    ).order_by('usuario__first_name')
+    # Excluir el propio perfil si el usuario autenticado es docente
     if request.user.is_docente():
         docentes = docentes.exclude(usuario=request.user)
     context = {
@@ -341,7 +346,9 @@ def horarios_curso(request):
         if paralelo_ident:
             paralelos = paralelos.filter(identificador=paralelo_ident)
             
-        horarios_qs = Horario.objects.filter(tipo='clase')
+        # Mostrar todos los horarios (docente y clase) en la vista del curso,
+        # ya que la validación de choques previene duplicados.
+        horarios_qs = Horario.objects.select_related('docente__usuario', 'asignatura')
         
         for p in paralelos:
             hs = horarios_qs.filter(curso=p.curso, paralelo=p).order_by('dia', 'hora_inicio')
