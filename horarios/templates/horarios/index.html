@@ -6,11 +6,11 @@
 <div class="max-w-container-max mx-auto space-y-lg">
 
     <!-- Header -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
-        <div>
-            <h2 class="font-h2 text-h2 text-on-surface mb-xs">Directorio de Docentes</h2>
-            <div class="w-12 h-1 bg-primary rounded mb-sm"></div>
-            <p class="font-body-md text-body-md text-on-surface-variant">Consulta la disponibilidad y ubicación de tus docentes en tiempo real.</p>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md relative">
+        <div class="relative z-10">
+            <h2 class="font-extrabold text-4xl text-[#0B1A40] mb-3 tracking-tight">Directorio de Docentes</h2>
+            <div class="w-16 h-1.5 bg-[#EF4444] rounded-full mb-4"></div>
+            <p class="text-gray-500 text-sm md:text-base max-w-md">Consulta la disponibilidad y ubicación de tus docentes en tiempo real.</p>
         </div>
         <!-- Ilustración -->
         <div class="hidden md:flex items-center justify-center">
@@ -59,24 +59,24 @@
     </div>
 
     <!-- Search & Filters -->
-    <div class="flex flex-col sm:flex-row gap-md items-stretch sm:items-center">
+    <div class="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center mt-6">
         <div class="relative flex-1">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-[24px]">search</span>
             <input type="text" id="buscar-docente" placeholder="Buscar docente por nombre o área..."
-                class="w-full pl-10 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all font-body-md text-body-md">
+                class="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl shadow-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-medium text-sm">
         </div>
         <div class="relative">
             <button id="btn-filtro" onclick="toggleFiltro()"
-                class="flex items-center gap-2 px-5 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl text-on-surface hover:bg-surface-container-low transition-all font-label-md text-label-md w-full sm:w-auto justify-center">
-                <span class="material-symbols-outlined text-[18px]">filter_list</span>
+                class="flex items-center gap-2 px-6 py-3.5 bg-white border border-gray-200 rounded-2xl text-[#0B1A40] shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-all font-bold text-sm w-full sm:w-auto justify-center">
+                <span class="material-symbols-outlined text-[#3B82F6] text-[20px]">filter_list</span>
                 Filtros
-                <span class="material-symbols-outlined text-[16px] transition-transform duration-200" id="filtro-chevron">expand_more</span>
+                <span class="material-symbols-outlined text-[18px] transition-transform duration-200 text-gray-400" id="filtro-chevron">expand_more</span>
             </button>
             <!-- Dropdown filtros -->
-            <div id="filtro-dropdown" class="hidden absolute right-0 top-full mt-2 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg z-20 min-w-[180px] p-sm">
-                <button onclick="filtrarDisponibilidad('todos')" class="w-full text-left px-md py-sm rounded-lg hover:bg-surface-container-low font-body-sm text-body-sm text-on-surface transition-colors">Todos</button>
-                <button onclick="filtrarDisponibilidad('disponible')" class="w-full text-left px-md py-sm rounded-lg hover:bg-surface-container-low font-body-sm text-body-sm text-on-surface transition-colors">Solo disponibles</button>
-                <button onclick="filtrarDisponibilidad('ocupado')" class="w-full text-left px-md py-sm rounded-lg hover:bg-surface-container-low font-body-sm text-body-sm text-on-surface transition-colors">Solo ocupados</button>
+            <div id="filtro-dropdown" class="hidden absolute right-0 top-full mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl z-20 min-w-[200px] p-2">
+                <button onclick="filtrarDisponibilidad('todos')" class="w-full text-left px-4 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 font-semibold text-sm text-gray-700 transition-colors">Todos</button>
+                <button onclick="filtrarDisponibilidad('disponible')" class="w-full text-left px-4 py-2.5 rounded-xl hover:bg-green-50 hover:text-green-600 font-semibold text-sm text-gray-700 transition-colors mt-1">Solo disponibles</button>
+                <button onclick="filtrarDisponibilidad('ocupado')" class="w-full text-left px-4 py-2.5 rounded-xl hover:bg-red-50 hover:text-red-600 font-semibold text-sm text-gray-700 transition-colors mt-1">Solo ocupados</button>
             </div>
         </div>
     </div>
@@ -88,78 +88,88 @@
            data-nombre="{{ docente.usuario.get_full_name|lower|default:docente.usuario.username|lower }}"
            data-especialidad="{{ docente.especialidad|lower|default:'docente' }}"
            data-disponible="{{ docente.disponible|yesno:'true,false' }}"
-           class="docente-card group relative bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden no-underline flex flex-col p-lg text-center items-center cursor-pointer">
+           class="docente-card group relative bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 overflow-hidden no-underline flex flex-col p-6 text-center items-center cursor-pointer">
 
-            <!-- Fondo decorativo de color -->
             {% if forloop.counter0|divisibleby:4 %}
-            <div class="absolute top-0 left-0 right-0 h-24 bg-[#EEF2FF] rounded-t-2xl -z-0"></div>
+                {% with c_main="#1D4ED8" c_bg="#EFF6FF" %}
             {% elif forloop.counter0|divisibleby:3 %}
-            <div class="absolute top-0 left-0 right-0 h-24 bg-[#F0FDF4] rounded-t-2xl -z-0"></div>
+                {% with c_main="#0D9488" c_bg="#F0FDF4" %}
             {% elif forloop.counter0|divisibleby:2 %}
-            <div class="absolute top-0 left-0 right-0 h-24 bg-[#FFF7ED] rounded-t-2xl -z-0"></div>
+                {% with c_main="#7C3AED" c_bg="#FAF5FF" %}
             {% else %}
-            <div class="absolute top-0 left-0 right-0 h-24 bg-[#F0F9FF] rounded-t-2xl -z-0"></div>
+                {% with c_main="#EF4444" c_bg="#FEF2F2" %}
             {% endif %}
 
+            <!-- Fondo decorativo wavy superior -->
+            <div class="absolute top-0 left-0 right-0 h-32 -z-0">
+                <svg viewBox="0 0 400 120" preserveAspectRatio="none" class="w-full h-full" style="color: {{ c_bg }};">
+                    <path d="M0,0 L400,0 L400,70 Q300,120 200,70 T0,70 Z" fill="currentColor"></path>
+                </svg>
+            </div>
+
             <!-- Badge disponibilidad -->
-            <div class="absolute top-3 right-3 z-10 flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold border
-                {% if docente.disponible %}bg-[#DCFCE7] text-[#166534] border-[#86EFAC]{% else %}bg-[#FEE2E2] text-[#991B1B] border-[#FCA5A5]{% endif %}">
-                <span class="w-1.5 h-1.5 rounded-full {% if docente.disponible %}bg-[#22C55E]{% else %}bg-[#EF4444]{% endif %}"></span>
+            <div class="absolute top-4 right-4 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white shadow-sm
+                {% if docente.disponible %}text-[#16A34A]{% else %}text-[#DC2626]{% endif %}">
+                <span class="w-2 h-2 rounded-full {% if docente.disponible %}bg-[#22C55E]{% else %}bg-[#EF4444]{% endif %}"></span>
                 {% if docente.disponible %}Disponible{% else %}Ocupado{% endif %}
             </div>
 
             <!-- Avatar -->
-            <div class="relative z-10 mt-4 mb-sm">
+            <div class="relative z-10 mt-6 mb-3">
                 {% if docente.foto %}
                 <img src="{{ docente.foto.url }}" alt="{{ docente.usuario.get_full_name }}"
-                     class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md group-hover:ring-4 group-hover:ring-primary/20 transition-all duration-200">
+                     class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md group-hover:scale-105 transition-transform duration-300">
                 {% else %}
-                <div class="w-20 h-20 rounded-full border-4 border-white shadow-md flex items-center justify-center text-3xl font-bold text-white group-hover:ring-4 group-hover:ring-primary/20 transition-all duration-200
-                    {% if forloop.counter0|divisibleby:4 %}bg-[#6366F1]
-                    {% elif forloop.counter0|divisibleby:3 %}bg-[#059669]
-                    {% elif forloop.counter0|divisibleby:2 %}bg-[#F59E0B]
-                    {% else %}bg-[#3B82F6]{% endif %}">
+                <div class="w-24 h-24 rounded-full border-4 border-white shadow-md flex items-center justify-center text-4xl font-bold text-white group-hover:scale-105 transition-transform duration-300"
+                     style="background-color: {{ c_main }};">
                     {{ docente.usuario.first_name|first|default:docente.usuario.username|first|upper }}
                 </div>
                 {% endif %}
             </div>
 
             <!-- Info -->
-            <h3 class="font-semibold text-base text-on-surface group-hover:text-primary transition-colors duration-200 z-10">
+            <h3 class="font-extrabold text-lg text-[#0B1A40] z-10">
                 {{ docente.usuario.get_full_name|default:docente.usuario.username }}
             </h3>
 
             <!-- Tag especialidad -->
-            <span class="mt-1 mb-sm px-3 py-0.5 rounded-full text-xs font-semibold z-10
-                {% if forloop.counter0|divisibleby:4 %}bg-[#EEF2FF] text-[#4338CA]
-                {% elif forloop.counter0|divisibleby:3 %}bg-[#ECFDF5] text-[#059669]
-                {% elif forloop.counter0|divisibleby:2 %}bg-[#FFF7ED] text-[#B45309]
-                {% else %}bg-[#EFF6FF] text-[#2563EB]{% endif %}">
+            <span class="mt-1.5 mb-5 px-4 py-1 rounded-full text-xs font-bold z-10"
+                  style="background-color: {{ c_bg }}; color: {{ c_main }};">
                 {{ docente.especialidad|default:"Docente" }}
             </span>
 
             <!-- Divider -->
-            <div class="w-full border-t border-outline-variant/60 my-sm z-10"></div>
+            <div class="w-full border-t border-gray-100/80 mb-4 z-10"></div>
 
             <!-- Ubicación -->
-            <div class="flex items-start gap-2 w-full z-10">
-                <span class="material-symbols-outlined text-[16px] mt-0.5 flex-shrink-0
-                    {% if docente.disponible %}text-[#22C55E]{% else %}text-on-surface-variant{% endif %}">
+            <div class="flex items-start justify-center gap-2 w-full z-10">
+                <span class="material-symbols-outlined text-[20px] mt-0.5 flex-shrink-0"
+                      style="{% if docente.disponible %}color: {{ c_main }};{% else %}color: #9CA3AF;{% endif %}">
                     location_on
                 </span>
-                <div class="text-left">
-                    <p class="text-sm text-on-surface truncate">{{ docente.ubicacion_actual|default:"Ubicación no reportada" }}</p>
-                    <p class="text-xs text-on-surface-variant">Ubicación</p>
+                <div class="text-left flex-1 overflow-hidden">
+                    <p class="text-sm font-semibold text-gray-800 truncate">{{ docente.ubicacion_actual|default:"Ubicación no reportada" }}</p>
+                    <p class="text-xs text-gray-500 font-medium">Ubicación</p>
                 </div>
             </div>
 
+            <!-- Fondo decorativo wavy inferior -->
+            <div class="absolute bottom-0 left-0 right-0 h-20 -z-0">
+                <svg viewBox="0 0 400 80" preserveAspectRatio="none" class="w-full h-full" style="color: {{ c_bg }};">
+                    <path d="M0,80 L400,80 L400,30 Q300,0 200,30 T0,30 Z" fill="currentColor" opacity="0.4"></path>
+                </svg>
+            </div>
+
             <!-- CTA -->
-            <div class="mt-sm w-full z-10">
-                <span class="flex items-center justify-center gap-1 text-primary font-semibold text-sm group-hover:gap-2 transition-all duration-200">
+            <div class="mt-6 mb-2 w-full z-10 relative">
+                <span class="flex items-center justify-center gap-1.5 font-bold text-sm group-hover:gap-2.5 transition-all duration-300"
+                      style="color: {{ c_main }};">
                     Ver detalles
-                    <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </span>
             </div>
+
+            {% endwith %}
         </a>
         {% empty %}
         <div class="col-span-full py-xl text-center text-on-surface-variant bg-surface-container-low rounded-xl border border-outline-variant border-dashed">
@@ -176,19 +186,30 @@
     </div>
 
     <!-- Banner Info -->
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-md bg-surface-container-lowest border border-outline-variant rounded-2xl p-lg shadow-sm">
-        <div class="flex items-center gap-md">
-            <div class="w-12 h-12 rounded-full bg-[#EFF6FF] flex items-center justify-center flex-shrink-0">
-                <span class="material-symbols-outlined text-primary text-[24px]">schedule</span>
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-6 bg-[#F0F9FF] rounded-3xl p-6 sm:px-10 mt-8 relative overflow-hidden">
+        <!-- Decoration Blur -->
+        <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-blue-200/50 rounded-full mix-blend-multiply blur-2xl"></div>
+        <div class="absolute right-10 top-0 w-32 h-32 bg-blue-200/30 rounded-full mix-blend-multiply blur-2xl"></div>
+
+        <div class="flex items-center gap-5 relative z-10">
+            <!-- Icon Stopwatch Style -->
+            <div class="relative w-14 h-14 flex items-center justify-center bg-white rounded-full shadow-sm border-[3px] border-[#3B82F6]">
+                <span class="material-symbols-outlined text-[#3B82F6] text-[28px]">timer</span>
+                <!-- Decorative leaves/hearts -->
+                <span class="absolute -left-3 -top-1 text-blue-300 material-symbols-outlined text-[16px] -rotate-12">spa</span>
+                <span class="absolute -right-2 bottom-0 text-red-400 material-symbols-outlined text-[16px] rotate-12" style="font-variation-settings: 'FILL' 1;">favorite</span>
             </div>
             <div>
-                <p class="font-semibold text-on-surface text-sm">Información en tiempo real</p>
-                <p class="text-xs text-on-surface-variant">La disponibilidad de los docentes se actualiza automáticamente.</p>
+                <p class="font-extrabold text-[#0B1A40] text-[17px]">Información en tiempo real</p>
+                <p class="text-[13px] text-gray-500 font-medium mt-0.5">La disponibilidad de los docentes se actualiza automáticamente.</p>
             </div>
         </div>
-        <div class="flex items-center gap-2 bg-[#DCFCE7] text-[#166534] px-4 py-2 rounded-full text-sm font-semibold">
-            <span class="material-symbols-outlined text-[18px]">check_circle</span>
-            Datos actualizados
+
+        <div class="relative z-10 flex items-center mt-4 sm:mt-0">
+            <div class="flex items-center gap-2 bg-white text-[#16A34A] px-5 py-2.5 rounded-full text-sm font-bold shadow-sm border border-gray-100">
+                <span class="material-symbols-outlined text-[#22C55E] text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                Datos actualizados
+            </div>
         </div>
     </div>
 </div>
