@@ -92,11 +92,18 @@
                         <span class="material-symbols-outlined text-blue-600 text-[26px]">calendar_month</span>
                         Mi Horario de Clases
                     </h3>
-                    <button onclick="abrirModalHorario('', '', '', '', '', '{{ docente.id }}', '', '')"
-                        class="flex items-center gap-2 bg-[#0B4A99] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-[#083570] transition-colors shadow-sm">
-                        <span class="material-symbols-outlined text-[18px]">add</span>
-                        Añadir clase
-                    </button>
+                    <div class="flex items-center gap-3">
+                        <button onclick="window.print()"
+                            class="flex items-center gap-2 bg-white text-[#0B4A99] border border-blue-200 px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-50 transition-colors shadow-sm">
+                            <span class="material-symbols-outlined text-[18px]">print</span>
+                            Imprimir
+                        </button>
+                        <button onclick="abrirModalHorario('', '', '', '', '', '{{ docente.id }}', '', '')"
+                            class="flex items-center gap-2 bg-[#0B4A99] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-[#083570] transition-colors shadow-sm">
+                            <span class="material-symbols-outlined text-[18px]">add</span>
+                            Añadir clase
+                        </button>
+                    </div>
                 </div>
                 <div class="px-6 pb-4 overflow-x-auto">
                     <!-- Componente Schedule Grid -->
@@ -148,50 +155,7 @@
 
     </div>
 
-    <!-- Bottom Actions -->
-    <div class="pt-4 border-t border-gray-100">
-        <div class="flex flex-col md:flex-row items-center gap-6">
-            <div class="w-full md:w-1/4">
-                <h3 class="font-bold text-lg text-[#0B1A40]">Acciones rápidas</h3>
-                <p class="text-sm font-medium text-gray-500 mt-1">Administra tu horario de forma fácil y rápida.</p>
-            </div>
-            
-            <div class="w-full md:w-3/4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Action 1 -->
-                <div onclick="abrirModalHorario('', '', '', '', '', '{{ docente.id }}', '', '')" class="bg-white rounded-2xl border border-gray-100 p-5 flex items-start gap-4 cursor-pointer hover:shadow-md hover:border-blue-100 transition-all group">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                        <span class="material-symbols-outlined text-[20px]">edit_calendar</span>
-                    </div>
-                    <div>
-                        <p class="font-bold text-sm text-[#0B1A40] mb-0.5">Añadir clase</p>
-                        <p class="text-[12px] font-medium text-gray-500 leading-tight">Agrega nuevas clases a tu horario.</p>
-                    </div>
-                </div>
-                
-                <!-- Action 2 -->
-                <div class="bg-white rounded-2xl border border-gray-100 p-5 flex items-start gap-4 cursor-pointer hover:shadow-md hover:border-blue-100 transition-all group">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                        <span class="material-symbols-outlined text-[20px]">edit</span>
-                    </div>
-                    <div>
-                        <p class="font-bold text-sm text-[#0B1A40] mb-0.5">Editar horario</p>
-                        <p class="text-[12px] font-medium text-gray-500 leading-tight">Modifica tus clases programadas.</p>
-                    </div>
-                </div>
-                
-                <!-- Action 3 -->
-                <div onclick="window.print()" class="bg-white rounded-2xl border border-gray-100 p-5 flex items-start gap-4 cursor-pointer hover:shadow-md hover:border-blue-100 transition-all group">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                        <span class="material-symbols-outlined text-[20px]">print</span>
-                    </div>
-                    <div>
-                        <p class="font-bold text-sm text-[#0B1A40] mb-0.5">Imprimir horario</p>
-                        <p class="text-[12px] font-medium text-gray-500 leading-tight">Descarga e imprime tu horario semanal.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 </div>
 
 {% include 'horarios/includes/schedule_modals.html' %}
