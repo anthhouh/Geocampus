@@ -13,6 +13,7 @@ urlpatterns = [
     # Docente
     path('dashboard/', views.dashboard_docente, name='dashboard_docente'),
     path('api/cambiar-estado/', views.cambiar_estado, name='cambiar_estado'),
+    path('imprimir-horario/', views.imprimir_horario, name='imprimir_horario'),
     path('anadir-horario/', views.añadir_horario, name='anadir_horario'),
 
     # Horarios de curso (estudiantes)

@@ -93,11 +93,11 @@
                         Mi Horario de Clases
                     </h3>
                     <div class="flex items-center gap-3">
-                        <button onclick="window.print()"
-                            class="flex items-center gap-2 bg-white text-[#0B4A99] border border-blue-200 px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-50 transition-colors shadow-sm">
+                        <a href="{% url 'horarios:imprimir_horario' %}" target="_blank"
+                            class="flex items-center gap-2 bg-white text-[#0B4A99] border border-blue-200 px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-50 transition-colors shadow-sm no-underline">
                             <span class="material-symbols-outlined text-[18px]">print</span>
                             Imprimir
-                        </button>
+                        </a>
                         <button onclick="abrirModalHorario('', '', '', '', '', '{{ docente.id }}', '', '')"
                             class="flex items-center gap-2 bg-[#0B4A99] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-[#083570] transition-colors shadow-sm">
                             <span class="material-symbols-outlined text-[18px]">add</span>

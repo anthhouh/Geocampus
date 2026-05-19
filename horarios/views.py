@@ -312,6 +312,71 @@ def dashboard_docente(request):
     return render(request, 'horarios/dashboard_docente.html', context)
 
 @login_required
+def imprimir_horario(request):
+    if not hasattr(request.user, 'perfil_docente'):
+        return redirect('horarios:index')
+    
+    docente = request.user.perfil_docente
+    horarios = Horario.objects.filter(docente=docente).select_related('asignatura', 'curso', 'paralelo').order_by('dia', 'hora_inicio')
+
+    PERIODOS = [
+        {'num': '1',  'inicio': '07:00', 'fin': '07:45', 'key': '07:00:00'},
+        {'num': '2',  'inicio': '07:45', 'fin': '08:30', 'key': '07:45:00'},
+        {'num': '3',  'inicio': '08:30', 'fin': '09:15', 'key': '08:30:00'},
+        {'num': '4',  'inicio': '09:15', 'fin': '10:00', 'key': '09:15:00'},
+        {'num': 'R',  'inicio': '10:00', 'fin': '10:25', 'key': '10:00:00', 'recreo': True},
+        {'num': '5',  'inicio': '10:25', 'fin': '11:05', 'key': '10:25:00'},
+        {'num': '6',  'inicio': '11:05', 'fin': '11:45', 'key': '11:05:00'},
+        {'num': '7',  'inicio': '11:45', 'fin': '12:25', 'key': '11:45:00'},
+        {'num': '8',  'inicio': '12:25', 'fin': '13:05', 'key': '12:25:00'},
+        {'num': '9',  'inicio': '13:05', 'fin': '13:45', 'key': '13:05:00'},
+    ]
+    DIAS = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes']
+
+    # Organizar horarios en un dict {dia: {hora_inicio_str: horario_obj}}
+    horario_map = {}
+    for h in horarios:
+        key_dia = h.dia.lower()
+        key_hora = h.hora_inicio.strftime("%H:%M:%S")
+        horario_map[(key_dia, key_hora)] = h
+
+    # Calcular color por clase
+    def color_para(h):
+        clave = f"{h.asignatura.nombre if h.asignatura else ''}|{h.curso_id}|{h.paralelo_id}"
+        return get_color_for_materia(clave)
+
+    # Construir tabla: lista de filas, cada fila tiene celdas por día
+    tabla = []
+    for periodo in PERIODOS:
+        if periodo.get('recreo'):
+            tabla.append({'periodo': periodo, 'recreo': True})
+            continue
+        fila = {'periodo': periodo, 'recreo': False, 'dias': []}
+        for dia in DIAS:
+            h = horario_map.get((dia, periodo['key']))
+            if h:
+                colors = color_para(h)
+                fila['dias'].append({
+                    'horario': h,
+                    'color_bg': colors['bg'],
+                    'color_border': colors['border'],
+                    'color_text': colors['text'],
+                })
+            else:
+                fila['dias'].append(None)
+        tabla.append(fila)
+
+    from django.utils import timezone
+    fecha_hoy = timezone.localdate()
+
+    context = {
+        'docente': docente,
+        'tabla': tabla,
+        'fecha_hoy': fecha_hoy,
+    }
+    return render(request, 'horarios/imprimir_horario.html', context)
+
+@login_required
 @require_POST
 def cambiar_estado(request):
     if not hasattr(request.user, 'perfil_docente'):

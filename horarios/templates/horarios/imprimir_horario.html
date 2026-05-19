@@ -1,0 +1,562 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horario de Clases — {{ docente }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0" rel="stylesheet">
+    <style>
+        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-sizing: border-box; }
+
+        @page { size: landscape; margin: 0.5cm; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .print-page {
+            background: #fff;
+            width: 100%;
+            max-width: 1050px;
+            border: 6px solid #1a3a6b;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        /* Inner decorative border */
+        .inner-border {
+            border: 2px solid #c9a84c;
+            margin: 4px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* ── Header ─────────────────── */
+        .header {
+            background: linear-gradient(135deg, #0d2b5e 0%, #1a4a9e 60%, #0d2b5e 100%);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .logo-circle {
+            width: 58px;
+            height: 58px;
+            background: #c9a84c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 900;
+            color: #0d2b5e;
+            border: 3px solid #fff;
+            flex-shrink: 0;
+        }
+
+        .header-school-text {
+            color: #fff;
+        }
+
+        .header-school-text h1 {
+            font-family: 'Merriweather', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .header-school-text p {
+            font-size: 0.7rem;
+            color: #c9a84c;
+            margin: 2px 0 0;
+            letter-spacing: 0.5px;
+        }
+
+        .header-title {
+            text-align: center;
+            flex: 1;
+        }
+
+        .header-title h2 {
+            font-family: 'Merriweather', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffd97d;
+            letter-spacing: 2px;
+            margin: 0;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .header-title .ornament {
+            color: #c9a84c;
+            font-size: 1.1rem;
+            letter-spacing: 4px;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .header-geocampus {
+            flex-shrink: 0;
+            text-align: center;
+        }
+
+        .header-geocampus .gc-icon {
+            width: 52px;
+            height: 52px;
+            background: #ffffff15;
+            border: 2px solid #c9a84c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 4px;
+            font-size: 26px;
+        }
+
+        .header-geocampus span.brand {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #c9a84c;
+            letter-spacing: 1px;
+        }
+
+        /* ── Info bar ────────────────── */
+        .info-bar {
+            background: #f0f5ff;
+            border-top: 2px solid #c9a84c;
+            border-bottom: 2px solid #c9a84c;
+            padding: 8px 24px;
+            display: flex;
+            gap: 0;
+            align-items: center;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            padding: 0 12px;
+            border-right: 1px solid #c9a84c50;
+        }
+
+        .info-item:first-child { padding-left: 0; }
+        .info-item:last-child  { border-right: none; }
+
+        .info-item .material-symbols-outlined {
+            font-size: 20px;
+            color: #1a3a6b;
+        }
+
+        .info-item label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: #5a7ab0;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 1px;
+        }
+
+        .info-item span {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #1a3a6b;
+        }
+
+        /* ── Table ───────────────────── */
+        .schedule-wrapper {
+            padding: 0 10px 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 0.78rem;
+        }
+
+        thead tr th {
+            background: #1a3a6b;
+            color: #fff;
+            padding: 8px 6px;
+            text-align: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border: 1px solid #2a5aab;
+            text-transform: uppercase;
+        }
+
+        thead tr th:first-child {
+            width: 80px;
+            background: #0d2b5e;
+        }
+
+        tbody tr td {
+            border: 1px solid #dde4f0;
+            vertical-align: middle;
+            text-align: center;
+            padding: 4px 3px;
+            min-height: 42px;
+            height: 42px;
+        }
+
+        /* Hora col */
+        td.hora-col {
+            background: #f0f5ff;
+            border-right: 2px solid #1a3a6b;
+            padding: 4px 6px;
+            width: 80px;
+        }
+
+        .periodo-num {
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: #1a3a6b;
+            display: block;
+            line-height: 1;
+        }
+
+        .periodo-horas {
+            font-size: 0.6rem;
+            color: #5a7ab0;
+            display: block;
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        /* Recreo row */
+        tr.recreo-row td {
+            background: #eef2f6;
+            border-top: 1px solid #c9a84c;
+            border-bottom: 1px solid #c9a84c;
+        }
+
+        td.recreo-hora {
+            background: #1a3a6b !important;
+            color: #ffd97d;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        td.recreo-content {
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: #1a3a6b;
+            font-size: 0.82rem;
+        }
+
+        /* Empty cell */
+        td.empty-cell {
+            color: #bcc7d9;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* Schedule block inside cell */
+        .block {
+            border-radius: 5px;
+            padding: 4px 5px;
+            margin: 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+        }
+
+        .block strong {
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .block small {
+            font-size: 0.6rem;
+            font-weight: 500;
+            opacity: 0.85;
+        }
+
+        /* ── Footer section ──────────── */
+        .bottom-section {
+            display: flex;
+            gap: 12px;
+            padding: 8px 10px 0;
+        }
+
+        .notes-box {
+            flex: 2;
+            border: 1.5px solid #c9a84c;
+            border-radius: 6px;
+            padding: 8px 12px;
+            min-height: 56px;
+        }
+
+        .notes-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            font-size: 0.72rem;
+            letter-spacing: 0.5px;
+            color: #1a3a6b;
+            margin-bottom: 6px;
+        }
+
+        .notes-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .notes-lines .line {
+            border-bottom: 1px dashed #c9a84c80;
+            height: 14px;
+        }
+
+        .motto-box {
+            flex: 1;
+            background: linear-gradient(135deg, #0d2b5e, #1a4a9e);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 14px;
+            color: #fff;
+        }
+
+        .motto-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .motto-text {
+            font-family: 'Merriweather', serif;
+            font-size: 0.8rem;
+            font-style: italic;
+            line-height: 1.5;
+            color: #ffd97d;
+        }
+
+        /* Page footer */
+        .page-footer {
+            text-align: center;
+            padding: 6px;
+            font-size: 0.65rem;
+            color: #5a7ab0;
+            font-style: italic;
+            border-top: 1px solid #dde4f0;
+            margin-top: 8px;
+        }
+
+        /* ── Print button (hidden when printing) ── */
+        .print-btn-wrapper {
+            text-align: center;
+            padding: 16px;
+            background: #f0f4f8;
+        }
+
+        .print-btn {
+            background: #1a3a6b;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 32px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .print-btn:hover { background: #0d2b5e; }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .print-btn-wrapper { display: none; }
+            .print-page {
+                box-shadow: none;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="print-page">
+    <div class="inner-border">
+
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-logo">
+                <div class="logo-circle">LD</div>
+                <div class="header-school-text">
+                    <h1>LA DOLOROSA</h1>
+                    <p>Gestión de Horarios</p>
+                </div>
+            </div>
+
+            <div class="header-title">
+                <h2>✦ MI HORARIO DE CLASES ✦</h2>
+                <span class="ornament">— ✶ —</span>
+            </div>
+
+            <div class="header-geocampus">
+                <div class="gc-icon">🎓</div>
+                <span class="brand">Geocampus</span>
+            </div>
+        </div>
+
+        <!-- INFO BAR -->
+        <div class="info-bar">
+            <div class="info-item">
+                <span class="material-symbols-outlined">person</span>
+                <div>
+                    <label>Docente:</label>
+                    <span>{{ docente }}</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="material-symbols-outlined">school</span>
+                <div>
+                    <label>Institución:</label>
+                    <span>La Dolorosa</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="material-symbols-outlined">calendar_month</span>
+                <div>
+                    <label>Período Académico:</label>
+                    <span>2025 – 2026</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="material-symbols-outlined">schedule</span>
+                <div>
+                    <label>Fecha de Impresión:</label>
+                    <span>{{ fecha_hoy|date:"d/m/Y" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCHEDULE TABLE -->
+        <div class="schedule-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>HORA</th>
+                        <th>LUNES</th>
+                        <th>MARTES</th>
+                        <th>MIÉRCOLES</th>
+                        <th>JUEVES</th>
+                        <th>VIERNES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fila in tabla %}
+                        {% if fila.recreo %}
+                            <tr class="recreo-row">
+                                <td class="hora-col recreo-hora">
+                                    <span class="periodo-num">R</span>
+                                    <span class="periodo-horas">10:00 - 10:25</span>
+                                </td>
+                                <td class="recreo-content" colspan="5">☕ &nbsp; R E C R E O</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td class="hora-col">
+                                    <span class="periodo-num">{{ fila.periodo.num }}</span>
+                                    <span class="periodo-horas">{{ fila.periodo.inicio }} – {{ fila.periodo.fin }}</span>
+                                </td>
+                                {% for celda in fila.dias %}
+                                    <td>
+                                        {% if celda %}
+                                            <div class="block" style="background-color: {{ celda.color_bg }}; border: 1px solid {{ celda.color_border }}; color: {{ celda.color_text }};">
+                                                <strong>{{ celda.horario.asignatura.nombre }}</strong>
+                                                <small>{{ celda.horario.curso.nombre }} "{{ celda.horario.paralelo.identificador }}"</small>
+                                            </div>
+                                        {% else %}
+                                            <span class="empty-cell">—</span>
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- BOTTOM -->
+        <div class="bottom-section">
+            <div class="notes-box">
+                <div class="notes-title">
+                    <span class="material-symbols-outlined" style="font-size:16px;">edit_note</span>
+                    NOTAS
+                </div>
+                <div class="notes-lines">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+            <div class="motto-box">
+                <span class="motto-icon">🎓</span>
+                <p class="motto-text">Organiza tu tiempo,<br>alcanza tus metas.</p>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            ⟨ Horarios elaborados por el {{ docente }} ⟩
+        </div>
+
+    </div><!-- /inner-border -->
+</div><!-- /print-page -->
+
+<!-- Print button -->
+<div class="print-btn-wrapper">
+    <button class="print-btn" onclick="window.print()">
+        <span class="material-symbols-outlined">print</span>
+        Imprimir / Guardar PDF
+    </button>
+    &nbsp;&nbsp;
+    <a href="{% url 'horarios:dashboard_docente' %}" style="color:#1a3a6b; font-weight:600; text-decoration:none; font-size:0.9rem;">← Volver al panel</a>
+</div>
+
+<script>
+    // Auto-print on load optionally — comented for now to let user preview first
+    // window.addEventListener('load', () => window.print());
+</script>
+</body>
+</html>
