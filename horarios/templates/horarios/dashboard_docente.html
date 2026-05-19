@@ -98,6 +98,11 @@
                             <span class="material-symbols-outlined text-[18px]">print</span>
                             Imprimir
                         </a>
+                        <button onclick="guardarHorarioPDF()"
+                            class="flex items-center gap-2 bg-white text-[#0B4A99] border border-blue-200 px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-50 transition-colors shadow-sm cursor-pointer">
+                            <span class="material-symbols-outlined text-[18px]">download</span>
+                            Guardar horario
+                        </button>
                         <button onclick="abrirModalHorario('', '', '', '', '', '{{ docente.id }}', '', '')"
                             class="flex items-center gap-2 bg-[#0B4A99] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-[#083570] transition-colors shadow-sm">
                             <span class="material-symbols-outlined text-[18px]">add</span>
@@ -164,6 +169,26 @@
 {% block scripts %}
 {% include 'horarios/includes/schedule_scripts.html' %}
 <script>
+    function guardarHorarioPDF() {
+        const btn = document.querySelector('button[onclick="guardarHorarioPDF()"]');
+        let originalHTML = '';
+        if (btn) {
+            originalHTML = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span> Descargando...';
+        }
+
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = "{% url 'horarios:imprimir_horario' %}?download=1";
+        document.body.appendChild(iframe);
+
+        // Limpiar iframe y restaurar botón
+        setTimeout(() => {
+            iframe.remove();
+            if (btn) btn.innerHTML = originalHTML;
+        }, 5000);
+    }
+
     function toggleEstado(estado) {
         const ubicacion = document.getElementById('ubicacion-input').value;
         enviarActualizacion(estado, ubicacion);

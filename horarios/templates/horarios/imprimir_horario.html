@@ -30,197 +30,294 @@
         .print-page {
             background: #fff;
             width: 100%;
-            max-width: 1060px;
-            border: 5px solid #1a3a6b;
-            border-radius: 7px;
-            overflow: hidden;
+            max-width: 1100px;
+            border: 3px solid #0d2b5e;
+            border-radius: 8px;
+            padding: 4px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.14);
         }
 
         .inner-border {
-            border: 2px solid #c9a84c;
-            margin: 3px;
+            border: 1px solid #c9a84c;
             border-radius: 4px;
-            overflow: hidden;
+            padding: 15px 20px;
+            position: relative;
         }
 
         /* ── HEADER ─── */
         .header {
-            background: linear-gradient(135deg, #0d2b5e 0%, #1a4a9e 60%, #0d2b5e 100%);
-            padding: 9px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        .header-logo {
+        .header-logo-left {
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
+            width: 320px;
         }
-
-        .logo-circle {
-            width: 46px; height: 46px;
-            background: #c9a84c;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; font-weight: 900; color: #0d2b5e;
-            border: 2px solid #fff;
-            flex-shrink: 0;
+        .header-logo-left img {
+            max-height: 85px;
+            width: auto;
+            object-fit: contain;
         }
-
         .header-school-text h1 {
             font-family: 'Merriweather', serif;
-            font-size: 0.88rem; font-weight: 700;
-            letter-spacing: 0.8px; color: #fff;
-            line-height: 1.2;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0d2b5e;
+            margin: 0;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
         }
         .header-school-text p {
-            font-size: 0.6rem; color: #c9a84c;
-            margin-top: 1px; letter-spacing: 0.4px;
+            color: #d12e2e;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 0.3px;
         }
 
         .header-title {
-            text-align: center; flex: 1;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
         .header-title h2 {
             font-family: 'Merriweather', serif;
-            font-size: 1.2rem; font-weight: 700;
-            color: #ffd97d; letter-spacing: 2px; margin: 0;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0d2b5e;
+            margin: 0;
+            letter-spacing: 1.5px;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.1);
         }
-        .header-title .ornament {
-            color: #c9a84c; font-size: 0.85rem;
-            letter-spacing: 4px; display: block; margin-top: 1px;
-        }
+        .ornament { color: #c9a84c; font-size: 1.4rem; }
 
-        .header-geocampus { flex-shrink: 0; text-align: center; }
-        .header-geocampus .gc-icon {
-            width: 42px; height: 42px;
-            background: #ffffff15; border: 2px solid #c9a84c;
-            border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; margin: 0 auto 2px; font-size: 20px;
+        .header-logo-right {
+            width: 250px;
+            display: flex;
+            justify-content: flex-end;
         }
-        .header-geocampus span.brand {
-            font-size: 0.65rem; font-weight: 700;
-            color: #c9a84c; letter-spacing: 1px;
+        .header-logo-right img {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
         }
 
         /* ── INFO BAR ─── */
         .info-bar {
-            background: #f0f5ff;
-            border-top: 2px solid #c9a84c;
-            border-bottom: 2px solid #c9a84c;
-            padding: 5px 18px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            border: 1px solid #c8d3e6;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+        .info-item {
             display: flex;
             align-items: center;
+            gap: 10px;
+            border-right: 1px dashed #c8d3e6;
         }
-
-        .info-item {
-            display: flex; align-items: center; gap: 6px;
-            flex: 1; padding: 0 10px;
-            border-right: 1px solid #c9a84c50;
+        .info-item:last-child {
+            border-right: none;
         }
-        .info-item:first-child { padding-left: 0; }
-        .info-item:last-child  { border-right: none; }
-
-        .info-item .material-symbols-outlined { font-size: 16px; color: #1a3a6b; }
-        .info-item label {
-            font-size: 0.55rem; font-weight: 700;
-            letter-spacing: 0.6px; color: #5a7ab0;
-            text-transform: uppercase; display: block; margin-bottom: 1px;
+        .info-item .material-symbols-outlined {
+            font-size: 26px;
+            color: #1a4a9e;
         }
-        .info-item span { font-size: 0.74rem; font-weight: 600; color: #1a3a6b; }
+        .info-text label {
+            display: block;
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: #5a7ab0;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+        .info-text span {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #0d2b5e;
+        }
 
         /* ── TABLE ─── */
-        .schedule-wrapper { padding: 0 8px 6px; }
-
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-
-        thead tr th {
-            background: #1a3a6b; color: #fff;
-            padding: 5px 4px; text-align: center;
-            font-size: 0.64rem; font-weight: 700;
-            letter-spacing: 0.8px; border: 1px solid #2a5aab;
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 2px solid #0d2b5e;
+            border-radius: 8px;
+            overflow: hidden;
+            table-layout: fixed;
+        }
+        thead th {
+            background: #0d2b5e;
+            color: #fff;
+            padding: 8px 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-left: 1px solid #3c5a96;
+            border-bottom: 2px solid #0d2b5e;
             text-transform: uppercase;
         }
-        thead tr th:first-child { width: 72px; background: #0d2b5e; }
-
-        tbody tr td {
-            border: 1px solid #dde4f0;
-            vertical-align: middle;
+        thead th:first-child { border-left: none; width: 100px; }
+        
+        tbody td {
+            border-left: 1px solid #c8d3e6;
+            border-bottom: 1px solid #c8d3e6;
+            padding: 4px;
             text-align: center;
-            padding: 2px 2px;
-            height: 36px;
+            vertical-align: middle;
+            height: 54px;
         }
+        tbody td:first-child { border-left: none; }
+        tbody tr:last-child td { border-bottom: none; }
 
         td.hora-col {
-            background: #f0f5ff;
-            border-right: 2px solid #1a3a6b;
-            padding: 2px 5px; width: 72px;
+            background: #fff;
+            padding: 4px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            border-bottom: none !important;
+            border-left: none !important;
         }
+        .hora-col-wrapper {
+            background: #fff;
+            padding: 0 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 100%;
+        }
+
         .periodo-num {
-            font-weight: 800; font-size: 0.8rem;
-            color: #1a3a6b; display: block; line-height: 1;
+            font-weight: 800;
+            color: #0d2b5e;
+            font-size: 0.85rem;
+            display: block;
         }
         .periodo-horas {
-            font-size: 0.52rem; color: #5a7ab0;
-            display: block; margin-top: 1px; font-weight: 500;
+            font-size: 0.6rem;
+            color: #5a7ab0;
+            display: block;
+            font-weight: 500;
+            margin-top: 1px;
         }
+        .hora-icon { color: #1a4a9e; font-size: 16px; opacity: 0.8; }
 
         /* RECREO */
-        tr.recreo-row td { background: #eef2f6; border-top: 1px solid #c9a84c; border-bottom: 1px solid #c9a84c; }
-        td.recreo-hora   { background: #1a3a6b !important; color: #ffd97d; font-weight: 700; font-size: 0.7rem; }
-        td.recreo-content { text-align: center; font-weight: 700; letter-spacing: 5px; text-transform: uppercase; color: #1a3a6b; font-size: 0.74rem; }
+        tr.recreo-row td { background: #eef2f6; border-top: 1px solid #c8d3e6; border-bottom: 1px solid #c8d3e6; }
+        td.recreo-hora   { background: #eef2f6; }
+        td.recreo-content {
+            font-weight: 700;
+            color: #1a4a9e;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        .recreo-content-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
 
         /* Empty */
-        td.empty-cell { color: #bcc7d9; font-size: 0.85rem; font-weight: 600; }
+        td.empty-cell { color: #9ab0d6; font-size: 1.2rem; font-weight: 300; }
 
         /* Block */
         .block {
-            border-radius: 4px; padding: 3px 4px; margin: 1px;
-            display: flex; flex-direction: row; align-items: center; gap: 6px; text-align: left; height: 100%;
+            border-radius: 6px;
+            padding: 4px 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-align: left;
+            height: 100%;
+            min-height: 44px;
         }
         .block-content {
-            display: flex; flex-direction: column; flex: 1; justify-content: center;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: center;
         }
-        .block strong { font-size: 0.65rem; font-weight: 700; display: block; line-height: 1.2; }
-        .block small   { font-size: 0.55rem; font-weight: 500; opacity: 0.85; }
+        .block strong { font-size: 0.7rem; font-weight: 700; line-height: 1.2; color: inherit; }
+        .block small { font-size: 0.6rem; font-weight: 500; opacity: 0.9; margin-top: 2px; }
 
         /* ── BOTTOM ─── */
         .bottom-section {
-            display: flex; gap: 10px;
-            padding: 5px 8px 4px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            gap: 15px;
         }
-
         .notes-box {
-            flex: 2; border: 1.5px solid #c9a84c;
-            border-radius: 5px; padding: 5px 10px; min-height: 40px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            flex: 2;
+            border: 1px solid #c8d3e6;
+            border-radius: 8px;
+            padding: 10px 15px;
+            background: #f8fafc;
         }
-        .notes-title {
-            display: flex; align-items: center; gap: 5px;
-            font-weight: 700; font-size: 0.64rem;
-            letter-spacing: 0.4px; color: #1a3a6b; margin-bottom: 4px;
+        .notes-box .material-symbols-outlined { color: #1a4a9e; font-size: 20px; }
+        .notes-title { font-weight: 700; color: #0d2b5e; font-size: 0.75rem; margin-top: 2px; }
+        .notes-lines {
+            flex: 1;
+            margin-left: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-top: 10px;
         }
-        .notes-lines { display: flex; flex-direction: column; gap: 5px; }
-        .notes-lines .line { border-bottom: 1px dashed #c9a84c80; height: 10px; }
+        .notes-lines .line { border-bottom: 1px dotted #9ab0d6; }
 
         .motto-box {
-            flex: 1; background: linear-gradient(135deg, #0d2b5e, #1a4a9e);
-            border-radius: 5px; display: flex; align-items: center;
-            justify-content: center; gap: 8px; padding: 6px 12px; color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex: 1;
+            background: #f0f5ff;
+            border-radius: 8px;
+            padding: 10px 20px;
+            border: 1px solid #c8d3e6;
         }
-        .motto-icon { font-size: 1.6rem; flex-shrink: 0; }
-        .motto-text { font-family: 'Merriweather', serif; font-size: 0.7rem; font-style: italic; line-height: 1.4; color: #ffd97d; }
+        .motto-box .material-symbols-outlined { color: #0d2b5e; font-size: 32px; }
+        .motto-text {
+            font-family: 'Merriweather', serif;
+            font-size: 0.9rem;
+            font-style: italic;
+            color: #0d2b5e;
+            font-weight: 700;
+        }
 
-        /* Footer */
+        /* ── FOOTER ─── */
         .page-footer {
-            text-align: center; padding: 3px 0 4px;
-            font-size: 0.58rem; color: #5a7ab0;
-            font-style: italic; border-top: 1px solid #dde4f0; margin-top: 4px;
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.7rem;
+            color: #0d2b5e;
+            font-family: 'Merriweather', serif;
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 600;
         }
+        .footer-ornament { font-size: 1.2rem; color: #c9a84c; }
 
         /* Print button (hidden when printing) */
         .print-btn-wrapper {
@@ -252,22 +349,18 @@
 
         <!-- HEADER -->
         <div class="header">
-            <div class="header-logo">
-                <div class="logo-circle">LD</div>
-                <div class="header-school-text">
-                    <h1>LA DOLOROSA</h1>
-                    <p>Gestión de Horarios</p>
-                </div>
+            <div class="header-logo-left">
+                <img src="{% static 'images/logo_dolorosa.png' %}" alt="Logo La Dolorosa" style="max-height: 85px; width: auto; object-fit: contain;" onerror="this.style.display='none'">
             </div>
 
             <div class="header-title">
-                <h2>✦ MI HORARIO DE CLASES ✦</h2>
-                <span class="ornament">— ✶ —</span>
+                <span class="material-symbols-outlined ornament">hotel_class</span>
+                <h2>MI HORARIO DE CLASES</h2>
+                <span class="material-symbols-outlined ornament">hotel_class</span>
             </div>
 
-            <div class="header-geocampus">
-                <div class="gc-icon">🎓</div>
-                <span class="brand">Geocampus</span>
+            <div class="header-logo-right">
+                <img src="{% static 'images/logo_geocampus.png' %}" alt="Logo Geocampus" onerror="this.style.display='none'">
             </div>
         </div>
 
@@ -275,23 +368,30 @@
         <div class="info-bar">
             <div class="info-item">
                 <span class="material-symbols-outlined">person</span>
-                <div>
+                <div class="info-text">
                     <label>Docente:</label>
                     <span>{{ docente }}</span>
                 </div>
             </div>
             <div class="info-item">
-                <span class="material-symbols-outlined">school</span>
-                <div>
-                    <label>Institución:</label>
-                    <span>La Dolorosa</span>
+                <span class="material-symbols-outlined">auto_stories</span>
+                <div class="info-text">
+                    <label>Curso / Paralelo:</label>
+                    <span>Todos los asignados</span>
                 </div>
             </div>
             <div class="info-item">
                 <span class="material-symbols-outlined">calendar_month</span>
-                <div>
+                <div class="info-text">
                     <label>Período Académico:</label>
-                    <span>2025 – 2026</span>
+                    <span>2025 - 2026</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="material-symbols-outlined">schedule</span>
+                <div class="info-text">
+                    <label>Fecha de Impresión:</label>
+                    <span>{{ fecha_hoy|date:"d / m / Y" }}</span>
                 </div>
             </div>
         </div>
@@ -313,26 +413,45 @@
                     {% for fila in tabla %}
                         {% if fila.recreo %}
                             <tr class="recreo-row">
-                                <td class="hora-col recreo-hora">
-                                    <span class="periodo-num">R</span>
-                                    <span class="periodo-horas">10:00–10:25</span>
+                                <td style="padding:0;">
+                                    <div class="hora-col-wrapper">
+                                        <span class="material-symbols-outlined hora-icon">schedule</span>
+                                        <div style="text-align: right;">
+                                            <span class="periodo-num">R</span>
+                                            <span class="periodo-horas">10:00 - 10:25</span>
+                                        </div>
+                                    </div>
                                 </td>
-                                <td class="recreo-content" colspan="5">☕ &nbsp; R E C R E O</td>
+                                <td class="recreo-content" colspan="5">
+                                    <div class="recreo-content-inner">
+                                        <span class="material-symbols-outlined">local_cafe</span>
+                                        RECREO
+                                    </div>
+                                </td>
                             </tr>
                         {% else %}
                             <tr>
-                                <td class="hora-col">
-                                    <span class="periodo-num">{{ fila.periodo.num }}</span>
-                                    <span class="periodo-horas">{{ fila.periodo.inicio }}–{{ fila.periodo.fin }}</span>
+                                <td style="padding:0;">
+                                    <div class="hora-col-wrapper">
+                                        <span class="material-symbols-outlined hora-icon">schedule</span>
+                                        <div style="text-align: right;">
+                                            <span class="periodo-num">{{ fila.periodo.num }}</span>
+                                            <span class="periodo-horas">{{ fila.periodo.inicio }} - {{ fila.periodo.fin }}</span>
+                                        </div>
+                                    </div>
                                 </td>
                                 {% for celda in fila.dias %}
-                                    <td>
+                                    <td {% if celda and celda.rowspan and celda.rowspan > 1 %}rowspan="{{ celda.rowspan }}"{% endif %}>
                                         {% if celda %}
                                             <div class="block" style="background-color:{{ celda.color_bg }};border:1px solid {{ celda.color_border }};color:{{ celda.color_text }};">
                                                 <span class="material-symbols-outlined" style="font-size:1.5rem;opacity:0.85;flex-shrink:0;">{{ celda.horario.asignatura.nombre|subject_icon }}</span>
                                                 <div class="block-content">
                                                     <strong>{{ celda.horario.asignatura.nombre }}</strong>
-                                                    <small>{{ celda.horario.curso.nombre }} "{{ celda.horario.paralelo.identificador }}"</small>
+                                                    <small>
+                                                        {% if celda.horario.curso and celda.horario.paralelo %}
+                                                            {{ celda.horario.curso.nombre }} "{{ celda.horario.paralelo.identificador }}"
+                                                        {% endif %}
+                                                    </small>
                                                 </div>
                                             </div>
                                         {% else %}
@@ -350,24 +469,26 @@
         <!-- BOTTOM -->
         <div class="bottom-section">
             <div class="notes-box">
-                <div class="notes-title">
-                    <span class="material-symbols-outlined" style="font-size:14px;">edit_note</span>
-                    NOTAS
-                </div>
-                <div class="notes-lines">
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
+                <span class="material-symbols-outlined">edit_note</span>
+                <div style="flex:1;">
+                    <div class="notes-title">NOTAS</div>
+                    <div class="notes-lines">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
                 </div>
             </div>
             <div class="motto-box">
-                <span class="motto-icon">🎓</span>
+                <span class="material-symbols-outlined">school</span>
                 <p class="motto-text">Organiza tu tiempo,<br>alcanza tus metas.</p>
+                <span class="material-symbols-outlined" style="color: #c9a84c; font-size: 24px; margin-left: 10px;">spa</span>
             </div>
         </div>
 
         <div class="page-footer">
-            ⟨ Horarios elaborados por {{ docente }} — Unidad Educativa La Dolorosa ⟩
+            <span class="material-symbols-outlined footer-ornament">spa</span>
+            Horarios elaborados por {{ docente }}
+            <span class="material-symbols-outlined footer-ornament">spa</span>
         </div>
 
     </div><!-- /inner-border -->
@@ -376,10 +497,36 @@
 <div class="print-btn-wrapper">
     <button class="print-btn" onclick="window.print()">
         <span class="material-symbols-outlined">print</span>
-        Imprimir / Guardar PDF
+        Imprimir
+    </button>
+    <button class="print-btn" style="background:#0d2b5e; margin-left:10px;" onclick="descargarPDF()">
+        <span class="material-symbols-outlined">download</span>
+        Descargar PDF
     </button>
     <a class="back-link" href="{% url 'horarios:dashboard_docente' %}">← Volver al panel</a>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+    function descargarPDF() {
+        const element = document.querySelector('.print-page');
+        const opt = {
+            margin:       0.3,
+            filename:     'Horario_{{ docente|default:"Clases"|escapejs }}.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('download') === '1') {
+            descargarPDF();
+        }
+    });
+</script>
 
 </body>
 </html>

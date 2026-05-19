@@ -295,8 +295,8 @@ def dashboard_docente(request):
 
     horarios = Horario.objects.filter(docente=docente).order_by('dia', 'hora_inicio')
     
-    # Para el grid interactivo, no fusionamos bloques y necesitamos celdas vacías
-    horarios_grid, celdas_vacias = preparar_horarios_grid(horarios, incluir_vacios=True, fusionar_bloques=False)
+    # Para el grid interactivo, fusionamos bloques y necesitamos celdas vacías
+    horarios_grid, celdas_vacias = preparar_horarios_grid(horarios, incluir_vacios=True, fusionar_bloques=True)
     
     context = {
         'docente': docente,
@@ -347,20 +347,41 @@ def imprimir_horario(request):
 
     # Construir tabla: lista de filas, cada fila tiene celdas por día
     tabla = []
-    for periodo in PERIODOS:
+    skip_map = {}
+    for row_idx, periodo in enumerate(PERIODOS):
         if periodo.get('recreo'):
             tabla.append({'periodo': periodo, 'recreo': True})
             continue
+            
         fila = {'periodo': periodo, 'recreo': False, 'dias': []}
-        for dia in DIAS:
+        for dia_idx, dia in enumerate(DIAS):
+            if skip_map.get((dia_idx, row_idx)):
+                continue
+                
             h = horario_map.get((dia, periodo['key']))
             if h:
+                rowspan = 1
+                for next_row_idx in range(row_idx + 1, len(PERIODOS)):
+                    next_periodo = PERIODOS[next_row_idx]
+                    if next_periodo.get('recreo'):
+                        break
+                    next_h = horario_map.get((dia, next_periodo['key']))
+                    if next_h and \
+                       next_h.asignatura_id == h.asignatura_id and \
+                       next_h.curso_id == h.curso_id and \
+                       next_h.paralelo_id == h.paralelo_id:
+                        rowspan += 1
+                        skip_map[(dia_idx, next_row_idx)] = True
+                    else:
+                        break
+                        
                 colors = color_para(h)
                 fila['dias'].append({
                     'horario': h,
                     'color_bg': colors['bg'],
                     'color_border': colors['border'],
                     'color_text': colors['text'],
+                    'rowspan': rowspan,
                 })
             else:
                 fila['dias'].append(None)
@@ -440,7 +461,7 @@ def horario_docente(request, docente_id):
     horarios = Horario.objects.filter(
         docente=docente, tipo='docente'
     ).order_by('dia', 'hora_inicio')
-    horarios_grid = preparar_horarios_grid(horarios)
+    horarios_grid = preparar_horarios_grid(horarios, fusionar_bloques=True)
 
     context = {
         'docente': docente,
@@ -559,7 +580,7 @@ def _render_horarios_list(request, tipo_agrupacion, titulo):
         
         for p in paralelos:
             hs = horarios_qs.filter(curso=p.curso, paralelo=p).order_by('dia', 'hora_inicio')
-            filled, empty = preparar_horarios_grid(hs, incluir_vacios=True)
+            filled, empty = preparar_horarios_grid(hs, incluir_vacios=True, fusionar_bloques=True)
             grupos.append({
                 'id': f"curso_{p.curso_id}_paralelo_{p.id}",
                 'titulo': f"{p.curso.nombre} '{p.identificador}'",
@@ -577,7 +598,7 @@ def _render_horarios_list(request, tipo_agrupacion, titulo):
             
         for d in docentes_qs:
             hs = horarios_qs.filter(docente=d).order_by('dia', 'hora_inicio')
-            filled, empty = preparar_horarios_grid(hs, incluir_vacios=True)
+            filled, empty = preparar_horarios_grid(hs, incluir_vacios=True, fusionar_bloques=True)
             grupos.append({
                 'id': f"docente_{d.id}",
                 'titulo': d.usuario.get_full_name() or d.usuario.username,
