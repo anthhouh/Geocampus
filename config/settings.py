@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary',
     'horarios',
 ]
 
@@ -142,3 +144,7 @@ AUTH_USER_MODEL = 'horarios.Usuario'
 LOGIN_URL = 'horarios:login'
 LOGIN_REDIRECT_URL = 'horarios:index'
 LOGOUT_REDIRECT_URL = 'horarios:login'
+
+# Configuración de Cloudinary para Media (Fotos, PDFs, etc.)
+if 'CLOUDINARY_URL' in os.environ:
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
