@@ -85,3 +85,9 @@ class AsignaturaForm(forms.ModelForm):
         widgets = {
             'nombre': forms.TextInput(attrs={'class': _INPUT, 'placeholder': 'Ej: Matemáticas'}),
         }
+
+class DocenteFotoForm(forms.ModelForm):
+    class Meta:
+        model = Docente
+        fields = ['foto']
+

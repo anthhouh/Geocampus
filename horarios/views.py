@@ -8,7 +8,7 @@ from django.views.decorators.http import require_POST
 from django.template.loader import render_to_string
 from django.contrib import messages
 from .models import Docente, Curso, Paralelo, Horario, Usuario, Asignatura
-from .forms import HorarioForm, HorarioAdminForm, DocenteEditForm, DocenteCreateForm, CursoForm, ParaleloForm, AsignaturaForm
+from .forms import HorarioForm, HorarioAdminForm, DocenteEditForm, DocenteCreateForm, CursoForm, ParaleloForm, AsignaturaForm, DocenteFotoForm
 
 
 def admin_required(view_func):
@@ -271,10 +271,24 @@ def index(request):
 
 @login_required
 def dashboard_docente(request):
-    if not request.user.is_docente():
+    if not (request.user.is_docente() or request.user.is_admin() or request.user.is_superuser):
         return redirect('horarios:index')
     
+    # Crear un perfil de Docente temporal o permanente para el administrador si no lo tiene
+    if not hasattr(request.user, 'perfil_docente'):
+        Docente.objects.create(usuario=request.user, especialidad="Administrador")
+    
     docente = request.user.perfil_docente
+
+    if request.method == 'POST':
+        form = DocenteFotoForm(request.POST, request.FILES, instance=docente)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Foto de perfil actualizada exitosamente.')
+            return redirect('horarios:dashboard_docente')
+        else:
+            messages.error(request, 'Error al subir la foto de perfil.')
+
     horarios = Horario.objects.filter(docente=docente).order_by('dia', 'hora_inicio')
     
     # Para el grid interactivo, no fusionamos bloques y necesitamos celdas vacías

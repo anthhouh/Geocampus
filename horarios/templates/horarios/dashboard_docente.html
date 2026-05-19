@@ -35,12 +35,25 @@
         <div class="md:col-span-3 flex flex-col gap-lg">
             <div
                 class="bg-surface-container-lowest rounded-xl border border-outline-variant p-xl flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow">
-                <div class="relative mb-md">
-                    <div
-                        class="w-24 h-24 rounded-full border-4 border-surface shadow-sm bg-primary flex items-center justify-center text-on-primary text-4xl font-bold">
-                        {{ user.first_name|first|default:user.username|first|upper }}
-                    </div>
-                    <div class="absolute bottom-0 right-0 w-6 h-6 {% if docente.disponible %}bg-[#4CAF50]{% else %}bg-[#E53935]{% endif %} border-2 border-surface rounded-full"
+                <div class="relative mb-md group">
+                    <form method="post" enctype="multipart/form-data" id="foto-form" class="relative">
+                        {% csrf_token %}
+                        <div class="w-24 h-24 rounded-full border-4 border-surface shadow-sm bg-primary flex items-center justify-center text-on-primary text-4xl font-bold overflow-hidden cursor-pointer relative"
+                             onclick="document.getElementById('id_foto_input').click()">
+                            {% if docente.foto %}
+                                <img src="{{ docente.foto.url }}" alt="Foto de perfil" class="w-full h-full object-cover">
+                            {% else %}
+                                {{ user.first_name|first|default:user.username|first|upper }}
+                            {% endif %}
+                            
+                            <!-- Overlay Hover -->
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-white">photo_camera</span>
+                            </div>
+                        </div>
+                        <input type="file" name="foto" id="id_foto_input" class="hidden" accept="image/*" onchange="document.getElementById('foto-form').submit()">
+                    </form>
+                    <div class="absolute bottom-0 right-0 w-6 h-6 {% if docente.disponible %}bg-[#4CAF50]{% else %}bg-[#E53935]{% endif %} border-2 border-surface rounded-full z-10"
                         id="status-indicator"></div>
                 </div>
                 <h3 class="font-h3 text-h3 text-on-surface">{{ user.get_full_name|default:user.username }}</h3>
