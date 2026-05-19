@@ -55,6 +55,7 @@
         .header-logo-left {
             display: flex;
             align-items: center;
+            gap: 12px;
             width: 320px;
         }
         .header-logo-left img {
@@ -104,7 +105,7 @@
             justify-content: flex-end;
         }
         .header-logo-right img {
-            height: 70px;
+            max-height: 100px;
             width: auto;
             object-fit: contain;
         }
@@ -180,23 +181,13 @@
         tbody td:first-child { border-left: none; }
         tbody tr:last-child td { border-bottom: none; }
 
-        td.hora-col {
-            background: #fff;
-            padding: 4px 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 100%;
-            border-bottom: none !important;
-            border-left: none !important;
-        }
         .hora-col-wrapper {
             background: #fff;
-            padding: 0 5px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            justify-content: flex-end;
+            padding-right: 20px;
+            gap: 10px;
             height: 100%;
         }
 
@@ -351,16 +342,20 @@
         <div class="header">
             <div class="header-logo-left">
                 <img src="{% static 'images/logo_dolorosa.png' %}" alt="Logo La Dolorosa" style="max-height: 85px; width: auto; object-fit: contain;" onerror="this.style.display='none'">
+                <div class="header-school-text">
+                    <h1>LA DOLOROSA</h1>
+                    <p>Gestión de Horarios</p>
+                </div>
             </div>
 
             <div class="header-title">
                 <span class="material-symbols-outlined ornament">hotel_class</span>
-                <h2>MI HORARIO DE CLASES</h2>
+                <h2 style="font-size: 1.35rem; text-align: center; white-space: nowrap;">Unidad Educativa Fiscomisional La Dolorosa</h2>
                 <span class="material-symbols-outlined ornament">hotel_class</span>
             </div>
 
             <div class="header-logo-right">
-                <img src="{% static 'images/logo_geocampus.png' %}" alt="Logo Geocampus" onerror="this.style.display='none'">
+                <img src="{% static 'images/logogeo.png' %}" alt="Logo Geocampus" onerror="this.style.display='none'">
             </div>
         </div>
 
@@ -416,7 +411,7 @@
                                 <td style="padding:0;">
                                     <div class="hora-col-wrapper">
                                         <span class="material-symbols-outlined hora-icon">schedule</span>
-                                        <div style="text-align: right;">
+                                        <div style="text-align: center;">
                                             <span class="periodo-num">R</span>
                                             <span class="periodo-horas">10:00 - 10:25</span>
                                         </div>
@@ -434,7 +429,7 @@
                                 <td style="padding:0;">
                                     <div class="hora-col-wrapper">
                                         <span class="material-symbols-outlined hora-icon">schedule</span>
-                                        <div style="text-align: right;">
+                                        <div style="text-align: center;">
                                             <span class="periodo-num">{{ fila.periodo.num }}</span>
                                             <span class="periodo-horas">{{ fila.periodo.inicio }} - {{ fila.periodo.fin }}</span>
                                         </div>
