@@ -1,9 +1,9 @@
 <div id="schedule-item-{{ item.horario.id }}" class="schedule-item relative group/item" style="
     grid-column: {{ item.grid_col }};
     grid-row: {{ item.grid_row_start }} / {{ item.grid_row_end }};
-    background-color: {{ item.color_bg }};
+    background-color: #ffffff;
     border: 2px solid {{ item.color_border }};
-    color: {{ item.color_text }};
+    color: {{ item.color_border }};
     z-index: 10;
 ">
     <strong style="font-size:0.78rem; display:block; line-height:1.2;">{{ item.horario.asignatura.nombre }}</strong>
