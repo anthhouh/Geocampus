@@ -84,21 +84,14 @@
     <!-- Grid de Docentes -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-lg" id="grid-docentes">
         {% for docente in docentes %}
+        {% cycle '#1D4ED8' '#0D9488' '#7C3AED' '#EF4444' as c_main silent %}
+        {% cycle '#EFF6FF' '#F0FDF4' '#FAF5FF' '#FEF2F2' as c_bg silent %}
+        
         <a href="{% url 'horarios:horario_docente' docente.id %}"
            data-nombre="{{ docente.usuario.get_full_name|lower|default:docente.usuario.username|lower }}"
            data-especialidad="{{ docente.especialidad|lower|default:'docente' }}"
            data-disponible="{{ docente.disponible|yesno:'true,false' }}"
            class="docente-card group relative bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 overflow-hidden no-underline flex flex-col p-6 text-center items-center cursor-pointer">
-
-            {% if forloop.counter0|divisibleby:4 %}
-                {% with c_main="#1D4ED8" c_bg="#EFF6FF" %}
-            {% elif forloop.counter0|divisibleby:3 %}
-                {% with c_main="#0D9488" c_bg="#F0FDF4" %}
-            {% elif forloop.counter0|divisibleby:2 %}
-                {% with c_main="#7C3AED" c_bg="#FAF5FF" %}
-            {% else %}
-                {% with c_main="#EF4444" c_bg="#FEF2F2" %}
-            {% endif %}
 
             <!-- Fondo decorativo wavy superior -->
             <div class="absolute top-0 left-0 right-0 h-32 -z-0">
@@ -168,8 +161,6 @@
                     <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </span>
             </div>
-
-            {% endwith %}
         </a>
         {% empty %}
         <div class="col-span-full py-xl text-center text-on-surface-variant bg-surface-container-low rounded-xl border border-outline-variant border-dashed">
