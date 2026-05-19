@@ -173,3 +173,13 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
+
+# Django 4.2+ requiere STORAGES dict (DEFAULT_FILE_STORAGE es ignorado)
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
