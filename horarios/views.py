@@ -314,7 +314,7 @@ def dashboard_docente(request):
 @login_required
 @require_POST
 def cambiar_estado(request):
-    if not request.user.is_docente():
+    if not hasattr(request.user, 'perfil_docente'):
         return JsonResponse({'error': 'No autorizado'}, status=403)
     
     try:
