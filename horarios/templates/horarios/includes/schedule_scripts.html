@@ -235,9 +235,9 @@ document.addEventListener('keydown', e => {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px dashed #cbd5e1; /* Color gris claro/neutro */
-    background-color: rgba(241, 245, 249, 0.5); /* Fondo tenue */
-    border-radius: 6px;
+    border: 1px solid transparent;
+    background-color: transparent;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
     min-height: 45px;
@@ -246,28 +246,31 @@ document.addEventListener('keydown', e => {
     z-index: 1;
 }
 .empty-slot .plus-icon {
+    display: none;
     font-size: 24px;
-    color: #94a3b8;
-    transition: color 0.2s ease;
+    color: #3b82f6;
+}
+.empty-slot .dash-icon {
+    display: block;
+    color: #cbd5e1;
+    font-size: 18px;
+    font-weight: 500;
 }
 .empty-slot:hover {
-    border-color: #3b82f6; /* Color primario azul */
-    background-color: rgba(59, 130, 246, 0.1);
+    background-color: rgba(59, 130, 246, 0.08);
+}
+.empty-slot:hover .dash-icon {
+    display: none;
 }
 .empty-slot:hover .plus-icon {
-    color: #3b82f6;
+    display: block;
 }
 /* En modo oscuro, ajustamos los colores sutilmente */
 @media (prefers-color-scheme: dark) {
-    .empty-slot {
-        border-color: #334155;
-        background-color: rgba(30, 41, 59, 0.5);
-    }
-    .empty-slot .plus-icon {
+    .empty-slot .dash-icon {
         color: #475569;
     }
     .empty-slot:hover {
-        border-color: #3b82f6;
         background-color: rgba(59, 130, 246, 0.15);
     }
 }
