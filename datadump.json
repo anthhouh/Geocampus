@@ -1,0 +1,1289 @@
+[
+{
+  "model": "horarios.usuario",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$dKLQ6bbZ3ld3MdAHbk48Ib$7lvw5/A3GgdxoZ8++J1iMI/RhBbX835eRTm05rlhWF0=",
+    "last_login": "2026-05-13T17:13:04.899Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@example.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-07T00:02:40.970Z",
+    "rol": "admin",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "horarios.usuario",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$TTDb5HhxYroi8olwyOYEPP$AxJDb4QX98Cbp47TvlLpVcPCXrMKaGqtSh6BVTbgh9A=",
+    "last_login": "2026-05-18T12:26:17.053Z",
+    "is_superuser": false,
+    "username": "jtandazo1",
+    "first_name": "Jimmy",
+    "last_name": "Tandazo",
+    "email": "jtandazo@ladolorosa-loja.edu.ec",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-07T00:18:31Z",
+    "rol": "docente",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "horarios.usuario",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$1laEJ7Vlg6xzjtKhNcja71$qhvoWE3ys27+T+/BoMlOvcStdmZ7cdEnaB3e6RTZqwk=",
+    "last_login": "2026-05-07T18:46:08.523Z",
+    "is_superuser": false,
+    "username": "anthonyojeda.dol",
+    "first_name": "Anthony",
+    "last_name": "Ojeda",
+    "email": "aojeda@ladolorosa-loja.edu.ec",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-07T02:47:55.807Z",
+    "rol": "estudiante",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "horarios.usuario",
+  "fields": {
+    "password": "!jYubZbJHjXo2WJyriPrznNI9KrYVcAyptMg4UaQZ",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "ljacomedol",
+    "first_name": "Lourdes",
+    "last_name": "Jácome",
+    "email": "ljacome@ladolorosa-loja.edu.ec",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-07T12:12:49Z",
+    "rol": "docente",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "horarios.usuario",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$P28YvW3XcJ6FYPaRuIWWBf$KhbXNTyDUCLJVZKZfHkKON92Gi2BMY2aBOdIu0bMQ4M=",
+    "last_login": "2026-05-13T15:05:44.158Z",
+    "is_superuser": false,
+    "username": "cristiandol",
+    "first_name": "Leon",
+    "last_name": "Cristian",
+    "email": "caleon@ladolorosa-loja.edu.ec",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-07T18:39:26.887Z",
+    "rol": "estudiante",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "horarios.usuario",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$2uABR1nRXHSxmKnE2RRsvp$FHRYfiUC8eb1ZcU8qDeMDeGgHHvVJeqTR6AXpYtfJzc=",
+    "last_login": "2026-05-13T17:09:00.320Z",
+    "is_superuser": true,
+    "username": "jsarmiento.dol",
+    "first_name": "Jorge",
+    "last_name": "Sarmiento",
+    "email": "jrsarmiento@ladolorosa-loja.edu.ec",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-12T21:09:38Z",
+    "rol": "admin",
+    "groups": [],
+    "user_permissions": [
+      [
+        "add_logentry",
+        "admin",
+        "logentry"
+      ],
+      [
+        "change_logentry",
+        "admin",
+        "logentry"
+      ],
+      [
+        "delete_logentry",
+        "admin",
+        "logentry"
+      ],
+      [
+        "view_logentry",
+        "admin",
+        "logentry"
+      ],
+      [
+        "add_group",
+        "auth",
+        "group"
+      ],
+      [
+        "change_group",
+        "auth",
+        "group"
+      ],
+      [
+        "delete_group",
+        "auth",
+        "group"
+      ],
+      [
+        "view_group",
+        "auth",
+        "group"
+      ],
+      [
+        "add_permission",
+        "auth",
+        "permission"
+      ],
+      [
+        "change_permission",
+        "auth",
+        "permission"
+      ],
+      [
+        "delete_permission",
+        "auth",
+        "permission"
+      ],
+      [
+        "view_permission",
+        "auth",
+        "permission"
+      ],
+      [
+        "add_contenttype",
+        "contenttypes",
+        "contenttype"
+      ],
+      [
+        "change_contenttype",
+        "contenttypes",
+        "contenttype"
+      ],
+      [
+        "delete_contenttype",
+        "contenttypes",
+        "contenttype"
+      ],
+      [
+        "view_contenttype",
+        "contenttypes",
+        "contenttype"
+      ],
+      [
+        "add_curso",
+        "horarios",
+        "curso"
+      ],
+      [
+        "change_curso",
+        "horarios",
+        "curso"
+      ],
+      [
+        "delete_curso",
+        "horarios",
+        "curso"
+      ],
+      [
+        "view_curso",
+        "horarios",
+        "curso"
+      ],
+      [
+        "add_docente",
+        "horarios",
+        "docente"
+      ],
+      [
+        "change_docente",
+        "horarios",
+        "docente"
+      ],
+      [
+        "delete_docente",
+        "horarios",
+        "docente"
+      ],
+      [
+        "view_docente",
+        "horarios",
+        "docente"
+      ],
+      [
+        "add_horario",
+        "horarios",
+        "horario"
+      ],
+      [
+        "change_horario",
+        "horarios",
+        "horario"
+      ],
+      [
+        "delete_horario",
+        "horarios",
+        "horario"
+      ],
+      [
+        "view_horario",
+        "horarios",
+        "horario"
+      ],
+      [
+        "add_paralelo",
+        "horarios",
+        "paralelo"
+      ],
+      [
+        "change_paralelo",
+        "horarios",
+        "paralelo"
+      ],
+      [
+        "delete_paralelo",
+        "horarios",
+        "paralelo"
+      ],
+      [
+        "view_paralelo",
+        "horarios",
+        "paralelo"
+      ],
+      [
+        "add_usuario",
+        "horarios",
+        "usuario"
+      ],
+      [
+        "change_usuario",
+        "horarios",
+        "usuario"
+      ],
+      [
+        "delete_usuario",
+        "horarios",
+        "usuario"
+      ],
+      [
+        "view_usuario",
+        "horarios",
+        "usuario"
+      ],
+      [
+        "add_session",
+        "sessions",
+        "session"
+      ],
+      [
+        "change_session",
+        "sessions",
+        "session"
+      ],
+      [
+        "delete_session",
+        "sessions",
+        "session"
+      ],
+      [
+        "view_session",
+        "sessions",
+        "session"
+      ]
+    ]
+  }
+},
+{
+  "model": "horarios.usuario",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$VFKL95r7QGUyx2XQvXcslK$LZKXTejJykaPSZfWtTZivApW4X1THIjq1EHNrfb7nIA=",
+    "last_login": "2026-05-15T16:21:37.973Z",
+    "is_superuser": false,
+    "username": "syarmijos.dol",
+    "first_name": "Sonia",
+    "last_name": "Armijos",
+    "email": "syarmijos@ladolorosa-loja.edu.ec",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-13T17:08:37.674Z",
+    "rol": "docente",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "horarios.docente",
+  "pk": 2,
+  "fields": {
+    "usuario": [
+      "jtandazo1"
+    ],
+    "especialidad": "Física",
+    "foto": "docentes_fotos/fff_V1IPW4a.png",
+    "disponible": true,
+    "ubicacion_actual": "Laboratorio de Física"
+  }
+},
+{
+  "model": "horarios.docente",
+  "pk": 3,
+  "fields": {
+    "usuario": [
+      "ljacomedol"
+    ],
+    "especialidad": "Religión y Orientación",
+    "foto": "",
+    "disponible": true,
+    "ubicacion_actual": "Departamento de Pastoral"
+  }
+},
+{
+  "model": "horarios.docente",
+  "pk": 4,
+  "fields": {
+    "usuario": [
+      "jsarmiento.dol"
+    ],
+    "especialidad": "",
+    "foto": "",
+    "disponible": true,
+    "ubicacion_actual": null
+  }
+},
+{
+  "model": "horarios.docente",
+  "pk": 5,
+  "fields": {
+    "usuario": [
+      "syarmijos.dol"
+    ],
+    "especialidad": "",
+    "foto": "",
+    "disponible": true,
+    "ubicacion_actual": null
+  }
+},
+{
+  "model": "horarios.curso",
+  "pk": 1,
+  "fields": {
+    "nombre": "Octavo",
+    "nivel": "Educacion General Básica"
+  }
+},
+{
+  "model": "horarios.curso",
+  "pk": 2,
+  "fields": {
+    "nombre": "Noveno",
+    "nivel": "Educacion General Básica"
+  }
+},
+{
+  "model": "horarios.curso",
+  "pk": 3,
+  "fields": {
+    "nombre": "Décimo",
+    "nivel": "Educacion General Básica"
+  }
+},
+{
+  "model": "horarios.curso",
+  "pk": 4,
+  "fields": {
+    "nombre": "Primero",
+    "nivel": "Bachillerato"
+  }
+},
+{
+  "model": "horarios.curso",
+  "pk": 5,
+  "fields": {
+    "nombre": "Segundo",
+    "nivel": "Bachillerato"
+  }
+},
+{
+  "model": "horarios.curso",
+  "pk": 6,
+  "fields": {
+    "nombre": "Tercero",
+    "nivel": "Bachillerato"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 1,
+  "fields": {
+    "curso": 1,
+    "identificador": "A",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 6,
+  "fields": {
+    "curso": 1,
+    "identificador": "B",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 7,
+  "fields": {
+    "curso": 1,
+    "identificador": "C",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 8,
+  "fields": {
+    "curso": 1,
+    "identificador": "D",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 9,
+  "fields": {
+    "curso": 1,
+    "identificador": "E",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 10,
+  "fields": {
+    "curso": 1,
+    "identificador": "F",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 11,
+  "fields": {
+    "curso": 1,
+    "identificador": "G",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 12,
+  "fields": {
+    "curso": 1,
+    "identificador": "H",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 13,
+  "fields": {
+    "curso": 2,
+    "identificador": "A",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 14,
+  "fields": {
+    "curso": 2,
+    "identificador": "B",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 15,
+  "fields": {
+    "curso": 2,
+    "identificador": "C",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 16,
+  "fields": {
+    "curso": 2,
+    "identificador": "D",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 17,
+  "fields": {
+    "curso": 2,
+    "identificador": "E",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 18,
+  "fields": {
+    "curso": 2,
+    "identificador": "F",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 19,
+  "fields": {
+    "curso": 2,
+    "identificador": "G",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 20,
+  "fields": {
+    "curso": 2,
+    "identificador": "H",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 21,
+  "fields": {
+    "curso": 3,
+    "identificador": "A",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 22,
+  "fields": {
+    "curso": 3,
+    "identificador": "B",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 23,
+  "fields": {
+    "curso": 3,
+    "identificador": "C",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 24,
+  "fields": {
+    "curso": 3,
+    "identificador": "D",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 25,
+  "fields": {
+    "curso": 3,
+    "identificador": "E",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 26,
+  "fields": {
+    "curso": 3,
+    "identificador": "F",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 27,
+  "fields": {
+    "curso": 3,
+    "identificador": "G",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 28,
+  "fields": {
+    "curso": 3,
+    "identificador": "H",
+    "especialidad_bachillerato": ""
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 29,
+  "fields": {
+    "curso": 4,
+    "identificador": "A",
+    "especialidad_bachillerato": "bgu"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 30,
+  "fields": {
+    "curso": 4,
+    "identificador": "B",
+    "especialidad_bachillerato": "bgu"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 31,
+  "fields": {
+    "curso": 4,
+    "identificador": "C",
+    "especialidad_bachillerato": "bgu"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 32,
+  "fields": {
+    "curso": 4,
+    "identificador": "D",
+    "especialidad_bachillerato": "bgu"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 33,
+  "fields": {
+    "curso": 4,
+    "identificador": "E",
+    "especialidad_bachillerato": "informatica"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 34,
+  "fields": {
+    "curso": 4,
+    "identificador": "F",
+    "especialidad_bachillerato": "informatica"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 35,
+  "fields": {
+    "curso": 4,
+    "identificador": "G",
+    "especialidad_bachillerato": "electricidad"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 36,
+  "fields": {
+    "curso": 5,
+    "identificador": "A",
+    "especialidad_bachillerato": "bgu"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 37,
+  "fields": {
+    "curso": 5,
+    "identificador": "B",
+    "especialidad_bachillerato": "bgu"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 38,
+  "fields": {
+    "curso": 5,
+    "identificador": "C",
+    "especialidad_bachillerato": "bgu"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 39,
+  "fields": {
+    "curso": 5,
+    "identificador": "D",
+    "especialidad_bachillerato": "bgu"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 40,
+  "fields": {
+    "curso": 5,
+    "identificador": "E",
+    "especialidad_bachillerato": "informatica"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 41,
+  "fields": {
+    "curso": 5,
+    "identificador": "F",
+    "especialidad_bachillerato": "informatica"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 42,
+  "fields": {
+    "curso": 5,
+    "identificador": "G",
+    "especialidad_bachillerato": "electricidad"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 43,
+  "fields": {
+    "curso": 6,
+    "identificador": "A",
+    "especialidad_bachillerato": "bgu"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 44,
+  "fields": {
+    "curso": 6,
+    "identificador": "B",
+    "especialidad_bachillerato": "bgu"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 45,
+  "fields": {
+    "curso": 6,
+    "identificador": "C",
+    "especialidad_bachillerato": "bgu"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 46,
+  "fields": {
+    "curso": 6,
+    "identificador": "D",
+    "especialidad_bachillerato": "bgu"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 47,
+  "fields": {
+    "curso": 6,
+    "identificador": "E",
+    "especialidad_bachillerato": "informatica"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 48,
+  "fields": {
+    "curso": 6,
+    "identificador": "F",
+    "especialidad_bachillerato": "informatica"
+  }
+},
+{
+  "model": "horarios.paralelo",
+  "pk": 49,
+  "fields": {
+    "curso": 6,
+    "identificador": "G",
+    "especialidad_bachillerato": "electricidad"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 1,
+  "fields": {
+    "nombre": "Física"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 2,
+  "fields": {
+    "nombre": "Religión y Orientación"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 3,
+  "fields": {
+    "nombre": "C.A.I.A"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 4,
+  "fields": {
+    "nombre": "Ciencias Naturales"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 5,
+  "fields": {
+    "nombre": "Estudios Sociales"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 6,
+  "fields": {
+    "nombre": "Educación Física"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 7,
+  "fields": {
+    "nombre": "Matemáticas"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 8,
+  "fields": {
+    "nombre": "Lengua y Literatura"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 9,
+  "fields": {
+    "nombre": "Educación Cultural y Artística"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 10,
+  "fields": {
+    "nombre": "Inglés"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 11,
+  "fields": {
+    "nombre": "Animación a la Lectura"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 12,
+  "fields": {
+    "nombre": "Religión"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 13,
+  "fields": {
+    "nombre": "Filosofia"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 14,
+  "fields": {
+    "nombre": "Biología"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 15,
+  "fields": {
+    "nombre": "Química"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 16,
+  "fields": {
+    "nombre": "Emprendimiento"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 17,
+  "fields": {
+    "nombre": "Ciudadanía"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 18,
+  "fields": {
+    "nombre": "Historia"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 19,
+  "fields": {
+    "nombre": "PPE"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 20,
+  "fields": {
+    "nombre": "Ética LCD"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 21,
+  "fields": {
+    "nombre": "Pens. Computacional"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 22,
+  "fields": {
+    "nombre": "Prác. Experimental"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 23,
+  "fields": {
+    "nombre": "Sist. Oper. y Aplic."
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 24,
+  "fields": {
+    "nombre": "Soport. Técn. Informático"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 25,
+  "fields": {
+    "nombre": "Fund. Electric y Electrónica"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 26,
+  "fields": {
+    "nombre": "Fundamentos de las TIC"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 27,
+  "fields": {
+    "nombre": "Prog. Estruct"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 28,
+  "fields": {
+    "nombre": "Aplicaciones Escritorio"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 29,
+  "fields": {
+    "nombre": "Base Datos"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 30,
+  "fields": {
+    "nombre": "Electrotecnia"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 31,
+  "fields": {
+    "nombre": "Sist. Autom. y Control"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 32,
+  "fields": {
+    "nombre": "Proces. Indust. Sosten."
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 33,
+  "fields": {
+    "nombre": "Dib. Téc. Aplicado"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 34,
+  "fields": {
+    "nombre": "Inst. Eléct. Conv. Especi"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 35,
+  "fields": {
+    "nombre": "Seguridad Industrial"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 36,
+  "fields": {
+    "nombre": "Diseño Web"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 37,
+  "fields": {
+    "nombre": "Progra y BD"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 38,
+  "fields": {
+    "nombre": "Sist. Oper y Redes"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 39,
+  "fields": {
+    "nombre": "Sop. Técnico"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 40,
+  "fields": {
+    "nombre": "Ins. Elec. Interior"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 41,
+  "fields": {
+    "nombre": "Auto. y Tab. Elec."
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 42,
+  "fields": {
+    "nombre": "C. Filosóficas"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 43,
+  "fields": {
+    "nombre": "Investigación"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 44,
+  "fields": {
+    "nombre": "A. Ofimáticas"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 45,
+  "fields": {
+    "nombre": "F.O.L"
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 46,
+  "fields": {
+    "nombre": "Ins. Enl. Cent. Trans."
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 47,
+  "fields": {
+    "nombre": "Mant. Máq. Elec."
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 48,
+  "fields": {
+    "nombre": "Ins. Autom. Elec."
+  }
+},
+{
+  "model": "horarios.asignatura",
+  "pk": 49,
+  "fields": {
+    "nombre": "Ins. Serv. Espc. en Edf"
+  }
+},
+{
+  "model": "horarios.horario",
+  "pk": 27,
+  "fields": {
+    "docente": 2,
+    "curso": 2,
+    "paralelo": 17,
+    "asignatura": 1,
+    "dia": "miercoles",
+    "hora_inicio": "07:00:00",
+    "hora_fin": "08:30:00",
+    "tipo": "docente"
+  }
+},
+{
+  "model": "horarios.horario",
+  "pk": 28,
+  "fields": {
+    "docente": 3,
+    "curso": 1,
+    "paralelo": 1,
+    "asignatura": 2,
+    "dia": "lunes",
+    "hora_inicio": "07:00:00",
+    "hora_fin": "07:45:00",
+    "tipo": "clase"
+  }
+},
+{
+  "model": "horarios.horario",
+  "pk": 29,
+  "fields": {
+    "docente": 3,
+    "curso": 1,
+    "paralelo": 1,
+    "asignatura": 2,
+    "dia": "lunes",
+    "hora_inicio": "07:45:00",
+    "hora_fin": "08:30:00",
+    "tipo": "clase"
+  }
+},
+{
+  "model": "horarios.horario",
+  "pk": 32,
+  "fields": {
+    "docente": 5,
+    "curso": 1,
+    "paralelo": 1,
+    "asignatura": 4,
+    "dia": "lunes",
+    "hora_inicio": "08:30:00",
+    "hora_fin": "09:15:00",
+    "tipo": "clase"
+  }
+},
+{
+  "model": "horarios.horario",
+  "pk": 33,
+  "fields": {
+    "docente": 5,
+    "curso": 1,
+    "paralelo": 1,
+    "asignatura": 4,
+    "dia": "lunes",
+    "hora_inicio": "09:15:00",
+    "hora_fin": "10:00:00",
+    "tipo": "clase"
+  }
+},
+{
+  "model": "horarios.horario",
+  "pk": 34,
+  "fields": {
+    "docente": 3,
+    "curso": 1,
+    "paralelo": 1,
+    "asignatura": 3,
+    "dia": "lunes",
+    "hora_inicio": "10:25:00",
+    "hora_fin": "11:05:00",
+    "tipo": "clase"
+  }
+},
+{
+  "model": "horarios.horario",
+  "pk": 35,
+  "fields": {
+    "docente": 5,
+    "curso": 1,
+    "paralelo": 1,
+    "asignatura": 4,
+    "dia": "martes",
+    "hora_inicio": "07:00:00",
+    "hora_fin": "07:45:00",
+    "tipo": "clase"
+  }
+},
+{
+  "model": "horarios.horario",
+  "pk": 36,
+  "fields": {
+    "docente": 5,
+    "curso": 1,
+    "paralelo": 1,
+    "asignatura": 4,
+    "dia": "martes",
+    "hora_inicio": "07:45:00",
+    "hora_fin": "08:30:00",
+    "tipo": "clase"
+  }
+}
+]
