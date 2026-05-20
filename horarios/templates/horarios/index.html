@@ -1,4 +1,5 @@
 {% extends 'base_app.html' %}
+{% load static %}
 
 {% block title %}Directorio de Docentes - La Dolorosa{% endblock %}
 
@@ -85,7 +86,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-lg" id="grid-docentes">
         {% for docente in docentes %}
         {% cycle '#1D4ED8' '#0D9488' '#7C3AED' '#EF4444' as c_main silent %}
-        {% cycle '#DBEAFE' '#CCFBF1' '#F3E8FF' '#FEE2E2' as c_bg silent %}
+        {% cycle '#BFDBFE' '#99F6E4' '#E9D5FF' '#FECACA' as c_bg silent %}
         
         <a href="{% url 'horarios:horario_docente' docente.id %}"
            data-nombre="{{ docente.usuario.get_full_name|lower|default:docente.usuario.username|lower }}"
@@ -168,55 +169,41 @@
     </div>
 
     <!-- Banner Info -->
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-6 bg-[#E0F2FE] rounded-3xl p-6 sm:px-10 mt-8 relative overflow-hidden">
-        <!-- Decoration Blur -->
-        <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-blue-300/50 rounded-full mix-blend-multiply blur-2xl"></div>
-        <div class="absolute right-10 top-0 w-32 h-32 bg-blue-300/40 rounded-full mix-blend-multiply blur-2xl"></div>
+    <div class="flex flex-col sm:flex-row items-center justify-between bg-gradient-to-r from-[#f4f8fb] to-[#eef5fa] rounded-2xl p-6 sm:px-10 mt-8 relative border border-[#e2e8f0]/50 h-auto sm:h-28 overflow-visible">
+        
+        <!-- Left Side: Icon + Text -->
+        <div class="flex items-center gap-5 relative z-10 w-full sm:w-auto">
+            <!-- Icon Stopwatch (CSS drawn to match) -->
+            <div class="relative w-16 h-16 flex items-center justify-center shrink-0">
+                <!-- Background decorative leaves -->
+                <div class="absolute -left-2 top-2 w-3 h-6 bg-[#bfdbfe] rounded-full rotate-[-45deg] opacity-80"></div>
+                <div class="absolute -left-1 top-8 w-4 h-6 bg-[#bfdbfe] rounded-full rotate-[-60deg] opacity-80"></div>
+                <div class="absolute right-0 top-1 w-3 h-6 bg-[#bfdbfe] rounded-full rotate-[45deg] opacity-80"></div>
+                <!-- Red leaves -->
+                <div class="absolute -right-2 bottom-1 w-5 h-7 bg-[#ef4444] rounded-t-full rounded-br-full rotate-[45deg]"></div>
+                <div class="absolute right-2 -bottom-1 w-4 h-6 bg-[#ef4444] rounded-t-full rounded-br-full rotate-[70deg]"></div>
 
-        <div class="flex items-center gap-5 relative z-10">
-            <!-- Icon Stopwatch Style -->
-            <div class="relative w-14 h-14 flex items-center justify-center bg-white rounded-full shadow-sm border-[3px] border-[#3B82F6]">
-                <span class="material-symbols-outlined text-[#3B82F6] text-[28px]">timer</span>
-                <!-- Decorative leaves/hearts -->
-                <span class="absolute -left-3 -top-1 text-blue-300 material-symbols-outlined text-[16px] -rotate-12">spa</span>
-                <span class="absolute -right-2 bottom-0 text-red-400 material-symbols-outlined text-[16px] rotate-12" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                <!-- Stopwatch body -->
+                <div class="relative w-14 h-14 border-[3px] border-[#1d4ed8] rounded-full bg-white z-10 shadow-sm flex items-center justify-center">
+                    <!-- Top button -->
+                    <div class="absolute -top-[5px] w-4 h-2 border-[3px] border-[#1d4ed8] bg-white rounded-t-sm"></div>
+                    <div class="absolute -top-[8px] w-2 h-1 bg-[#1d4ed8] rounded-t-sm"></div>
+                    <!-- Hands -->
+                    <div class="w-1.5 h-1.5 bg-[#1d4ed8] rounded-full absolute"></div>
+                    <div class="w-[3px] h-4 bg-[#1d4ed8] absolute top-2 right-3 rotate-[40deg] rounded-full"></div>
+                    <div class="w-[2px] h-3 bg-[#1d4ed8] absolute top-3 left-4 -rotate-45 rounded-full"></div>
+                </div>
             </div>
+
             <div>
-                <p class="font-extrabold text-[#0B1A40] text-[17px]">Información en tiempo real</p>
-                <p class="text-[13px] text-gray-500 font-medium mt-0.5">La disponibilidad de los docentes se actualiza automáticamente.</p>
+                <p class="font-extrabold text-[#1e3a8a] text-[17px]">Información en tiempo real</p>
+                <p class="text-[13px] text-[#64748b] font-medium mt-0.5 z-10 relative">La disponibilidad de los docentes se actualiza automáticamente.</p>
             </div>
         </div>
 
-        <div class="relative z-10 flex items-center mt-4 sm:mt-0 gap-6">
-            <div class="flex items-center gap-2 bg-white text-[#16A34A] px-5 py-2.5 rounded-full text-sm font-bold shadow-sm border border-gray-100">
-                <span class="material-symbols-outlined text-[#22C55E] text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                Datos actualizados
-            </div>
-            
-            <!-- CSS Illustration Girl with Laptop -->
-            <div class="hidden md:flex relative w-24 h-24 items-end justify-center shrink-0 translate-y-6">
-                <!-- Laptop -->
-                <div class="absolute bottom-4 left-0 w-12 h-9 bg-[#cbd5e1] rounded-t-md transform -rotate-12 z-30">
-                    <div class="w-full h-full flex items-center justify-center"><div class="w-2 h-2 bg-white/50 rounded-full"></div></div>
-                </div>
-                <!-- Body -->
-                <div class="absolute bottom-0 right-2 w-16 h-14 bg-[#2563eb] rounded-t-3xl z-20 overflow-hidden">
-                    <div class="w-full h-1 bg-[#1e40af] absolute top-2"></div>
-                </div>
-                <!-- Head -->
-                <div class="absolute bottom-11 right-5 w-10 h-10 bg-[#fca5a5] rounded-full z-10 flex flex-col items-center">
-                    <!-- Hair -->
-                    <div class="absolute -top-1 -left-2 w-14 h-14 bg-[#1e293b] rounded-t-[2rem] rounded-bl-xl z-0"></div>
-                    <!-- Face (overlaps hair) -->
-                    <div class="w-9 h-9 bg-[#fcd34d] rounded-full z-10 mt-1 flex flex-col items-center justify-center gap-0.5">
-                        <div class="flex gap-2">
-                            <div class="w-1 h-1 bg-[#475569] rounded-full"></div>
-                            <div class="w-1 h-1 bg-[#475569] rounded-full"></div>
-                        </div>
-                        <div class="w-2 h-0.5 bg-[#ef4444] rounded-full mt-1"></div>
-                    </div>
-                </div>
-            </div>
+        <!-- Right Side: Girl Image Container -->
+        <div class="absolute top-[-60px] right-0 bottom-0 w-[400px] overflow-hidden rounded-r-2xl pointer-events-none z-0 flex items-end justify-end">
+            <img src="{% static 'images/img01.png' %}" alt="Girl Illustration" class="w-[350px] h-auto object-contain translate-y-[28px] translate-x-[4px]">
         </div>
     </div>
 </div>
