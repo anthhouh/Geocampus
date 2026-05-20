@@ -85,13 +85,13 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-lg" id="grid-docentes">
         {% for docente in docentes %}
         {% cycle '#1D4ED8' '#0D9488' '#7C3AED' '#EF4444' as c_main silent %}
-        {% cycle '#EFF6FF' '#F0FDF4' '#FAF5FF' '#FEF2F2' as c_bg silent %}
+        {% cycle '#DBEAFE' '#CCFBF1' '#F3E8FF' '#FEE2E2' as c_bg silent %}
         
         <a href="{% url 'horarios:horario_docente' docente.id %}"
            data-nombre="{{ docente.usuario.get_full_name|lower|default:docente.usuario.username|lower }}"
            data-especialidad="{{ docente.especialidad|lower|default:'docente' }}"
            data-disponible="{{ docente.disponible|yesno:'true,false' }}"
-           class="docente-card group relative bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 overflow-hidden no-underline flex flex-col p-6 text-center items-center cursor-pointer">
+           class="docente-card group relative bg-white rounded-3xl border border-[#f1f5f9] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden no-underline flex flex-col items-center cursor-pointer">
 
             <!-- Fondo decorativo wavy superior -->
             <div class="absolute top-0 left-0 right-0 h-32 -z-0">
@@ -101,19 +101,19 @@
             </div>
 
             <!-- Badge disponibilidad -->
-            <div class="absolute top-4 right-4 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white shadow-sm
-                {% if docente.disponible %}text-[#16A34A]{% else %}text-[#DC2626]{% endif %}">
+            <div class="absolute top-4 right-4 z-10 flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/70 backdrop-blur-sm
+                {% if docente.disponible %}text-[#16A34A]{% else %}text-[#DC2626]{% endif %} shadow-sm">
                 <span class="w-2 h-2 rounded-full {% if docente.disponible %}bg-[#22C55E]{% else %}bg-[#EF4444]{% endif %}"></span>
                 {% if docente.disponible %}Disponible{% else %}Ocupado{% endif %}
             </div>
 
             <!-- Avatar -->
-            <div class="relative z-10 mt-6 mb-3">
+            <div class="relative z-10 mt-8 mb-4">
                 {% if docente.foto %}
                 <img src="{{ docente.foto.url }}" alt="{{ docente.usuario.get_full_name }}"
-                     class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md group-hover:scale-105 transition-transform duration-300">
+                     class="w-[88px] h-[88px] rounded-full object-cover border-4 border-white shadow-sm group-hover:scale-105 transition-transform duration-300">
                 {% else %}
-                <div class="w-24 h-24 rounded-full border-4 border-white shadow-md flex items-center justify-center text-4xl font-bold text-white group-hover:scale-105 transition-transform duration-300"
+                <div class="w-[88px] h-[88px] rounded-full border-4 border-white shadow-sm flex items-center justify-center text-[34px] font-bold text-white group-hover:scale-105 transition-transform duration-300"
                      style="background-color: {{ c_main }};">
                     {{ docente.usuario.first_name|first|default:docente.usuario.username|first|upper }}
                 </div>
@@ -121,45 +121,36 @@
             </div>
 
             <!-- Info -->
-            <h3 class="font-extrabold text-lg text-[#0B1A40] z-10">
+            <h3 class="font-extrabold text-[17px] text-[#0B1A40] z-10 mb-1 px-4 text-center">
                 {{ docente.usuario.get_full_name|default:docente.usuario.username }}
             </h3>
 
             <!-- Tag especialidad -->
-            <span class="mt-1.5 mb-5 px-4 py-1 rounded-full text-xs font-bold z-10"
-                  style="background-color: {{ c_bg }}; color: {{ c_main }};">
+            <span class="mb-5 px-3.5 py-1 rounded-full text-[11px] font-bold z-10 border"
+                  style="background-color: {{ c_bg }}; color: {{ c_main }}; border-color: {{ c_bg }};">
                 {{ docente.especialidad|default:"Docente" }}
             </span>
 
             <!-- Divider -->
-            <div class="w-full border-t border-gray-100/80 mb-4 z-10"></div>
+            <div class="w-[85%] border-t border-dashed border-[#e2e8f0] mb-5 z-10"></div>
 
             <!-- Ubicación -->
-            <div class="flex items-start justify-center gap-2 w-full z-10">
-                <span class="material-symbols-outlined text-[20px] mt-0.5 flex-shrink-0"
+            <div class="flex items-start gap-3 w-full px-6 mb-6 z-10">
+                <span class="material-symbols-outlined text-[22px] mt-0.5 flex-shrink-0"
                       style="{% if docente.disponible %}color: {{ c_main }};{% else %}color: #9CA3AF;{% endif %}">
                     location_on
                 </span>
                 <div class="text-left flex-1 overflow-hidden">
-                    <p class="text-sm font-semibold text-gray-800 truncate">{{ docente.ubicacion_dinamica }}</p>
-                    <p class="text-xs text-gray-500 font-medium">Ubicación</p>
+                    <p class="text-[13px] font-bold text-[#0B1A40] truncate">{{ docente.ubicacion_dinamica }}</p>
+                    <p class="text-[11px] text-[#64748b] font-medium">Ubicación</p>
                 </div>
             </div>
 
-            <!-- Fondo decorativo wavy inferior -->
-            <div class="absolute bottom-0 left-0 right-0 h-20 -z-0">
-                <svg viewBox="0 0 400 80" preserveAspectRatio="none" class="w-full h-full" style="color: {{ c_bg }};">
-                    <path d="M0,80 L400,80 L400,30 Q300,0 200,30 T0,30 Z" fill="currentColor" opacity="0.4"></path>
-                </svg>
-            </div>
-
-            <!-- CTA -->
-            <div class="mt-6 mb-2 w-full z-10 relative">
-                <span class="flex items-center justify-center gap-1.5 font-bold text-sm group-hover:gap-2.5 transition-all duration-300"
-                      style="color: {{ c_main }};">
-                    Ver detalles
-                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-                </span>
+            <!-- Bottom CTA Button (Full Width) -->
+            <div class="mt-auto w-full py-3.5 flex items-center justify-center gap-1.5 font-bold text-[13px] group-hover:gap-2.5 transition-all duration-300 z-10"
+                 style="background-color: {{ c_bg }}; color: {{ c_main }};">
+                Ver detalles
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
             </div>
         </a>
         {% empty %}
@@ -177,10 +168,10 @@
     </div>
 
     <!-- Banner Info -->
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-6 bg-[#F0F9FF] rounded-3xl p-6 sm:px-10 mt-8 relative overflow-hidden">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-6 bg-[#E0F2FE] rounded-3xl p-6 sm:px-10 mt-8 relative overflow-hidden">
         <!-- Decoration Blur -->
-        <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-blue-200/50 rounded-full mix-blend-multiply blur-2xl"></div>
-        <div class="absolute right-10 top-0 w-32 h-32 bg-blue-200/30 rounded-full mix-blend-multiply blur-2xl"></div>
+        <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-blue-300/50 rounded-full mix-blend-multiply blur-2xl"></div>
+        <div class="absolute right-10 top-0 w-32 h-32 bg-blue-300/40 rounded-full mix-blend-multiply blur-2xl"></div>
 
         <div class="flex items-center gap-5 relative z-10">
             <!-- Icon Stopwatch Style -->
@@ -196,10 +187,35 @@
             </div>
         </div>
 
-        <div class="relative z-10 flex items-center mt-4 sm:mt-0">
+        <div class="relative z-10 flex items-center mt-4 sm:mt-0 gap-6">
             <div class="flex items-center gap-2 bg-white text-[#16A34A] px-5 py-2.5 rounded-full text-sm font-bold shadow-sm border border-gray-100">
                 <span class="material-symbols-outlined text-[#22C55E] text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                 Datos actualizados
+            </div>
+            
+            <!-- CSS Illustration Girl with Laptop -->
+            <div class="hidden md:flex relative w-24 h-24 items-end justify-center shrink-0 translate-y-6">
+                <!-- Laptop -->
+                <div class="absolute bottom-4 left-0 w-12 h-9 bg-[#cbd5e1] rounded-t-md transform -rotate-12 z-30">
+                    <div class="w-full h-full flex items-center justify-center"><div class="w-2 h-2 bg-white/50 rounded-full"></div></div>
+                </div>
+                <!-- Body -->
+                <div class="absolute bottom-0 right-2 w-16 h-14 bg-[#2563eb] rounded-t-3xl z-20 overflow-hidden">
+                    <div class="w-full h-1 bg-[#1e40af] absolute top-2"></div>
+                </div>
+                <!-- Head -->
+                <div class="absolute bottom-11 right-5 w-10 h-10 bg-[#fca5a5] rounded-full z-10 flex flex-col items-center">
+                    <!-- Hair -->
+                    <div class="absolute -top-1 -left-2 w-14 h-14 bg-[#1e293b] rounded-t-[2rem] rounded-bl-xl z-0"></div>
+                    <!-- Face (overlaps hair) -->
+                    <div class="w-9 h-9 bg-[#fcd34d] rounded-full z-10 mt-1 flex flex-col items-center justify-center gap-0.5">
+                        <div class="flex gap-2">
+                            <div class="w-1 h-1 bg-[#475569] rounded-full"></div>
+                            <div class="w-1 h-1 bg-[#475569] rounded-full"></div>
+                        </div>
+                        <div class="w-2 h-0.5 bg-[#ef4444] rounded-full mt-1"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

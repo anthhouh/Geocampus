@@ -140,11 +140,59 @@
 <div class="max-w-[1200px] mx-auto p-4 md:p-6 space-y-6">
 
     <!-- Header Banner -->
-    <div class="mockup-header-card p-6 flex items-center gap-4">
-        <span class="material-symbols-outlined text-[#1e40af]" style="font-size: 2.5rem;">calendar_month</span>
-        <div>
-            <h1 class="text-2xl font-bold text-[#1e3a8a] mb-1">Consultar Horarios de Clases</h1>
-            <p class="text-[#475569] text-sm">Selecciona las opciones para visualizar el horario.</p>
+    <div class="mockup-header-card p-6 flex items-center justify-between relative overflow-hidden">
+        <div class="z-10 flex items-center gap-4">
+            <span class="material-symbols-outlined text-[#1e40af]" style="font-size: 2.5rem;">calendar_month</span>
+            <div>
+                <h1 class="text-2xl font-bold text-[#1e3a8a] mb-1">Consultar Horarios de Clases</h1>
+                <p class="text-[#475569] text-sm">Selecciona las opciones para visualizar el horario.</p>
+            </div>
+        </div>
+
+        <!-- CSS Illustration (Right side) -->
+        <div class="hidden md:flex relative w-64 h-24 items-center justify-end pr-8 pointer-events-none">
+            <!-- Background blobs -->
+            <div class="absolute right-2 top-0 w-48 h-24 bg-gradient-to-r from-[#dbeafe] to-[#c7d2fe] rounded-full blur-md opacity-90"></div>
+            
+            <!-- Clock -->
+            <div class="absolute left-6 top-4 w-10 h-10 rounded-full bg-[#bfdbfe] border-2 border-white flex items-center justify-center shadow-sm z-10">
+                <span class="material-symbols-outlined text-[#1e40af]" style="font-size: 1.2rem;">schedule</span>
+            </div>
+            
+            <!-- Calendar -->
+            <div class="relative w-20 h-24 bg-white rounded-xl shadow-md border border-[#e2e8f0] flex flex-col overflow-hidden z-20 translate-y-1">
+                <!-- Red spiral rings -->
+                <div class="h-3 w-full bg-white flex justify-evenly items-center border-b border-[#e2e8f0]">
+                    <div class="w-1.5 h-3 bg-[#ef4444] rounded-full -mt-2"></div>
+                    <div class="w-1.5 h-3 bg-[#ef4444] rounded-full -mt-2"></div>
+                    <div class="w-1.5 h-3 bg-[#ef4444] rounded-full -mt-2"></div>
+                </div>
+                <!-- Top red bar -->
+                <div class="h-4 w-full bg-[#fef2f2] border-b border-[#fca5a5] flex items-center justify-center">
+                    <div class="w-8 h-1 rounded-full bg-[#fca5a5]"></div>
+                </div>
+                <!-- Grid -->
+                <div class="flex-1 p-1.5 grid grid-cols-3 gap-1">
+                    <div class="bg-[#f8fafc] rounded-sm flex items-center justify-center"><span class="material-symbols-outlined text-[#ef4444]" style="font-size: 10px; font-weight: bold;">check</span></div>
+                    <div class="bg-[#f8fafc] rounded-sm"></div>
+                    <div class="bg-[#f8fafc] rounded-sm flex items-center justify-center"><span class="material-symbols-outlined text-[#ef4444]" style="font-size: 10px; font-weight: bold;">check</span></div>
+                    <div class="bg-[#f8fafc] rounded-sm"></div>
+                    <div class="bg-[#f8fafc] rounded-sm flex items-center justify-center"><span class="material-symbols-outlined text-[#ef4444]" style="font-size: 10px; font-weight: bold;">check</span></div>
+                    <div class="bg-[#f8fafc] rounded-sm"></div>
+                </div>
+            </div>
+            
+            <!-- Plant -->
+            <div class="relative w-12 h-20 ml-2 z-10 flex flex-col items-center justify-end translate-y-2">
+                <!-- Leaves -->
+                <div class="absolute top-2 flex justify-center w-full">
+                    <span class="material-symbols-outlined text-[#93c5fd] rotate-[-20deg]" style="font-size: 1.5rem; position: absolute; left: -2px; top: 5px;">eco</span>
+                    <span class="material-symbols-outlined text-[#60a5fa]" style="font-size: 2.2rem; position: absolute; top: -8px;">eco</span>
+                    <span class="material-symbols-outlined text-[#bfdbfe] rotate-[30deg]" style="font-size: 1.5rem; position: absolute; right: -2px; top: 10px;">eco</span>
+                </div>
+                <!-- Pot -->
+                <div class="w-8 h-8 bg-[#93c5fd] rounded-b-md relative z-10 border-t-4 border-[#60a5fa]"></div>
+            </div>
         </div>
     </div>
 
@@ -270,13 +318,38 @@
     {% endif %}
 
     <!-- Consejo Bottom Card -->
-    <div class="mockup-card p-6 mt-8 bg-gradient-to-r from-blue-50 to-white flex items-center gap-4 relative overflow-hidden">
-        <div class="w-12 h-12 rounded-full bg-[#1d4ed8] text-white flex items-center justify-center shrink-0 z-10">
-            <span class="material-symbols-outlined" style="font-size: 1.5rem;">lightbulb</span>
+    <div class="mockup-card p-6 mt-8 bg-gradient-to-r from-blue-100 to-white flex items-center justify-between relative overflow-hidden">
+        <div class="flex items-center gap-4 z-10">
+            <div class="w-12 h-12 rounded-full bg-[#1d4ed8] text-white flex items-center justify-center shrink-0 shadow-sm">
+                <span class="material-symbols-outlined" style="font-size: 1.5rem;">lightbulb</span>
+            </div>
+            <div>
+                <h3 class="font-bold text-[#1e293b] text-base mb-1">Consejo</h3>
+                <p class="text-sm text-[#475569]">Puedes cambiar los filtros para consultar otros cursos o paralelos.</p>
+            </div>
         </div>
-        <div class="z-10">
-            <h3 class="font-bold text-[#1e293b] text-base mb-1">Consejo</h3>
-            <p class="text-sm text-[#475569]">Puedes cambiar los filtros para consultar otros cursos o paralelos.</p>
+
+        <!-- CSS Books Illustration -->
+        <div class="hidden sm:flex relative w-24 h-20 items-end justify-center z-10 pointer-events-none pr-4 pb-2">
+            <!-- Book 1 (Bottom) -->
+            <div class="absolute bottom-0 w-24 h-4 bg-[#93c5fd] rounded-sm border border-[#60a5fa] flex items-center px-1 z-10">
+                <div class="w-full h-1 bg-white rounded-full opacity-60"></div>
+            </div>
+            <!-- Book 2 (Middle) -->
+            <div class="absolute bottom-4 w-20 h-4 bg-[#bfdbfe] rounded-sm border border-[#93c5fd] flex items-center px-1 translate-x-1 z-20">
+                <div class="w-full h-1 bg-white rounded-full opacity-60"></div>
+                <!-- Bookmark -->
+                <div class="absolute -right-1.5 w-1.5 h-6 bg-[#fca5a5] rounded-b-sm -bottom-4"></div>
+            </div>
+            <!-- Book 3 (Top) -->
+            <div class="absolute bottom-8 w-16 h-3 bg-[#60a5fa] rounded-sm border border-[#3b82f6] flex items-center px-1 -translate-x-1 z-30">
+                <div class="w-full h-0.5 bg-white rounded-full opacity-60"></div>
+            </div>
+            <!-- Apple -->
+            <div class="absolute bottom-11 w-6 h-6 bg-[#fca5a5] rounded-full border border-[#f87171] shadow-sm flex justify-center z-40 translate-x-1">
+                <div class="w-1 h-2 bg-[#b45309] rounded-full -mt-1"></div>
+                <div class="w-2 h-2 bg-[#86efac] rounded-full absolute -top-1 right-0"></div>
+            </div>
         </div>
     </div>
 
