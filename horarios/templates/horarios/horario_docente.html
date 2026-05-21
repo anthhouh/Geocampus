@@ -3,132 +3,408 @@
 {% block title %}Horario de {{ docente.usuario.get_full_name|default:docente.usuario.username }} - La Dolorosa{% endblock %}
 
 {% block content %}
-<div class="max-w-container-max mx-auto space-y-xl">
+<div class="max-w-6xl mx-auto space-y-6">
 
     <!-- Back button -->
     <div>
-        <a href="{% url 'horarios:index' %}"
-           class="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary font-label-md text-label-md transition-colors duration-200 group">
-            <span class="material-symbols-outlined text-[20px] group-hover:-translate-x-1 transition-transform duration-200">arrow_back</span>
+        <a href="{% url 'horarios:index' %}" class="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-bold text-sm transition-colors duration-200">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
             Volver al Directorio
         </a>
     </div>
 
     <!-- Profile Header -->
-    <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
+    <div class="bg-white rounded-[24px] shadow-sm overflow-hidden border border-gray-100 relative">
         <!-- Banner -->
-        <div class="h-28 bg-gradient-to-r from-primary to-secondary opacity-80 relative"></div>
+        <!-- Gradient from dark blue to crimson red with a wavy SVG background overlay (using a simple gradient for now) -->
+        <div class="h-32 bg-gradient-to-r from-[#0F1C3F] via-[#3E1A4B] to-[#C11236] relative w-full overflow-hidden">
+            <!-- Decorative wave/texture (optional, simulated with a pseudo element or radial gradients) -->
+            <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 100% 0%, white 1%, transparent 15%), radial-gradient(circle at 0% 100%, white 2%, transparent 20%); background-size: 50px 50px;"></div>
+        </div>
 
-        <div class="px-xl pb-xl relative">
-            <!-- Avatar -->
-            <div class="absolute -top-12 left-xl w-24 h-24 rounded-full border-4 border-surface shadow-md
-                        bg-primary-container text-on-primary-container flex items-center justify-center text-4xl font-bold">
-                {{ docente.usuario.first_name|first|default:docente.usuario.username|first|upper }}
+        <div class="px-8 pb-8 relative">
+            
+            <div class="flex justify-between items-start">
+                <div class="flex flex-col">
+                    <!-- Avatar overlapping banner -->
+                    <div class="relative -mt-16 mb-4">
+                        <div class="w-[100px] h-[100px] rounded-full border-4 border-white shadow-sm bg-[#1A56DB] text-white flex items-center justify-center text-4xl font-bold relative z-10">
+                            {{ docente.usuario.first_name|first|default:docente.usuario.username|first|upper }}
+                        </div>
+                        <!-- Online status dot on avatar -->
+                        <div class="absolute bottom-1 right-2 w-5 h-5 {% if docente.estado_disponible %}bg-[#22C55E]{% else %}bg-[#EF4444]{% endif %} border-[3px] border-white rounded-full z-20"></div>
+                    </div>
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold text-[#1E293B]">
+                            {{ docente.usuario.get_full_name|default:docente.usuario.username }}
+                        </h2>
+                        <p class="text-primary font-medium mt-0.5">
+                            Docente
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Status badge (top-right) -->
+                <div class="mt-4">
+                    <span class="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold border
+                        {% if docente.estado_disponible %}
+                            text-[#16A34A] bg-[#DCFCE7] border-[#22C55E]/30
+                        {% else %}
+                            text-[#DC2626] bg-[#FEE2E2] border-[#EF4444]/30
+                        {% endif %}">
+                        <span class="w-2 h-2 rounded-full {% if docente.estado_disponible %}bg-[#22C55E]{% else %}bg-[#EF4444]{% endif %}"></span>
+                        {% if docente.estado_disponible %}Disponible{% else %}Ocupado{% endif %}
+                    </span>
+                </div>
             </div>
 
-            <!-- Status badge (top-right) -->
-            <div class="flex justify-end pt-3">
-                <span class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border
-                    {% if docente.disponible %}
-                        text-[#2E7D32] bg-[#E8F5E9] border-[#4CAF50]/30
-                    {% else %}
-                        text-[#C62828] bg-[#FFEBEE] border-[#E53935]/30
-                    {% endif %}">
-                    <span class="w-2 h-2 rounded-full {% if docente.disponible %}bg-[#4CAF50]{% else %}bg-[#E53935]{% endif %}"></span>
-                    {% if docente.disponible %}Disponible{% else %}Ocupado{% endif %}
-                </span>
+            <!-- Contact Pills -->
+            <div class="mt-6 flex flex-wrap gap-4">
+                <div class="flex items-center gap-2 bg-[#F1F5F9] text-[#475569] font-medium text-sm px-4 py-2 rounded-lg">
+                    <span class="material-symbols-outlined text-[18px] text-[#3B82F6]">location_on</span>
+                    {{ docente.ubicacion_actual|default:"Ubicación no reportada" }}
+                </div>
+                <div class="flex items-center gap-2 bg-[#F1F5F9] text-[#475569] font-medium text-sm px-4 py-2 rounded-lg">
+                    <span class="material-symbols-outlined text-[18px] text-[#3B82F6]">mail</span>
+                    {{ docente.usuario.email|default:"Sin correo" }}
+                </div>
+                {% if es_propio %}
+                <a href="{% url 'horarios:dashboard_docente' %}" class="flex items-center gap-2 bg-primary text-white font-medium text-sm px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">dashboard</span>
+                    Ir a mi panel
+                </a>
+                {% endif %}
             </div>
 
-            <!-- Info -->
-            <div class="mt-10">
-                <h2 class="font-h2 text-h2 text-on-surface">
-                    {{ docente.usuario.get_full_name|default:docente.usuario.username }}
-                </h2>
-                <p class="font-body-md text-body-md text-primary mt-0.5">
-                    {{ docente.especialidad|default:"Docente" }}
-                </p>
+            <!-- Stats Divider -->
+            <hr class="border-gray-100 my-8">
 
-                <div class="mt-md flex flex-wrap gap-md">
-                    <!-- Ubicación -->
-                    <div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm
-                                bg-surface-container-low px-md py-sm rounded-lg border border-outline-variant">
-                        <span class="material-symbols-outlined text-[18px] text-primary">location_on</span>
-                        {{ docente.ubicacion_actual|default:"Ubicación no reportada" }}
+            <!-- Stats Row -->
+            <div class="flex items-center justify-between px-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#3B82F6]">
+                        <span class="material-symbols-outlined">school</span>
                     </div>
-
-                    <!-- Email -->
-                    <div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm
-                                bg-surface-container-low px-md py-sm rounded-lg border border-outline-variant">
-                        <span class="material-symbols-outlined text-[18px] text-primary">mail</span>
-                        {{ docente.usuario.email|default:"Sin correo" }}
+                    <div>
+                        <p class="font-bold text-[#1E293B]">Docente</p>
+                        <p class="text-xs text-gray-500">Rol asignado</p>
                     </div>
+                </div>
+                
+                <div class="h-10 w-px bg-gray-100"></div>
 
-                    {% if es_propio %}
-                    <!-- Enlace a mi panel (solo si es el propio docente) -->
-                    <a href="{% url 'horarios:dashboard_docente' %}"
-                       class="flex items-center gap-2 bg-primary text-on-primary px-md py-sm rounded-lg
-                              font-button text-button hover:bg-primary/90 transition-colors shadow-sm">
-                        <span class="material-symbols-outlined text-[18px]">dashboard</span>
-                        Ir a mi panel
-                    </a>
-                    {% endif %}
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#3B82F6]">
+                        <span class="material-symbols-outlined">menu_book</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-[#1E293B]">Asignaturas</p>
+                        <p class="text-xs text-gray-500">{{ asignaturas_count }} asignadas</p>
+                    </div>
+                </div>
+
+                <div class="h-10 w-px bg-gray-100"></div>
+
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#3B82F6]">
+                        <span class="material-symbols-outlined">groups</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-[#1E293B]">Cursos</p>
+                        <p class="text-xs text-gray-500">{{ cursos_count }} a cargo</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Schedule Grid -->
-    <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
-        <div class="p-lg border-b border-outline-variant bg-surface-bright flex items-center gap-sm">
-            <span class="material-symbols-outlined text-primary">calendar_month</span>
-            <h3 class="font-h3 text-h3 text-on-surface">Horario Semanal</h3>
+    <div class="bg-white rounded-[24px] shadow-sm overflow-hidden border border-gray-100">
+        <!-- Header -->
+        <div class="p-6 border-b border-gray-100 flex items-center justify-between bg-white">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-[28px]">calendar_month</span>
+                </div>
+                <div>
+                    <h3 class="font-bold text-xl text-[#1E293B]">Horario Semanal</h3>
+                    <p class="text-sm text-gray-500">Vista general de tus clases por día y hora.</p>
+                </div>
+            </div>
+            
+            <a href="?formato=lista" class="hidden md:flex items-center gap-2 border border-gray-200 text-primary font-bold text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                <span class="material-symbols-outlined text-[18px]">list</span>
+                Ver en listado
+            </a>
         </div>
 
-        <div class="p-lg overflow-x-auto">
+        <!-- Grid Container -->
+        <div class="p-4 overflow-x-auto">
             {% if horarios_grid %}
-            <div class="schedule-grid">
-                <div style="grid-column: 1; grid-row: 1;"></div>
-                <div class="day-header" style="grid-column: 2; grid-row: 1;">Lu</div>
-                <div class="day-header" style="grid-column: 3; grid-row: 1;">Ma</div>
-                <div class="day-header" style="grid-column: 4; grid-row: 1;">Mi</div>
-                <div class="day-header" style="grid-column: 5; grid-row: 1;">Ju</div>
-                <div class="day-header" style="grid-column: 6; grid-row: 1;">Vi</div>
+            <div class="min-w-[800px] border border-gray-100 rounded-xl overflow-hidden bg-white">
+                
+                <style>
+                    .premium-grid {
+                        display: grid;
+                        grid-template-columns: 80px repeat(5, 1fr);
+                        grid-template-rows: 40px repeat(11, minmax(60px, auto));
+                        background-color: white;
+                        border: 1px solid #E2E8F0;
+                        border-radius: 12px;
+                        overflow: hidden;
+                    }
+                    .premium-grid > div {
+                        background-color: white;
+                        border-right: 1px solid #E2E8F0;
+                        border-bottom: 1px solid #E2E8F0;
+                    }
+                    .premium-grid > div:last-child,
+                    .premium-grid > div:nth-child(6n) {
+                        border-right: none;
+                    }
+                    .grid-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: 700;
+                        font-size: 0.82rem;
+                        color: #475569;
+                        background-color: #F8FAFC !important;
+                        border-bottom: 2px solid #CBD5E1 !important;
+                        letter-spacing: 0.02em;
+                    }
+                    .time-col {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 6px;
+                        color: #64748B;
+                        background-color: #F8FAFC !important;
+                        border-right: 2px solid #CBD5E1 !important;
+                    }
+                    .time-num {
+                        font-size: 1.05rem;
+                        font-weight: 800;
+                        color: #0F1C3F;
+                    }
+                    .time-range {
+                        display: flex;
+                        flex-direction: column;
+                        font-size: 0.62rem;
+                        line-height: 1.15;
+                        color: #94A3B8;
+                    }
+                    .recreo-row {
+                        background-color: #EFF6FF !important;
+                        grid-column: 1 / -1;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 8px;
+                        color: #2563EB;
+                        font-weight: bold;
+                        font-size: 0.85rem;
+                        border-right: none !important;
+                        border-top: 1px solid #BFDBFE;
+                        border-bottom: 1px solid #BFDBFE;
+                    }
+                    .grid-empty-cell {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: #CBD5E1;
+                        font-size: 1rem;
+                    }
+                    .class-block {
+                        margin: 4px;
+                        border-radius: 8px;
+                        padding: 8px;
+                        display: flex;
+                        gap: 8px;
+                        align-items: flex-start;
+                        transition: transform 0.2s, box-shadow 0.2s;
+                        border-right: none !important;
+                        border-bottom: none !important;
+                    }
+                    .class-block:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.12);
+                    }
+                    .class-icon {
+                        margin-top: 2px;
+                        flex-shrink: 0;
+                    }
+                </style>
 
-                <div class="time-slot" style="grid-column: 1; grid-row: 2;"><strong>1</strong><span>07:00</span><span>07:45</span></div>
-                <div class="time-slot" style="grid-column: 1; grid-row: 3;"><strong>2</strong><span>07:45</span><span>08:30</span></div>
-                <div class="time-slot" style="grid-column: 1; grid-row: 4;"><strong>3</strong><span>08:30</span><span>09:15</span></div>
-                <div class="time-slot" style="grid-column: 1; grid-row: 5;"><strong>4</strong><span>09:15</span><span>10:00</span></div>
+                <div class="premium-grid">
+                    <div class="grid-header" style="border-right: 2px solid #CBD5E1 !important;">Hora</div>
+                    <div class="grid-header">Lunes</div>
+                    <div class="grid-header">Martes</div>
+                    <div class="grid-header">Miércoles</div>
+                    <div class="grid-header">Jueves</div>
+                    <div class="grid-header" style="border-right:none;">Viernes</div>
 
-                <div class="time-slot" style="grid-column: 1; grid-row: 6;"><strong>R</strong><span>10:00</span><span>10:25</span></div>
-                <div class="schedule-recreo">RECREO</div>
+                    <!-- Empty cells row 2 (período 1) -->
+                    <div class="grid-empty-cell" style="grid-row:2; grid-column:2;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:2; grid-column:3;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:2; grid-column:4;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:2; grid-column:5;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:2; grid-column:6; border-right:none;">—</div>
+                    <!-- Empty cells row 3 (período 2) -->
+                    <div class="grid-empty-cell" style="grid-row:3; grid-column:2;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:3; grid-column:3;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:3; grid-column:4;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:3; grid-column:5;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:3; grid-column:6; border-right:none;">—</div>
+                    <!-- Empty cells row 4 (período 3) -->
+                    <div class="grid-empty-cell" style="grid-row:4; grid-column:2;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:4; grid-column:3;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:4; grid-column:4;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:4; grid-column:5;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:4; grid-column:6; border-right:none;">—</div>
+                    <!-- Empty cells row 5 (período 4) -->
+                    <div class="grid-empty-cell" style="grid-row:5; grid-column:2;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:5; grid-column:3;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:5; grid-column:4;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:5; grid-column:5;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:5; grid-column:6; border-right:none;">—</div>
+                    <!-- Empty cells row 7 (período 5) -->
+                    <div class="grid-empty-cell" style="grid-row:7; grid-column:2;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:7; grid-column:3;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:7; grid-column:4;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:7; grid-column:5;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:7; grid-column:6; border-right:none;">—</div>
+                    <!-- Empty cells row 8 (período 6) -->
+                    <div class="grid-empty-cell" style="grid-row:8; grid-column:2;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:8; grid-column:3;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:8; grid-column:4;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:8; grid-column:5;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:8; grid-column:6; border-right:none;">—</div>
+                    <!-- Empty cells row 9 (período 7) -->
+                    <div class="grid-empty-cell" style="grid-row:9; grid-column:2;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:9; grid-column:3;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:9; grid-column:4;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:9; grid-column:5;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:9; grid-column:6; border-right:none;">—</div>
+                    <!-- Empty cells row 10 (período 8) -->
+                    <div class="grid-empty-cell" style="grid-row:10; grid-column:2;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:10; grid-column:3;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:10; grid-column:4;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:10; grid-column:5;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:10; grid-column:6; border-right:none;">—</div>
+                    <!-- Empty cells row 11 (período 9) -->
+                    <div class="grid-empty-cell" style="grid-row:11; grid-column:2; border-bottom:none;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:11; grid-column:3; border-bottom:none;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:11; grid-column:4; border-bottom:none;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:11; grid-column:5; border-bottom:none;">—</div>
+                    <div class="grid-empty-cell" style="grid-row:11; grid-column:6; border-right:none; border-bottom:none;">—</div>
 
-                <div class="time-slot" style="grid-column: 1; grid-row: 7;"><strong>5</strong><span>10:25</span><span>11:05</span></div>
-                <div class="time-slot" style="grid-column: 1; grid-row: 8;"><strong>6</strong><span>11:05</span><span>11:45</span></div>
-                <div class="time-slot" style="grid-column: 1; grid-row: 9;"><strong>7</strong><span>11:45</span><span>12:25</span></div>
-                <div class="time-slot" style="grid-column: 1; grid-row: 10;"><strong>8</strong><span>12:25</span><span>13:05</span></div>
-                <div class="time-slot" style="grid-column: 1; grid-row: 11;"><strong>9</strong><span>13:05</span><span>13:45</span></div>
+                    <div class="time-col" style="grid-row: 2; grid-column: 1;">
+                        <span class="time-num">1</span>
+                        <div class="time-range"><span>07:00</span><span>07:45</span></div>
+                    </div>
+                    <div class="time-col" style="grid-row: 3; grid-column: 1;">
+                        <span class="time-num">2</span>
+                        <div class="time-range"><span>07:45</span><span>08:30</span></div>
+                    </div>
+                    <div class="time-col" style="grid-row: 4; grid-column: 1;">
+                        <span class="time-num">3</span>
+                        <div class="time-range"><span>08:30</span><span>09:15</span></div>
+                    </div>
+                    <div class="time-col" style="grid-row: 5; grid-column: 1;">
+                        <span class="time-num">4</span>
+                        <div class="time-range"><span>09:15</span><span>10:00</span></div>
+                    </div>
 
-                {% for item in horarios_grid %}
-                <div class="schedule-item" style="
-                        grid-column: {{ item.grid_col }};
-                        grid-row: {{ item.grid_row_start }} / {{ item.grid_row_end }};
-                        background-color: {{ item.color_bg }};
-                        border: 2px solid {{ item.color_border }};
-                        color: {{ item.color_text }};
-                    ">
-                    <strong style="font-size:0.78rem; display:block; line-height:1.2;">{{ item.horario.materia }}</strong>
-                    <small style="opacity:0.85; font-size:0.68rem;">{{ item.horario.curso.nombre }} "{{ item.horario.paralelo.identificador }}"</small>
+                    <div class="recreo-row" style="grid-row: 6;">
+                        <div class="time-col" style="position:absolute; left:0; width:80px; justify-content:center;">
+                            <span class="time-num">R</span>
+                            <div class="time-range"><span>10:00</span><span>10:25</span></div>
+                        </div>
+                        <span class="material-symbols-outlined text-[18px]">local_cafe</span>
+                        RECREO
+                    </div>
+
+                    <div class="time-col" style="grid-row: 7; grid-column: 1;">
+                        <span class="time-num">5</span>
+                        <div class="time-range"><span>10:25</span><span>11:05</span></div>
+                    </div>
+                    <div class="time-col" style="grid-row: 8; grid-column: 1;">
+                        <span class="time-num">6</span>
+                        <div class="time-range"><span>11:05</span><span>11:45</span></div>
+                    </div>
+                    <div class="time-col" style="grid-row: 9; grid-column: 1;">
+                        <span class="time-num">7</span>
+                        <div class="time-range"><span>11:45</span><span>12:25</span></div>
+                    </div>
+                    <div class="time-col" style="grid-row: 10; grid-column: 1;">
+                        <span class="time-num">8</span>
+                        <div class="time-range"><span>12:25</span><span>13:05</span></div>
+                    </div>
+                    <div class="time-col" style="grid-row: 11; grid-column: 1;">
+                        <span class="time-num">9</span>
+                        <div class="time-range"><span>13:05</span><span>13:45</span></div>
+                    </div>
+
+                    {% for item in horarios_grid %}
+                    <!-- Color styling overrides for pastel colors -->
+                    {% with materia=item.horario.asignatura.nombre|lower %}
+                    <div class="class-block" style="
+                            grid-column: {{ item.grid_col }};
+                            grid-row: {{ item.grid_row_start }} / {{ item.grid_row_end }};
+                            background-color: {% if 'ciencias' in materia %}#F0FDF4{% elif 'religión' in materia or 'religion' in materia %}#FEF2F2{% elif 'física' in materia or 'matemática' in materia %}#EFF6FF{% elif 'c.a.i.a' in materia or 'programacion' in materia %}#FFFBEB{% else %}{{ item.color_bg|default:'#F8FAFC' }}{% endif %};
+                            border: 1px solid {% if 'ciencias' in materia %}#BBF7D0{% elif 'religión' in materia or 'religion' in materia %}#FECACA{% elif 'física' in materia or 'matemática' in materia %}#BFDBFE{% elif 'c.a.i.a' in materia or 'programacion' in materia %}#FEF08A{% else %}{{ item.color_border|default:'#E2E8F0' }}{% endif %};
+                            color: {% if 'ciencias' in materia %}#166534{% elif 'religión' in materia or 'religion' in materia %}#991B1B{% elif 'física' in materia or 'matemática' in materia %}#1E40AF{% elif 'c.a.i.a' in materia or 'programacion' in materia %}#9A3412{% else %}{{ item.color_text|default:'#334155' }}{% endif %};
+                        ">
+                        <span class="material-symbols-outlined class-icon text-[18px]">
+                            {% if 'ciencias' in materia %}eco
+                            {% elif 'religión' in materia or 'religion' in materia %}church
+                            {% elif 'física' in materia %}psychology
+                            {% elif 'matemática' in materia %}calculate
+                            {% elif 'química' in materia %}science
+                            {% elif 'c.a.i.a' in materia or 'computacion' in materia or 'programacion' in materia %}computer
+                            {% elif 'lengua' in materia or 'literatura' in materia %}menu_book
+                            {% elif 'inglés' in materia or 'ingles' in materia %}translate
+                            {% elif 'historia' in materia %}history_edu
+                            {% elif 'educación física' in materia or 'educacion fisica' in materia %}sports_basketball
+                            {% else %}class
+                            {% endif %}
+                        </span>
+                        <div>
+                            <strong style="font-size:0.8rem; display:block; line-height:1.2;">{{ item.horario.asignatura.nombre }}</strong>
+                            <small style="opacity:0.8; font-size:0.7rem; margin-top:2px; display:block;">{{ item.horario.curso.nombre }} "{{ item.horario.paralelo.identificador }}"</small>
+                        </div>
+                    </div>
+                    {% endwith %}
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
 
             {% else %}
-            <div class="flex flex-col items-center justify-center py-16 text-on-surface-variant">
+            <div class="flex flex-col items-center justify-center py-16 text-gray-400">
                 <span class="material-symbols-outlined text-[56px] mb-3 opacity-40">event_busy</span>
-                <p class="font-body-md text-body-md">Este docente aún no tiene horarios registrados.</p>
-                <p class="font-body-sm text-body-sm opacity-60 mt-1">Intenta más tarde o contacta al administrador.</p>
+                <p class="font-medium text-gray-600">Este docente aún no tiene horarios registrados.</p>
+                <p class="text-sm mt-1">Intenta más tarde o contacta al administrador.</p>
             </div>
             {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Tip Footer -->
+    <div class="bg-white rounded-[24px] shadow-sm border border-gray-100 p-6 flex items-center justify-between overflow-hidden relative">
+        <div class="flex items-center gap-4 z-10">
+            <div class="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-white flex-shrink-0">
+                <span class="material-symbols-outlined text-[28px]">lightbulb</span>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg text-[#1E293B]">Consejo rápido</h4>
+                <p class="text-sm text-gray-500 mt-1">Puedes hacer clic en cada clase para ver más detalles o gestionar tu horario.</p>
+            </div>
+        </div>
+        <!-- Decorative element (simulated calendar icon) -->
+        <div class="hidden sm:block absolute -bottom-4 -right-4 opacity-10">
+            <span class="material-symbols-outlined text-[120px] text-primary">calendar_month</span>
         </div>
     </div>
 

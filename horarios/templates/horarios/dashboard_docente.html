@@ -13,13 +13,13 @@
         <!-- Status Toggle -->
         <div class="bg-white p-1.5 rounded-full border border-gray-100 flex items-center shadow-sm" id="status-container">
             <button onclick="toggleEstado(true)" id="btn-estado-disponible"
-                class="px-4 py-2 rounded-full {% if docente.disponible %}bg-green-50 text-green-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 font-medium{% endif %} text-[13px] flex items-center gap-2 transition-all">
-                <span id="dot-estado-disponible" class="w-2 h-2 rounded-full {% if docente.disponible %}bg-green-500{% else %}bg-gray-300{% endif %}"></span>
+                class="px-4 py-2 rounded-full {% if docente.estado_disponible %}bg-green-50 text-green-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 font-medium{% endif %} text-[13px] flex items-center gap-2 transition-all">
+                <span id="dot-estado-disponible" class="w-2 h-2 rounded-full {% if docente.estado_disponible %}bg-green-500{% else %}bg-gray-300{% endif %}"></span>
                 Disponible
             </button>
             <button onclick="toggleEstado(false)" id="btn-estado-ocupado"
-                class="px-4 py-2 rounded-full {% if not docente.disponible %}bg-red-50 text-red-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 font-medium{% endif %} text-[13px] flex items-center gap-2 transition-all">
-                <span id="dot-estado-ocupado" class="w-2 h-2 rounded-full {% if not docente.disponible %}bg-red-500{% else %}bg-gray-300{% endif %}"></span>
+                class="px-4 py-2 rounded-full {% if not docente.estado_disponible %}bg-red-50 text-red-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 font-medium{% endif %} text-[13px] flex items-center gap-2 transition-all">
+                <span id="dot-estado-ocupado" class="w-2 h-2 rounded-full {% if not docente.estado_disponible %}bg-red-500{% else %}bg-gray-300{% endif %}"></span>
                 Ocupado
             </button>
         </div>
@@ -52,7 +52,7 @@
                         </div>
                         <input type="file" name="foto" id="id_foto_input" class="hidden" accept="image/*" onchange="document.getElementById('foto-form').submit()">
                     </form>
-                    <div class="absolute bottom-1 right-2 w-5 h-5 {% if docente.disponible %}bg-green-500{% else %}bg-red-500{% endif %} border-[3px] border-white rounded-full z-10" id="status-indicator"></div>
+                    <div class="absolute bottom-1 right-2 w-5 h-5 {% if docente.estado_disponible %}bg-green-500{% else %}bg-red-500{% endif %} border-[3px] border-white rounded-full z-10" id="status-indicator"></div>
                 </div>
                 
                 <h3 class="font-bold text-xl text-[#0B1A40] z-10">{{ user.get_full_name|default:user.username }}</h3>

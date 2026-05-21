@@ -409,7 +409,7 @@ def cambiar_estado(request):
         docente.disponible = data.get('disponible', docente.disponible)
         docente.ubicacion_actual = data.get('ubicacion_actual', docente.ubicacion_actual)
         docente.save()
-        return JsonResponse({'status': 'ok', 'disponible': docente.disponible, 'ubicacion': docente.ubicacion_actual})
+        return JsonResponse({'status': 'ok', 'disponible': docente.estado_disponible, 'ubicacion': docente.ubicacion_dinamica})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
 
@@ -461,12 +461,18 @@ def horario_docente(request, docente_id):
     horarios = Horario.objects.filter(
         docente=docente, tipo='docente'
     ).order_by('dia', 'hora_inicio')
+    
+    asignaturas_count = horarios.values('asignatura').distinct().count()
+    cursos_count = horarios.values('curso', 'paralelo').distinct().count()
+    
     horarios_grid = preparar_horarios_grid(horarios, fusionar_bloques=True)
 
     context = {
         'docente': docente,
         'horarios': horarios,
         'horarios_grid': horarios_grid,
+        'asignaturas_count': asignaturas_count,
+        'cursos_count': cursos_count,
         'es_propio': request.user.is_docente() and hasattr(request.user, 'perfil_docente') and request.user.perfil_docente == docente,
     }
     return render(request, 'horarios/horario_docente.html', context)
@@ -649,114 +655,128 @@ def api_guardar_horario(request):
         paralelo = Paralelo.objects.get(id=paralelo_id)
         asignatura = Asignatura.objects.get(id=asignatura_id)
         
-        # Validación de cruce de horarios para el Docente
-        choques_docente = Horario.objects.filter(
-            docente=docente,
-            dia=dia,
-            hora_inicio__lt=hora_fin,
-            hora_fin__gt=hora_inicio
-        )
-        if horario_id:
-            choques_docente = choques_docente.exclude(id=horario_id)
-            
-        if choques_docente.exists():
-            choque = choques_docente.first()
-            docente_nombre = docente.usuario.get_full_name() or docente.usuario.username
-            hora_i = choque.hora_inicio.strftime('%H:%M')
-            hora_f = choque.hora_fin.strftime('%H:%M')
-            return JsonResponse({'status': 'error', 'message': f"¡Choque de Horario! El docente {docente_nombre} ya dicta '{choque.asignatura.nombre}' el {dia} de {hora_i} a {hora_f} en {choque.curso.nombre} '{choque.paralelo.identificador}'."})
-
-        # Validación de cruce de horarios para el Curso/Paralelo
-        choques_curso = Horario.objects.filter(
-            curso=curso,
-            paralelo=paralelo,
-            dia=dia,
-            hora_inicio__lt=hora_fin,
-            hora_fin__gt=hora_inicio
-        )
-        if horario_id:
-            choques_curso = choques_curso.exclude(id=horario_id)
-            
-        if choques_curso.exists():
-            choque = choques_curso.first()
-            doc_choque_nombre = choque.docente.usuario.get_full_name() or choque.docente.usuario.username
-            hora_i = choque.hora_inicio.strftime('%H:%M')
-            hora_f = choque.hora_fin.strftime('%H:%M')
-            return JsonResponse({'status': 'error', 'message': f"¡Choque de Horario! El curso {curso.nombre} '{paralelo.identificador}' ya tiene la clase '{choque.asignatura.nombre}' con el docente {doc_choque_nombre} el {dia} de {hora_i} a {hora_f}."})
+        cantidad_periodos = int(request.POST.get('cantidad_periodos', 1))
         
-        if horario_id:
-            h = Horario.objects.get(id=horario_id)
+        periodos_a_guardar = []
+        hora_inicio_str = str(hora_inicio)
+        if len(hora_inicio_str) == 5:
+            hora_inicio_str += ":00"
             
-            # Verificación de seguridad adicional
-            if not (request.user.is_admin() or request.user.is_superuser):
-                if h.docente_id != request.user.perfil_docente.id:
-                    return JsonResponse({'status': 'error', 'message': "No autorizado para editar este horario."}, status=403)
+        start_idx = -1
+        for i, row in enumerate(PERIODOS_ROWS):
+            if row[1] == hora_inicio_str:
+                start_idx = i
+                break
+                
+        if start_idx != -1:
+            for i in range(cantidad_periodos):
+                if start_idx + i < len(PERIODOS_ROWS):
+                    periodos_a_guardar.append((PERIODOS_ROWS[start_idx + i][1], PERIODOS_ROWS[start_idx + i][2]))
+                else:
+                    break
                     
-            h.dia = dia
-            h.hora_inicio = hora_inicio
-            h.hora_fin = hora_fin
-            h.asignatura = asignatura
-            h.docente = docente
-            h.curso = curso
-            h.paralelo = paralelo
-            h.save()
-            msg = "Horario actualizado exitosamente."
-        else:
-            # Determinamos si el form vino de la pestaña docente o clase
-            tipo = 'docente' if request.POST.get('es_docentes') == '1' else 'clase'
-            h = Horario.objects.create(
-                dia=dia,
-                hora_inicio=hora_inicio,
-                hora_fin=hora_fin,
-                asignatura=asignatura,
+        if not periodos_a_guardar:
+            periodos_a_guardar = [(hora_inicio, hora_fin)]
+
+        # Validación de cruce de horarios para todos los periodos
+        for p_inicio, p_fin in periodos_a_guardar:
+            # Check docente
+            choques_docente = Horario.objects.filter(
                 docente=docente,
+                dia=dia,
+                hora_inicio__lt=p_fin,
+                hora_fin__gt=p_inicio
+            )
+            if horario_id and p_inicio == periodos_a_guardar[0][0]:
+                choques_docente = choques_docente.exclude(id=horario_id)
+                
+            if choques_docente.exists():
+                choque = choques_docente.first()
+                docente_nombre = docente.usuario.get_full_name() or docente.usuario.username
+                hora_i = choque.hora_inicio.strftime('%H:%M')
+                hora_f = choque.hora_fin.strftime('%H:%M')
+                return JsonResponse({'status': 'error', 'message': f"¡Choque de Horario! El docente {docente_nombre} ya dicta '{choque.asignatura.nombre}' el {dia} de {hora_i} a {hora_f}."})
+
+            # Check curso/paralelo
+            choques_curso = Horario.objects.filter(
                 curso=curso,
                 paralelo=paralelo,
-                tipo=tipo
+                dia=dia,
+                hora_inicio__lt=p_fin,
+                hora_fin__gt=p_inicio
             )
-            msg = "Horario guardado exitosamente."
+            if horario_id and p_inicio == periodos_a_guardar[0][0]:
+                choques_curso = choques_curso.exclude(id=horario_id)
+                
+            if choques_curso.exists():
+                choque = choques_curso.first()
+                doc_choque_nombre = choque.docente.usuario.get_full_name() or choque.docente.usuario.username
+                hora_i = choque.hora_inicio.strftime('%H:%M')
+                hora_f = choque.hora_fin.strftime('%H:%M')
+                return JsonResponse({'status': 'error', 'message': f"¡Choque de Horario! El curso {curso.nombre} '{paralelo.identificador}' ya tiene la clase '{choque.asignatura.nombre}' con el docente {doc_choque_nombre} el {dia} de {hora_i} a {hora_f}."})
+        
+        first_h = None
+        tipo = 'docente' if request.POST.get('es_docentes') == '1' else 'clase'
+        
+        saved_horarios = []
+        for idx, (p_inicio, p_fin) in enumerate(periodos_a_guardar):
+            if idx == 0 and horario_id:
+                h = Horario.objects.get(id=horario_id)
+                
+                # Verificación de seguridad adicional
+                if not (request.user.is_admin() or request.user.is_superuser):
+                    if h.docente_id != request.user.perfil_docente.id:
+                        return JsonResponse({'status': 'error', 'message': "No autorizado para editar este horario."}, status=403)
+                        
+                h.dia = dia
+                h.hora_inicio = p_inicio
+                h.hora_fin = p_fin
+                h.asignatura = asignatura
+                h.docente = docente
+                h.curso = curso
+                h.paralelo = paralelo
+                h.save()
+                saved_horarios.append(h)
+            else:
+                h = Horario.objects.create(
+                    dia=dia,
+                    hora_inicio=p_inicio,
+                    hora_fin=p_fin,
+                    asignatura=asignatura,
+                    docente=docente,
+                    curso=curso,
+                    paralelo=paralelo,
+                    tipo=tipo
+                )
+                saved_horarios.append(h)
+
+        msg = f"Se guardaron {len(periodos_a_guardar)} periodos exitosamente." if len(periodos_a_guardar) > 1 else ("Horario actualizado exitosamente." if horario_id else "Horario guardado exitosamente.")
             
-        # Preparar los datos del item para renderizar el HTML
-        from .views import DAY_TO_COL, TIME_TO_ROW, get_color_for_materia
+        # Preparar los datos de los items para renderizar el HTML fusionado
+        # Extraemos los IDs y hacemos un fetch de la BD para asegurar que los campos de hora sean objetos datetime.time
+        saved_ids = [h.id for h in saved_horarios]
+        fresh_horarios = Horario.objects.filter(id__in=saved_ids).select_related('docente__usuario', 'curso', 'paralelo', 'asignatura').order_by('dia', 'hora_inicio')
         
-        # Encontrar los periodos
-        start_str = str(h.hora_inicio)
-        if len(start_str) == 5: start_str += ":00"
-        
-        end_str = str(h.hora_fin)
-        if len(end_str) == 5: end_str += ":00"
-        
-        row_start = TIME_TO_ROW.get(start_str, 2)
-        row_end = TIME_TO_ROW.get(end_str, row_start + 1)
-        col = DAY_TO_COL.get(h.dia.lower(), 2)
-        
-        # Color único por combinación materia + curso + paralelo
-        clave_color = f"{h.asignatura.nombre if h.asignatura else ''}|{h.curso_id}|{h.paralelo_id}"
-        colors = get_color_for_materia(clave_color)
-        
-        item_data = {
-            'horario': h,
-            'grid_col': col,
-            'grid_row_start': row_start,
-            'grid_row_end': row_end,
-            'color_bg': colors['bg'],
-            'color_text': colors['text'],
-            'color_border': colors['border']
-        }
+        from .views import preparar_horarios_grid
+        merged_items = preparar_horarios_grid(fresh_horarios, fusionar_bloques=True)
         
         es_docentes = request.POST.get('es_docentes') == '1'
-        html = render_to_string('horarios/gestion/schedule_item.html', {'item': item_data, 'es_docentes': es_docentes})
+        html_parts = []
+        for item_data in merged_items:
+            html_parts.append(render_to_string('horarios/gestion/schedule_item.html', {'item': item_data, 'es_docentes': es_docentes}))
+            
+        html = "\n".join(html_parts)
         
         if es_docentes:
-            grupo_id = f"docente_{h.docente.id}"
+            grupo_id = f"docente_{docente.id}"
         else:
-            grupo_id = f"curso_{h.curso.id}_paralelo_{h.paralelo.id}"
+            grupo_id = f"curso_{curso.id}_paralelo_{paralelo.id}"
             
         return JsonResponse({
             'status': 'success', 
             'message': msg,
             'html': html,
-            'horario_id': h.id,
+            'horario_id': saved_horarios[0].id,
             'grupo_id': grupo_id
         })
     except Exception as e:
@@ -812,8 +832,35 @@ def gestion_eliminar_horario(request, horario_id):
             return JsonResponse({'status': 'error', 'message': "No autorizado para eliminar este horario."}, status=403)
             
     nombre = horario.asignatura.nombre if horario.asignatura else 'Horario'
-    horario.delete()
-    return JsonResponse({'status': 'success', 'message': f'Horario "{nombre}" eliminado correctamente.'})
+    
+    # Para eliminar el bloque completo (que visualmente estaba fusionado)
+    horarios_to_delete = [horario]
+    current_h = horario
+    
+    while True:
+        # Buscamos el siguiente periodo que empiece exactamente donde termina este
+        # y tenga exactamente los mismos atributos
+        next_h = Horario.objects.filter(
+            docente_id=current_h.docente_id,
+            curso_id=current_h.curso_id,
+            paralelo_id=current_h.paralelo_id,
+            asignatura_id=current_h.asignatura_id,
+            dia=current_h.dia,
+            hora_inicio=current_h.hora_fin
+        ).first()
+        
+        if next_h:
+            horarios_to_delete.append(next_h)
+            current_h = next_h
+        else:
+            break
+            
+    count = len(horarios_to_delete)
+    for h in horarios_to_delete:
+        h.delete()
+        
+    msg = f'Horario "{nombre}" eliminado correctamente.' if count == 1 else f'Bloque de {count} periodos de "{nombre}" eliminado correctamente.'
+    return JsonResponse({'status': 'success', 'message': msg})
 
 
 @admin_required

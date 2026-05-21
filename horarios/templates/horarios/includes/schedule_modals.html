@@ -61,6 +61,16 @@
                         {% endfor %}
                     </select>
                 </div>
+                <div class="flex flex-col gap-xs">
+                    <label class="font-label-md text-label-md text-on-surface">Cantidad de periodos seguidos</label>
+                    <select name="cantidad_periodos" id="h_cantidad_periodos" class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-on-surface focus:border-primary">
+                        <option value="1">1 periodo</option>
+                        <option value="2">2 periodos</option>
+                        <option value="3">3 periodos</option>
+                        <option value="4">4 periodos</option>
+                        <option value="5">5 periodos</option>
+                    </select>
+                </div>
 
                 {% if es_docentes %}
                 <div class="flex flex-col gap-xs">

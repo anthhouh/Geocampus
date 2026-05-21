@@ -49,6 +49,24 @@ class Docente(models.Model):
                 
         return self.ubicacion_actual or "Ubicación no reportada"
 
+    @property
+    def estado_disponible(self):
+        from django.utils import timezone
+        ahora = timezone.localtime()
+        dias_map = {0: 'lunes', 1: 'martes', 2: 'miercoles', 3: 'jueves', 4: 'viernes', 5: 'sabado', 6: 'domingo'}
+        dia_actual = dias_map.get(ahora.weekday())
+        hora_actual = ahora.time()
+        
+        en_clase = self.horarios.filter(
+            dia=dia_actual,
+            hora_inicio__lte=hora_actual,
+            hora_fin__gte=hora_actual
+        ).exists()
+        
+        if en_clase:
+            return False
+        return self.disponible
+
     def __str__(self):
         nombre = self.usuario.get_full_name()
         if not nombre.strip():

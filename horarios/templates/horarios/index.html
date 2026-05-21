@@ -91,7 +91,7 @@
         <a href="{% url 'horarios:horario_docente' docente.id %}"
            data-nombre="{{ docente.usuario.get_full_name|lower|default:docente.usuario.username|lower }}"
            data-especialidad="{{ docente.especialidad|lower|default:'docente' }}"
-           data-disponible="{{ docente.disponible|yesno:'true,false' }}"
+           data-disponible="{{ docente.estado_disponible|yesno:'true,false' }}"
            class="docente-card group relative bg-white rounded-3xl border border-[#f1f5f9] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden no-underline flex flex-col items-center cursor-pointer">
 
             <!-- Fondo decorativo wavy superior -->
@@ -103,9 +103,9 @@
 
             <!-- Badge disponibilidad -->
             <div class="absolute top-4 right-4 z-10 flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/70 backdrop-blur-sm
-                {% if docente.disponible %}text-[#16A34A]{% else %}text-[#DC2626]{% endif %} shadow-sm">
-                <span class="w-2 h-2 rounded-full {% if docente.disponible %}bg-[#22C55E]{% else %}bg-[#EF4444]{% endif %}"></span>
-                {% if docente.disponible %}Disponible{% else %}Ocupado{% endif %}
+                {% if docente.estado_disponible %}text-[#16A34A]{% else %}text-[#DC2626]{% endif %} shadow-sm">
+                <span class="w-2 h-2 rounded-full {% if docente.estado_disponible %}bg-[#22C55E]{% else %}bg-[#EF4444]{% endif %}"></span>
+                {% if docente.estado_disponible %}Disponible{% else %}Ocupado{% endif %}
             </div>
 
             <!-- Avatar -->
@@ -138,7 +138,7 @@
             <!-- Ubicación -->
             <div class="flex items-start gap-3 w-full px-6 mb-6 z-10">
                 <span class="material-symbols-outlined text-[22px] mt-0.5 flex-shrink-0"
-                      style="{% if docente.disponible %}color: {{ c_main }};{% else %}color: #9CA3AF;{% endif %}">
+                      style="{% if docente.estado_disponible %}color: {{ c_main }};{% else %}color: #9CA3AF;{% endif %}">
                     location_on
                 </span>
                 <div class="text-left flex-1 overflow-hidden">
