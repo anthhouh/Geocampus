@@ -199,8 +199,8 @@
 </head>
 <body class="bg-background text-on-background font-body-md text-body-md min-h-screen">
     {% if messages %}
-        <div class="toast-overlay active" id="toast-overlay"></div>
-        <div class="toast-container" id="toast-container">
+        <div class="toast-overlay active" id="toast-overlay-django"></div>
+        <div class="toast-container" id="toast-container-django">
             {% for message in messages %}
                 <div class="toast toast-{{ message.tags }}">
                     <button class="toast-close material-symbols-outlined" onclick="closeToast(this)">close</button>
@@ -217,30 +217,84 @@
                 </div>
             {% endfor %}
         </div>
-        <script>
-            function closeToast(btn) {
-                const toast = btn ? btn.closest('.toast') : document.querySelector('.toast');
-                if (!toast) return;
-                const overlay = document.getElementById('toast-overlay');
-                
-                toast.classList.add('toast-hiding');
-                if (overlay) overlay.classList.remove('active');
-                
-                setTimeout(() => {
-                    toast.remove();
-                    const container = document.getElementById('toast-container');
-                    if (container && container.children.length === 0) {
-                        container.remove();
-                        if (overlay) overlay.remove();
+    {% endif %}
+
+    <script>
+        function closeToast(btn) {
+            const toast = btn ? btn.closest('.toast') : document.querySelector('.toast');
+            if (!toast) return;
+            const container = toast.closest('.toast-container');
+            const overlay = container ? container.previousElementSibling : null;
+            
+            toast.classList.add('toast-hiding');
+            if (overlay && overlay.classList.contains('toast-overlay')) {
+                overlay.classList.remove('active');
+            }
+            
+            setTimeout(() => {
+                toast.remove();
+                if (container && container.children.length === 0) {
+                    container.remove();
+                    if (overlay && overlay.classList.contains('toast-overlay')) {
+                        overlay.remove();
                     }
-                }, 300);
+                }
+            }, 300);
+        }
+
+        function showGlobalToast(message, type = 'error') {
+            // Eliminar toast anterior si existe
+            const oldContainer = document.querySelector('.toast-container');
+            if (oldContainer) {
+                const oldOverlay = oldContainer.previousElementSibling;
+                oldContainer.remove();
+                if (oldOverlay && oldOverlay.classList.contains('toast-overlay')) {
+                    oldOverlay.remove();
+                }
             }
 
-            document.getElementById('toast-overlay').addEventListener('click', function() {
-                closeToast();
-            });
-        </script>
-    {% endif %}
+            const overlay = document.createElement('div');
+            overlay.className = 'toast-overlay active';
+            overlay.addEventListener('click', () => closeToast());
+            
+            const container = document.createElement('div');
+            container.className = 'toast-container';
+
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+
+            let iconName = 'info';
+            let iconColor = '#005dac';
+            if (type === 'warning') { iconName = 'warning'; iconColor = '#f59e0b'; }
+            else if (type === 'error') { iconName = 'error'; iconColor = '#ba1a1a'; }
+            else if (type === 'success') { iconName = 'check_circle'; iconColor = '#10b981'; }
+
+            toast.innerHTML = `
+                <button class="toast-close material-symbols-outlined" onclick="closeToast(this)">close</button>
+                <span class="material-symbols-outlined" style="font-size: 36px; color: ${iconColor};">${iconName}</span>
+                <span style="font-weight: 500; color: #181c21; margin-top: 4px;">${message}</span>
+            `;
+
+            container.appendChild(toast);
+            document.body.appendChild(overlay);
+            document.body.appendChild(container);
+            
+            setTimeout(() => {
+                if (document.body.contains(toast)) {
+                    closeToast(toast.querySelector('.toast-close'));
+                }
+            }, 4000);
+        }
+
+        // Configurar listener para los mensajes de django
+        document.addEventListener('DOMContentLoaded', () => {
+            const djangoOverlay = document.getElementById('toast-overlay-django');
+            if (djangoOverlay) {
+                djangoOverlay.addEventListener('click', () => closeToast());
+                setTimeout(() => closeToast(), 4000);
+            }
+        });
+    </script>
 
     {% block layout %}{% endblock %}
 

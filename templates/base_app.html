@@ -41,10 +41,17 @@
                 {% endif %}
 
                 <!-- Gestión Horaria (Acceso Administradores) -->
+                {% if user.is_authenticated and user.is_admin or user.is_superuser %}
                 <a href="{% url 'horarios:gestion_dashboard' %}" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl {% if 'gestion' in request.path %}bg-[#1d4ed8] text-white shadow-md font-semibold{% else %}text-[#475569] hover:bg-slate-50 font-medium{% endif %} text-sm transition-all duration-200">
                     <span class="material-symbols-outlined" style="font-size: 1.3rem;">shield_person</span>
                     Gestión Horaria
                 </a>
+                {% else %}
+                <a href="#" onclick="event.preventDefault(); showGlobalToast('Se requieren permisos de administrador para acceder a esta sección.', 'error');" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl text-[#475569] hover:bg-slate-50 font-medium text-sm transition-all duration-200">
+                    <span class="material-symbols-outlined" style="font-size: 1.3rem;">shield_person</span>
+                    Gestión Horaria
+                </a>
+                {% endif %}
             </div>
         </div>
 
