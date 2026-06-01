@@ -7,34 +7,34 @@
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity duration-300 opacity-0" onclick="toggleSidebar()"></div>
 
     <!-- SideNavBar -->
-    <nav id="sidebar" class="bg-white border-r border-[#e2e8f0] fixed left-0 top-0 h-full w-64 flex flex-col justify-between py-6 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+    <nav id="sidebar" class="bg-[#4B50A3] border-r border-[#00175c] fixed left-0 top-0 h-full w-64 flex flex-col justify-between py-6 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
         <div>
             <div class="px-6 mb-8 mt-4 flex items-center gap-3">
                 <div class="w-10 h-10 flex items-center justify-center cursor-pointer select-none shrink-0">
                     <img src="{% static 'images/logo_dolorosa.png' %}" alt="Logo" class="max-w-full max-h-full object-contain" onerror="this.style.display='none'">
                 </div>
                 <div>
-                    <h1 class="text-lg font-bold text-[#1e3a8a] leading-tight">La Dolorosa</h1>
-                    <p class="text-xs text-[#64748b] font-medium">Gestión de Horarios</p>
+                    <h1 class="text-lg font-bold text-white leading-tight">La Dolorosa</h1>
+                    <p class="text-xs text-blue-200 font-medium">Gestión de Horarios</p>
                 </div>
             </div>
 
             <div class="px-4 flex flex-col gap-2">
                 <!-- Directorio -->
-                <a href="{% url 'horarios:index' %}" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl {% if request.resolver_match.url_name == 'index' %}bg-[#1d4ed8] text-white shadow-md font-semibold{% else %}text-[#475569] hover:bg-slate-50 font-medium{% endif %} text-sm transition-all duration-200">
+                <a href="{% url 'horarios:index' %}" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl {% if request.resolver_match.url_name == 'index' %}text-white font-bold{% else %}text-white hover:bg-white/5 font-medium{% endif %} text-sm transition-all duration-200">
                     <span class="material-symbols-outlined" style="font-size: 1.3rem;">group</span>
                     Directorio Docentes
                 </a>
 
                 <!-- Horarios Cursos -->
-                <a href="{% url 'horarios:horarios_curso' %}" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl {% if request.resolver_match.url_name == 'horarios_curso' %}bg-[#1d4ed8] text-white shadow-md font-semibold{% else %}text-[#475569] hover:bg-slate-50 font-medium{% endif %} text-sm transition-all duration-200">
+                <a href="{% url 'horarios:horarios_curso' %}" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl {% if request.resolver_match.url_name == 'horarios_curso' %}text-white font-bold{% else %}text-white hover:bg-white/5 font-medium{% endif %} text-sm transition-all duration-200">
                     <span class="material-symbols-outlined" style="font-size: 1.3rem;">calendar_month</span>
                     Horarios de Clases
                 </a>
 
                 <!-- Dashboard (Solo Docentes o Admins) -->
                 {% if user.is_authenticated and user.is_docente or user.is_admin or user.is_superuser %}
-                <a href="{% url 'horarios:dashboard_docente' %}" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl {% if request.resolver_match.url_name == 'dashboard_docente' %}bg-[#1d4ed8] text-white shadow-md font-semibold{% else %}text-[#475569] hover:bg-slate-50 font-medium{% endif %} text-sm transition-all duration-200">
+                <a href="{% url 'horarios:dashboard_docente' %}" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl {% if request.resolver_match.url_name == 'dashboard_docente' %}text-white font-bold{% else %}text-white hover:bg-white/5 font-medium{% endif %} text-sm transition-all duration-200">
                     <span class="material-symbols-outlined" style="font-size: 1.3rem; font-variation-settings: 'FILL' 1;">dashboard</span>
                     Mi Panel
                 </a>
@@ -42,12 +42,12 @@
 
                 <!-- Gestión Horaria (Acceso Administradores) -->
                 {% if user.is_authenticated and user.is_admin or user.is_superuser %}
-                <a href="{% url 'horarios:gestion_dashboard' %}" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl {% if 'gestion' in request.path %}bg-[#1d4ed8] text-white shadow-md font-semibold{% else %}text-[#475569] hover:bg-slate-50 font-medium{% endif %} text-sm transition-all duration-200">
+                <a href="{% url 'horarios:gestion_dashboard' %}" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl {% if 'gestion' in request.path %}text-white font-bold{% else %}text-white hover:bg-white/5 font-medium{% endif %} text-sm transition-all duration-200">
                     <span class="material-symbols-outlined" style="font-size: 1.3rem;">shield_person</span>
                     Gestión Horaria
                 </a>
                 {% else %}
-                <a href="#" onclick="event.preventDefault(); showGlobalToast('Se requieren permisos de administrador para acceder a esta sección.', 'error');" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl text-[#475569] hover:bg-slate-50 font-medium text-sm transition-all duration-200">
+                <a href="#" onclick="event.preventDefault(); showGlobalToast('Se requieren permisos de administrador para acceder a esta sección.', 'error');" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-white/5 font-medium text-sm transition-all duration-200">
                     <span class="material-symbols-outlined" style="font-size: 1.3rem;">shield_person</span>
                     Gestión Horaria
                 </a>
@@ -63,7 +63,7 @@
                 <div class="absolute right-4 bottom-0 w-10 h-16 bg-[#3b82f6] rounded-t-full opacity-60"></div>
                 
                 <!-- Main Building Wings -->
-                <div class="w-36 h-12 bg-[#60a5fa] relative flex justify-center items-end rounded-t-sm">
+                <div class="w-36 h-12 bg-[#60a5fa] opacity-80 relative flex justify-center items-end rounded-t-sm">
                     <!-- Windows -->
                     <div class="absolute w-full h-full flex justify-around items-center px-2">
                         <div class="w-3 h-5 bg-white opacity-70 rounded-t-sm"></div>
@@ -87,12 +87,12 @@
                 </div>
             </div>
             {% if user.is_authenticated %}
-            <a href="{% url 'horarios:logout' %}" class="cursor-pointer flex items-center gap-3 px-4 py-2.5 rounded-xl border border-[#ef4444]/30 text-[#ef4444] hover:bg-[#fef2f2] font-semibold text-sm transition-all duration-200 justify-center">
+            <a href="{% url 'horarios:logout' %}" class="cursor-pointer flex items-center gap-3 px-4 py-2.5 rounded-xl border border-white/20 text-white hover:bg-white/10 font-semibold text-sm transition-all duration-200 justify-center">
                 <span class="material-symbols-outlined">logout</span>
                 Cerrar Sesión
             </a>
             {% else %}
-            <a href="{% url 'horarios:login' %}" class="cursor-pointer flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#1d4ed8] text-white hover:bg-[#1e40af] font-semibold text-sm transition-all duration-200 justify-center">
+            <a href="{% url 'horarios:login' %}" class="cursor-pointer flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/10 text-white hover:bg-white/20 font-semibold text-sm transition-all duration-200 justify-center">
                 <span class="material-symbols-outlined">login</span>
                 Iniciar Sesión
             </a>
@@ -103,9 +103,9 @@
     <!-- Main Content Wrapper -->
     <div id="main-content" class="flex-1 flex flex-col md:ml-64 relative h-full transition-[margin] duration-300 ease-in-out">
         <!-- TopNavBar -->
-        <header class="sticky top-0 z-40 w-full h-[72px] flex justify-between items-center px-8 bg-white border-b border-[#e2e8f0]">
+        <header class="sticky top-0 z-40 w-full h-[72px] flex justify-between items-center px-8 bg-[#4B50A3] border-b border-[#3b3f81]">
             <div class="flex items-center gap-4">
-                <button onclick="toggleSidebar()" class="material-symbols-outlined text-[#1d4ed8] cursor-pointer hover:bg-slate-50 p-2 -ml-2 rounded-full transition-colors border-none bg-transparent">menu</button>
+                <button onclick="toggleSidebar()" class="material-symbols-outlined text-white cursor-pointer hover:bg-white/10 p-2 -ml-2 rounded-full transition-colors border-none bg-transparent">menu</button>
             </div>
             
             <div class="hidden md:flex items-center w-96 relative invisible">
@@ -114,8 +114,8 @@
 
             <div class="flex items-center gap-3">
                 {% if user.is_authenticated %}
-                <span class="text-sm font-medium text-[#475569] hidden sm:block">Hola, {{ user.first_name|default:user.username }}</span>
-                <div class="w-10 h-10 rounded-full bg-[#1d4ed8] flex items-center justify-center text-white font-bold cursor-pointer shadow-sm">
+                <span class="text-sm font-medium text-white hidden sm:block">Hola, {{ user.first_name|default:user.username }}</span>
+                <div class="w-10 h-10 rounded-full bg-[#002382] border border-white/20 flex items-center justify-center text-white font-bold cursor-pointer shadow-sm">
                     {{ user.first_name|first|default:user.username|first|upper }}
                 </div>
                 {% endif %}
@@ -123,7 +123,7 @@
         </header>
 
         <!-- Canvas -->
-        <main class="flex-1 overflow-y-auto p-8 bg-[#f8fafc]">
+        <main class="flex-1 overflow-y-auto p-8 bg-transparent">
             {% block content %}{% endblock %}
         </main>
     </div>

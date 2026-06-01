@@ -22,11 +22,11 @@
                         "tertiary": "#944700", "on-tertiary": "#ffffff", "on-background": "#181c21",
                         "secondary-fixed": "#ffdad6", "on-secondary": "#ffffff", "primary": "#005dac",
                         "on-secondary-fixed-variant": "#930010", "surface-container-highest": "#e0e2ea",
-                        "surface": "#f9f9ff", "secondary": "#b6171e", "on-primary-fixed": "#001c3a",
+                        "surface": "#ebfbff", "secondary": "#b6171e", "on-primary-fixed": "#001c3a",
                         "inverse-primary": "#a5c8ff", "inverse-surface": "#2d3037", "on-primary-fixed-variant": "#004786",
                         "on-primary-container": "#fffdff", "primary-container": "#1976d2", "tertiary-container": "#ba5b00",
-                        "background": "#f9f9ff", "inverse-on-surface": "#eff0f9", "on-error-container": "#93000a",
-                        "secondary-container": "#da3433", "surface-bright": "#f9f9ff", "surface-container-lowest": "#ffffff",
+                        "background": "#ebfbff", "inverse-on-surface": "#eff0f9", "on-error-container": "#93000a",
+                        "secondary-container": "#da3433", "surface-bright": "#ebfbff", "surface-container-lowest": "#ffffff",
                         "surface-tint": "#005faf", "error": "#ba1a1a", "secondary-fixed-dim": "#ffb3ac",
                         "tertiary-fixed-dim": "#ffb688", "on-surface": "#181c21", "on-tertiary-fixed": "#311300",
                         "surface-dim": "#d8dae2", "on-secondary-container": "#fffbff", "surface-container-high": "#e6e8f0",
@@ -60,7 +60,7 @@
             grid-template-columns: 52px repeat(5, 1fr);
             grid-template-rows: 36px repeat(11, minmax(50px, auto));
             gap: 0;
-            background: #fff;
+            background: #ffffff;
             border: 1px solid #e0e2ea;
             border-radius: 0.6rem;
             overflow: hidden;
@@ -177,6 +177,23 @@
             0% { transform: scale(1); opacity: 1; }
             100% { transform: scale(0.9) translateY(20px); opacity: 0; }
         }
+
+        /* Page Transitions */
+        .page-transition {
+            animation: pageFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .page-transition-out {
+            animation: pageFadeOut 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            pointer-events: none;
+        }
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pageFadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-12px); }
+        }
     </style>
     <script>
         // Rellena las celdas vacías del grid para crear las líneas de planilla
@@ -198,6 +215,16 @@
     </script>
 </head>
 <body class="bg-background text-on-background font-body-md text-body-md min-h-screen">
+    <script>
+        (function() {
+            try {
+                var navs = window.performance.getEntriesByType("navigation");
+                if (navs.length === 0 || navs[0].type !== "reload") {
+                    document.body.classList.add("page-transition");
+                }
+            } catch (e) {}
+        })();
+    </script>
     {% if messages %}
         <div class="toast-overlay active" id="toast-overlay-django"></div>
         <div class="toast-container" id="toast-container-django">
@@ -293,6 +320,37 @@
                 djangoOverlay.addEventListener('click', () => closeToast());
                 setTimeout(() => closeToast(), 4000);
             }
+
+            // Page Transition Out logic
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (
+                        this.hostname === window.location.hostname &&
+                        this.getAttribute('href') &&
+                        !this.getAttribute('href').startsWith('#') &&
+                        !this.getAttribute('href').startsWith('javascript:') &&
+                        this.getAttribute('target') !== '_blank' &&
+                        !e.ctrlKey &&
+                        !e.metaKey
+                    ) {
+                        e.preventDefault();
+                        const href = this.getAttribute('href');
+                        document.body.classList.remove('page-transition');
+                        document.body.classList.add('page-transition-out');
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 2500); // Debe coincidir con la duración de pageFadeOut
+                    }
+                });
+            });
+
+            // Restore body class on BFCache restore (Back/Forward navigation)
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted) {
+                    document.body.classList.remove('page-transition-out');
+                    document.body.classList.add('page-transition');
+                }
+            });
         });
     </script>
 
