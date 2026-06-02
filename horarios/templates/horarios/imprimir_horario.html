@@ -256,31 +256,10 @@
         /* ── BOTTOM ─── */
         .bottom-section {
             display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
+            justify-content: center;
+            margin-top: 10px;
             gap: 15px;
         }
-        .notes-box {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            flex: 2;
-            border: 1px solid #c8d3e6;
-            border-radius: 8px;
-            padding: 10px 15px;
-            background: #f8fafc;
-        }
-        .notes-box .material-symbols-outlined { color: #1a4a9e; font-size: 20px; }
-        .notes-title { font-weight: 700; color: #0d2b5e; font-size: 0.75rem; margin-top: 2px; }
-        .notes-lines {
-            flex: 1;
-            margin-left: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            padding-top: 10px;
-        }
-        .notes-lines .line { border-bottom: 1px dotted #9ab0d6; }
 
         .motto-box {
             display: flex;
@@ -335,9 +314,24 @@
         .back-link { color: #1a3a6b; font-weight: 600; text-decoration: none; font-size: 0.85rem; margin-left: 16px; }
 
         @media print {
-            html, body { background: white; padding: 0; }
+            html, body { background: white; padding: 0; margin: 0; min-height: auto; }
             .print-btn-wrapper { display: none; }
-            .print-page { box-shadow: none; max-width: 100%; border-radius: 0; }
+            .print-page { box-shadow: none; max-width: 100%; border: none; padding: 2px; }
+            .inner-border { padding: 5px; }
+            table { page-break-inside: avoid; }
+            tr, td, th { page-break-inside: avoid; }
+            tbody td { height: 40px; padding: 2px; }
+            .block { min-height: 34px; padding: 2px 4px; gap: 4px; }
+            .block strong { font-size: 0.65rem; }
+            .block small { font-size: 0.55rem; }
+            .header { margin-bottom: 5px; }
+            .header-school-text h1 { font-size: 1rem; }
+            .header-logo-left img { max-height: 60px !important; }
+            .header-logo-right img { max-height: 70px !important; }
+            .header-title h2 { font-size: 1.3rem !important; }
+            .info-bar { padding: 5px 0; margin-bottom: 5px; }
+            .bottom-section { margin-top: 5px; }
+            .page-footer { margin-top: 5px; }
         }
     </style>
 </head>
@@ -471,16 +465,6 @@
 
         <!-- BOTTOM -->
         <div class="bottom-section">
-            <div class="notes-box">
-                <span class="material-symbols-outlined">edit_note</span>
-                <div style="flex:1;">
-                    <div class="notes-title">NOTAS</div>
-                    <div class="notes-lines">
-                        <div class="line"></div>
-                        <div class="line"></div>
-                    </div>
-                </div>
-            </div>
             <div class="motto-box">
                 <span class="material-symbols-outlined">school</span>
                 <p class="motto-text">Organiza tu tiempo,<br>alcanza tus metas.</p>
