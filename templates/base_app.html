@@ -7,7 +7,7 @@
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-30 hidden transition-opacity duration-300 opacity-0" style="top: 72px;" onclick="toggleSidebar()"></div>
 
     <!-- SideNavBar: starts below the header (top-[72px]) -->
-    <nav id="sidebar" class="bg-[#4450CF] fixed left-0 top-[72px] h-[calc(100vh-72px)] w-64 flex flex-col justify-between py-6 z-40 transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl">
+    <nav id="sidebar" class="bg-[#4450CF] fixed left-0 top-[72px] h-[calc(100vh-72px)] w-64 flex flex-col justify-between py-6 z-40 transform translate-x-0 transition-transform duration-300 ease-in-out shadow-2xl">
         <div>
             <div class="px-6 mb-8 mt-4 flex items-center gap-3">
                 <div class="w-10 h-10 flex items-center justify-center cursor-pointer select-none shrink-0">
@@ -103,7 +103,7 @@
     <!-- Main Content Wrapper: full width, header is always static at top -->
     <div id="main-content" class="flex-1 flex flex-col relative h-full w-full">
         <!-- TopNavBar: always fixed at top, full width, never moves -->
-        <header class="fixed top-0 left-0 right-0 z-50 w-full h-[72px] flex justify-between items-center px-4 md:px-8 bg-[#4450CF] border-b border-[#3b3f81]">
+        <header class="fixed top-0 left-0 right-0 z-50 w-full h-[72px] flex justify-between items-center px-8 bg-[#4450CF] border-b border-[#3b3f81]">
             <div class="flex items-center gap-4">
                 <button onclick="toggleSidebar()" class="material-symbols-outlined text-white cursor-pointer hover:bg-white/10 p-2 -ml-2 rounded-full transition-colors border-none bg-transparent">menu</button>
             </div>
@@ -123,7 +123,7 @@
         </header>
 
         <!-- Canvas: padded top so content starts below the fixed header -->
-        <main class="flex-1 overflow-y-auto p-4 md:p-8 bg-transparent mt-[72px]">
+        <main class="flex-1 overflow-y-auto p-8 bg-transparent mt-[72px]">
             {% block content %}{% endblock %}
         </main>
     </div>
@@ -137,7 +137,7 @@
         if (sidebar.classList.contains('-translate-x-full')) {
             // Abrir
             sidebar.classList.remove('-translate-x-full');
-            sidebar.classList.add('translate-x-0');
+            sidebar.classListw.add('translate-x-0');
             overlay.classList.remove('hidden');
             setTimeout(() => overlay.classList.remove('opacity-0'), 10);
         } else {
