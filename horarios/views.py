@@ -313,11 +313,34 @@ def dashboard_docente(request):
 
 @login_required
 def imprimir_horario(request):
-    if not hasattr(request.user, 'perfil_docente'):
-        return redirect('horarios:index')
-    
-    docente = request.user.perfil_docente
-    horarios = Horario.objects.filter(docente=docente).select_related('asignatura', 'curso', 'paralelo').order_by('dia', 'hora_inicio')
+    docente_id = request.GET.get('docente_id')
+    curso_id = request.GET.get('curso_id')
+    paralelo_id = request.GET.get('paralelo_id')
+
+    es_clase = False
+    titulo_horario = ""
+    tutor_nombre = ""
+
+    if curso_id and paralelo_id:
+        es_clase = True
+        curso = get_object_or_404(Curso, id=curso_id)
+        paralelo = get_object_or_404(Paralelo, id=paralelo_id)
+        horarios = Horario.objects.filter(curso=curso, paralelo=paralelo).select_related('asignatura', 'docente__usuario').order_by('dia', 'hora_inicio')
+        titulo_horario = f"{curso.nombre} '{paralelo.identificador}'"
+        if paralelo.tutor:
+            tutor_nombre = paralelo.tutor.usuario.get_full_name() or paralelo.tutor.usuario.username
+    elif docente_id:
+        docente = get_object_or_404(Docente, id=docente_id)
+        horarios = Horario.objects.filter(docente=docente).select_related('asignatura', 'curso', 'paralelo').order_by('dia', 'hora_inicio')
+        titulo_horario = docente.usuario.get_full_name() or docente.usuario.username
+    else:
+        if hasattr(request.user, 'perfil_docente'):
+            docente = request.user.perfil_docente
+            horarios = Horario.objects.filter(docente=docente).select_related('asignatura', 'curso', 'paralelo').order_by('dia', 'hora_inicio')
+            titulo_horario = docente.usuario.get_full_name() or docente.usuario.username
+        else:
+            messages.error(request, 'No tienes un perfil de docente y no seleccionaste un horario específico.')
+            return redirect('horarios:index')
 
     PERIODOS = [
         {'num': '1',  'inicio': '07:00', 'fin': '07:45', 'key': '07:00:00'},
@@ -342,7 +365,10 @@ def imprimir_horario(request):
 
     # Calcular color por clase
     def color_para(h):
-        clave = f"{h.asignatura.nombre if h.asignatura else ''}|{h.curso_id}|{h.paralelo_id}"
+        if es_clase:
+            clave = f"{h.asignatura.nombre if h.asignatura else ''}|{h.docente_id}"
+        else:
+            clave = f"{h.asignatura.nombre if h.asignatura else ''}|{h.curso_id}|{h.paralelo_id}"
         return get_color_for_materia(clave)
 
     # Construir tabla: lista de filas, cada fila tiene celdas por día
@@ -366,12 +392,17 @@ def imprimir_horario(request):
                     if next_periodo.get('recreo'):
                         break
                     next_h = horario_map.get((dia, next_periodo['key']))
-                    if next_h and \
-                       next_h.asignatura_id == h.asignatura_id and \
-                       next_h.curso_id == h.curso_id and \
-                       next_h.paralelo_id == h.paralelo_id:
-                        rowspan += 1
-                        skip_map[(dia_idx, next_row_idx)] = True
+                    if next_h:
+                        if es_clase:
+                            mismo_bloque = (next_h.asignatura_id == h.asignatura_id and next_h.docente_id == h.docente_id)
+                        else:
+                            mismo_bloque = (next_h.asignatura_id == h.asignatura_id and next_h.curso_id == h.curso_id and next_h.paralelo_id == h.paralelo_id)
+                        
+                        if mismo_bloque:
+                            rowspan += 1
+                            skip_map[(dia_idx, next_row_idx)] = True
+                        else:
+                            break
                     else:
                         break
                         
@@ -391,7 +422,9 @@ def imprimir_horario(request):
     fecha_hoy = timezone.localdate()
 
     context = {
-        'docente': docente,
+        'es_clase': es_clase,
+        'titulo_horario': titulo_horario,
+        'tutor_nombre': tutor_nombre,
         'tabla': tabla,
         'fecha_hoy': fecha_hoy,
     }
@@ -441,6 +474,8 @@ def horarios_curso(request):
             
             grupos.append({
                 'id': f"curso_{p.curso_id}_paralelo_{p.id}",
+                'curso_id': p.curso_id,
+                'paralelo_id': p.id,
                 'titulo': f"{p.curso.nombre} '{p.identificador}'",
                 'horarios_grid': horarios_grid,
             })

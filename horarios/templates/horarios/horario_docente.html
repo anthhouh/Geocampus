@@ -133,10 +133,16 @@
                 </div>
             </div>
             
-            <a href="?formato=lista" class="hidden md:flex items-center gap-2 border border-gray-200 text-primary font-bold text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                <span class="material-symbols-outlined text-[18px]">list</span>
-                Ver en listado
-            </a>
+            <div class="flex items-center gap-3">
+                <a href="{% url 'horarios:imprimir_horario' %}?docente_id={{ docente.id }}" target="_blank" class="hidden md:flex items-center gap-2 border border-gray-200 text-primary font-bold text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">print</span>
+                    Imprimir
+                </a>
+                <a href="?formato=lista" class="hidden md:flex items-center gap-2 border border-gray-200 text-primary font-bold text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">list</span>
+                    Ver en listado
+                </a>
+            </div>
         </div>
 
         <!-- Grid Container -->

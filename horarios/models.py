@@ -97,6 +97,8 @@ class Paralelo(models.Model):
         default='',
         help_text="Solo para bachillerato. Dejar vacío para básica."
     )
+    tutor = models.ForeignKey('Docente', on_delete=models.SET_NULL, null=True, blank=True, related_name='paralelos_tutorados', help_text="Docente asignado como tutor de este paralelo.")
+
 
     class Meta:
         unique_together = ('curso', 'identificador')

@@ -71,11 +71,12 @@ class CursoForm(forms.ModelForm):
 class ParaleloForm(forms.ModelForm):
     class Meta:
         model = Paralelo
-        fields = ['curso', 'identificador', 'especialidad_bachillerato']
+        fields = ['curso', 'identificador', 'especialidad_bachillerato', 'tutor']
         widgets = {
             'curso':                   forms.Select(attrs={'class': _SELECT}),
             'identificador':           forms.TextInput(attrs={'class': _INPUT, 'placeholder': 'Ej: A'}),
             'especialidad_bachillerato': forms.Select(attrs={'class': _SELECT}),
+            'tutor':                   forms.Select(attrs={'class': _SELECT}),
         }
 
 class AsignaturaForm(forms.ModelForm):

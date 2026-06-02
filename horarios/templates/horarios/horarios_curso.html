@@ -241,7 +241,13 @@
                             </div>
                             <span class="font-bold text-[#1e293b] text-xl">Horario de {{ grupo.titulo }}</span>
                         </div>
-                        <span class="material-symbols-outlined text-[#64748b] bg-slate-100 p-1 rounded-full transition-transform group-open/accordion:rotate-180">expand_more</span>
+                        <div class="flex items-center gap-4">
+                            <a href="{% url 'horarios:imprimir_horario' %}?curso_id={{ grupo.curso_id }}&paralelo_id={{ grupo.paralelo_id }}" target="_blank" class="flex items-center gap-1 px-3 py-1 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-md transition-colors shadow-sm" onclick="event.stopPropagation()">
+                                <span class="material-symbols-outlined text-[18px]">print</span>
+                                Imprimir
+                            </a>
+                            <span class="material-symbols-outlined text-[#64748b] bg-slate-100 p-1 rounded-full transition-transform group-open/accordion:rotate-180">expand_more</span>
+                        </div>
                     </summary>
                     
                     <div class="overflow-x-auto p-4 md:p-6 bg-white">

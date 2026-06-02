@@ -16,7 +16,7 @@ class HorarioInline(admin.TabularInline):
 class ParaleloInline(admin.TabularInline):
     model = Paralelo
     extra = 1
-    fields = ('identificador', 'especialidad_bachillerato')
+    fields = ('identificador', 'especialidad_bachillerato', 'tutor')
 
 @admin.register(Docente)
 class DocenteAdmin(admin.ModelAdmin):
@@ -35,7 +35,7 @@ class CursoAdmin(admin.ModelAdmin):
 
 @admin.register(Paralelo)
 class ParaleloAdmin(admin.ModelAdmin):
-    list_display = ('identificador', 'curso', 'especialidad_bachillerato')
+    list_display = ('identificador', 'curso', 'especialidad_bachillerato', 'tutor')
     list_filter = ('curso', 'especialidad_bachillerato')
     search_fields = ('identificador', 'curso__nombre')
 

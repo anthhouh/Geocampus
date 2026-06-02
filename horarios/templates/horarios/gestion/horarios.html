@@ -64,7 +64,13 @@
                 </div>
                 <span>{{ grupo.titulo }}</span>
             </div>
-            <span class="material-symbols-outlined transition-transform group-open/accordion:rotate-180">expand_more</span>
+            <div class="flex items-center gap-4">
+                <a href="{% url 'horarios:imprimir_horario' %}?{% if es_docentes %}docente_id={{ grupo.docente_id }}{% else %}curso_id={{ grupo.curso_id }}&paralelo_id={{ grupo.paralelo_id }}{% endif %}" target="_blank" class="flex items-center gap-1 px-3 py-1 bg-surface-container-high hover:bg-surface-variant text-on-surface text-sm rounded-md transition-colors border border-outline-variant" onclick="event.stopPropagation()">
+                    <span class="material-symbols-outlined text-[18px]">print</span>
+                    Imprimir
+                </a>
+                <span class="material-symbols-outlined transition-transform group-open/accordion:rotate-180">expand_more</span>
+            </div>
         </summary>
         
         <div class="p-lg border-t border-outline-variant overflow-x-auto bg-surface-container-low/30">
