@@ -12,43 +12,37 @@ document.getElementById('form-horario').addEventListener('submit', function(e) {
     fetch(this.action, {
         method: 'POST',
         body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
     })
     .then(response => response.json())
     .then(data => {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+
         if (data.status === 'error') {
             mostrarToast(data.message, 'error');
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
         } else if (data.status === 'success') {
             mostrarToast(data.message, 'success');
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
             cerrarModalHorario();
-            
-            if (data.html && data.grupo_id) {
+
+            if (data.grupo_id) {
                 const grid = document.getElementById('grid-' + data.grupo_id);
-                const existingItem = document.getElementById('schedule-item-' + data.horario_id);
-                
-                if (existingItem) {
-                    // Update existing
-                    existingItem.outerHTML = data.html;
-                } else if (grid) {
-                    // Append new
-                    grid.insertAdjacentHTML('beforeend', data.html);
+                if (grid) {
+                    // Remove all existing schedule-item elements from this grid
+                    grid.querySelectorAll('.schedule-item').forEach(el => el.remove());
+
+                    // Insert the fresh full set of items returned by the server
+                    if (data.items_html) {
+                        grid.insertAdjacentHTML('beforeend', data.items_html);
+
+                        // Play pop-in animation on every new item
+                        grid.querySelectorAll('.schedule-item').forEach(el => {
+                            el.style.animation = 'none';
+                            el.offsetHeight; // trigger reflow
+                            el.style.animation = 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                        });
+                    }
                 }
-                
-                // Add pop-in animation to the new/updated element
-                const newItem = document.getElementById('schedule-item-' + data.horario_id);
-                if (newItem) {
-                    newItem.style.animation = 'none';
-                    newItem.offsetHeight; // trigger reflow
-                    newItem.style.animation = 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                }
-            } else {
-                setTimeout(() => window.location.reload(), 1000);
             }
         }
     })
@@ -59,6 +53,7 @@ document.getElementById('form-horario').addEventListener('submit', function(e) {
         submitBtn.disabled = false;
     });
 });
+
 
 document.getElementById('form-eliminar').addEventListener('submit', function(e) {
     e.preventDefault();

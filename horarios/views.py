@@ -786,38 +786,32 @@ def api_guardar_horario(request):
                 saved_horarios.append(h)
 
         msg = f"Se guardaron {len(periodos_a_guardar)} periodos exitosamente." if len(periodos_a_guardar) > 1 else ("Horario actualizado exitosamente." if horario_id else "Horario guardado exitosamente.")
-            
-        # Preparar los datos de los items para renderizar el HTML fusionado
-        # Extraemos los IDs y hacemos un fetch de la BD para asegurar que los campos de hora sean objetos datetime.time
-        saved_ids = [h.id for h in saved_horarios]
-        fresh_horarios = Horario.objects.filter(id__in=saved_ids).select_related('docente__usuario', 'curso', 'paralelo', 'asignatura').order_by('dia', 'hora_inicio')
-        
-        from .views import preparar_horarios_grid
-        merged_items = preparar_horarios_grid(fresh_horarios, fusionar_bloques=True)
-        
+
         es_docentes = request.POST.get('es_docentes') == '1'
-        html_parts = []
-        for item_data in merged_items:
-            html_parts.append(render_to_string('horarios/gestion/schedule_item.html', {'item': item_data, 'es_docentes': es_docentes}))
-            
-        html = "\n".join(html_parts)
-        
+
+        # Fetch ALL horarios for the affected group so the grid can be fully rebuilt client-side
         if es_docentes:
             grupo_id = f"docente_{docente.id}"
+            all_horarios = Horario.objects.filter(docente=docente).select_related('docente__usuario', 'curso', 'paralelo', 'asignatura').order_by('dia', 'hora_inicio')
         else:
             grupo_id = f"curso_{curso.id}_paralelo_{paralelo.id}"
-            
+            all_horarios = Horario.objects.filter(curso=curso, paralelo=paralelo).select_related('docente__usuario', 'curso', 'paralelo', 'asignatura').order_by('dia', 'hora_inicio')
+
+        from .views import preparar_horarios_grid
+        all_filled, _ = preparar_horarios_grid(all_horarios, fusionar_bloques=True, incluir_vacios=False)
+
+        items_html_parts = []
+        for item_data in all_filled:
+            items_html_parts.append(render_to_string('horarios/gestion/schedule_item.html', {'item': item_data, 'es_docentes': es_docentes}))
+
         return JsonResponse({
-            'status': 'success', 
+            'status': 'success',
             'message': msg,
-            'html': html,
-            'horario_id': saved_horarios[0].id,
-            'grupo_id': grupo_id
+            'grupo_id': grupo_id,
+            'items_html': "\n".join(items_html_parts),
         })
     except Exception as e:
-        return JsonResponse({'status': 'error', 'message': f"Error al guardar horario: {str(e)}"})
-
-
+        return JsonResponse({'status': 'error', 'message': f"Error al guardar horario: {str(e)}"})          
 @admin_required
 def gestion_crear_horario(request):
     if request.method == 'POST':
