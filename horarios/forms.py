@@ -74,7 +74,8 @@ class ParaleloForm(forms.ModelForm):
         fields = ['curso', 'identificador', 'especialidad_bachillerato', 'tutor']
         widgets = {
             'curso':                   forms.Select(attrs={'class': _SELECT}),
-            'identificador':           forms.TextInput(attrs={'class': _INPUT, 'placeholder': 'Ej: A'}),
+            'identificador':           forms.TextInput(attrs={'class': _INPUT, 'placeholder': 'Ej: A, B, Diurno...', 'maxlength': '50'}),
+
             'especialidad_bachillerato': forms.Select(attrs={'class': _SELECT}),
             'tutor':                   forms.Select(attrs={'class': _SELECT}),
         }

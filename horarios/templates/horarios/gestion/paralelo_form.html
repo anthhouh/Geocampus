@@ -22,7 +22,8 @@
                     <div class="flex flex-col gap-xs">
                         <label class="font-label-md text-label-md text-on-surface" for="{{ form.identificador.id_for_label }}">Identificador (letra) *</label>
                         {{ form.identificador }}
-                        <p class="text-xs text-on-surface-variant">Ej: A, B, C</p>
+                        <p class="text-xs text-on-surface-variant">Ej: A, B, C o texto más largo (máx. 50 caracteres)</p>
+
                         {% if form.identificador.errors %}<p class="text-xs text-error mt-1">{{ form.identificador.errors|join:", " }}</p>{% endif %}
                     </div>
                     <div class="flex flex-col gap-xs">

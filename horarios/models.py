@@ -89,7 +89,7 @@ class Paralelo(models.Model):
     )
 
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE, related_name='paralelos')
-    identificador = models.CharField(max_length=10, help_text="Ej: A, B, C")
+    identificador = models.CharField(max_length=50, help_text="Ej: A, B, C o nombre completo")
     especialidad_bachillerato = models.CharField(
         max_length=20,
         choices=ESPECIALIDADES,
