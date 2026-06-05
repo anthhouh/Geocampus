@@ -25,6 +25,8 @@ urlpatterns = [
     # ── Panel de gestión (solo admin) ─────────────────────────────────────
     path('gestion/',                                    views.gestion_dashboard,        name='gestion_dashboard'),
     path('gestion/horarios/',                           views.gestion_horarios,         name='gestion_horarios'),
+    path('gestion/horarios/preliminar/',                views.gestion_horarios_preliminar, name='gestion_horarios_preliminar'),
+    path('gestion/horarios/exportar-excel/',            views.exportar_horarios_excel,  name='exportar_horarios_excel'),
     path('gestion/horarios/docentes/',                  views.gestion_horarios_docentes,name='gestion_horarios_docentes'),
     path('gestion/horarios/cursos/',                    views.gestion_horarios_cursos,  name='gestion_horarios_cursos'),
     path('gestion/horarios/api/guardar/',               views.api_guardar_horario,      name='api_guardar_horario'),

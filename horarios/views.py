@@ -5,7 +5,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+import openpyxl
 from django.views.decorators.http import require_POST
 from django.template.loader import render_to_string
 from django.contrib import messages
@@ -619,6 +620,10 @@ def gestion_horarios_docentes(request):
 def gestion_horarios_cursos(request):
     return _render_horarios_list(request, 'clase', 'Horarios de Cursos')
 
+@admin_required
+def gestion_horarios_preliminar(request):
+    return _render_horarios_list(request, 'clase', 'Vista Preliminar de Horarios', template_name='horarios/gestion/horarios_preliminar.html')
+
 def _get_curso_order(titulo):
     t = titulo.lower()
     if 'octavo' in t: return 1
@@ -629,7 +634,7 @@ def _get_curso_order(titulo):
     if 'tercero' in t: return 6
     return 99
 
-def _render_horarios_list(request, tipo_agrupacion, titulo):
+def _render_horarios_list(request, tipo_agrupacion, titulo, template_name='horarios/gestion/horarios.html'):
     horarios_qs = Horario.objects.select_related('docente__usuario', 'curso', 'paralelo').exclude(tipo='atencion')
     atencion_qs = Horario.objects.select_related('docente__usuario', 'curso', 'paralelo', 'asignatura').filter(tipo='atencion')
     
@@ -699,7 +704,156 @@ def _render_horarios_list(request, tipo_agrupacion, titulo):
         'paralelos_json': _paralelos_json(),
         'asignaturas': Asignatura.objects.all(),
     }
-    return render(request, 'horarios/gestion/horarios.html', context)
+    return render(request, template_name, context)
+
+@admin_required
+def exportar_horarios_excel(request):
+    from openpyxl import Workbook
+    from openpyxl.styles import Alignment, PatternFill, Font, Border, Side
+    
+    # Reutilizamos la lógica de filtrado y preparación de grupos
+    # Simula la recolección de grupos (usamos 'clase' por defecto o el filtro provisto)
+    tipo_agrupacion = 'clase' if not request.GET.get('docente') else 'docente'
+    
+    horarios_qs = Horario.objects.select_related('docente__usuario', 'curso', 'paralelo', 'asignatura').exclude(tipo='atencion')
+    docente_id = request.GET.get('docente')
+    curso_id   = request.GET.get('curso')
+    dia        = request.GET.get('dia')
+
+    if docente_id: horarios_qs = horarios_qs.filter(docente_id=docente_id)
+    if curso_id:   horarios_qs = horarios_qs.filter(curso_id=curso_id)
+    if dia:        horarios_qs = horarios_qs.filter(dia=dia)
+
+    grupos = []
+    if tipo_agrupacion == 'clase':
+        paralelos = Paralelo.objects.select_related('curso').all()
+        if curso_id:
+            paralelos = paralelos.filter(curso_id=curso_id)
+        for p in paralelos:
+            hs = horarios_qs.filter(curso=p.curso, paralelo=p).order_by('dia', 'hora_inicio')
+            if hs.exists():
+                filled = preparar_horarios_grid(hs, incluir_vacios=False, fusionar_bloques=True)
+                grupos.append({
+                    'titulo': f"{p.curso.nombre} '{p.identificador}'",
+                    'horarios': filled
+                })
+        grupos.sort(key=lambda x: (_get_curso_order(x['titulo']), x['titulo']))
+    else:
+        docentes_qs = Docente.objects.select_related('usuario').all().order_by('usuario__first_name')
+        if docente_id:
+            docentes_qs = docentes_qs.filter(id=docente_id)
+        for d in docentes_qs:
+            hs = horarios_qs.filter(docente=d).order_by('dia', 'hora_inicio')
+            if hs.exists():
+                filled = preparar_horarios_grid(hs, incluir_vacios=False, fusionar_bloques=True)
+                grupos.append({
+                    'titulo': d.usuario.get_full_name() or d.usuario.username,
+                    'horarios': filled
+                })
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Horarios"
+    
+    # Estilos
+    font_bold = Font(bold=True)
+    font_title = Font(bold=True, size=14)
+    align_center = Alignment(horizontal='center', vertical='center', wrap_text=True)
+    align_left = Alignment(horizontal='left', vertical='center')
+    fill_header = PatternFill(start_color="D3D3D3", end_color="D3D3D3", fill_type="solid")
+    fill_day = PatternFill(start_color="EFEFEF", end_color="EFEFEF", fill_type="solid")
+    thin_border = Border(left=Side(style='thin'), right=Side(style='thin'), top=Side(style='thin'), bottom=Side(style='thin'))
+
+    row_num = 1
+    dias_nombres = {2: 'Lunes', 3: 'Martes', 4: 'Miércoles', 5: 'Jueves', 6: 'Viernes'}
+    periodos_dict = {row: (inicio, fin) for row, inicio, fin in PERIODOS_ROWS}
+
+    for grupo in grupos:
+        # Título del Grupo
+        ws.merge_cells(start_row=row_num, start_column=1, end_row=row_num, end_column=6)
+        cell = ws.cell(row=row_num, column=1, value=grupo['titulo'])
+        cell.font = font_title
+        cell.alignment = align_left
+        cell.fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
+        row_num += 1
+        
+        # Guardar la fila inicial de la cuadrícula para este grupo
+        grid_start_row = row_num
+        
+        # Encabezado (Días)
+        cell = ws.cell(row=grid_start_row, column=1, value="Hora")
+        cell.font = font_bold
+        cell.alignment = align_center
+        cell.fill = fill_header
+        cell.border = thin_border
+        
+        for col_idx in range(2, 7):
+            cell = ws.cell(row=grid_start_row, column=col_idx, value=dias_nombres[col_idx])
+            cell.font = font_bold
+            cell.alignment = align_center
+            cell.fill = fill_header
+            cell.border = thin_border
+            
+        # Generar las filas de 2 a 11 (horas y recreo)
+        for r_idx in range(2, 12):
+            excel_r = grid_start_row + r_idx - 1
+            cell_hora = ws.cell(row=excel_r, column=1)
+            cell_hora.alignment = align_center
+            cell_hora.border = thin_border
+            
+            if r_idx == 6:
+                cell_hora.value = "REC"
+                ws.merge_cells(start_row=excel_r, start_column=2, end_row=excel_r, end_column=6)
+                c_rec = ws.cell(row=excel_r, column=2, value="R E C R E O")
+                c_rec.alignment = align_center
+                c_rec.font = font_bold
+                c_rec.fill = fill_day
+                for c_idx in range(1, 7):
+                    ws.cell(row=excel_r, column=c_idx).border = thin_border
+            else:
+                inicio, fin = periodos_dict[r_idx]
+                cell_hora.value = f"{inicio[:5]} - {fin[:5]}"
+                for c_idx in range(2, 7):
+                    c_vacia = ws.cell(row=excel_r, column=c_idx, value="")
+                    c_vacia.border = thin_border
+                    
+        # Rellenar con los horarios reales
+        for item in grupo['horarios']:
+            h = item['horario']
+            c_idx = item['grid_col']
+            r_start = item['grid_row_start']
+            r_end = item['grid_row_end'] - 1 
+            
+            texto = h.asignatura.nombre if getattr(h, 'asignatura', None) else getattr(h, 'materia', '')
+            subtexto = h.docente.usuario.get_full_name() if tipo_agrupacion == 'clase' else f"{h.curso.nombre} '{h.paralelo.identificador}'"
+            valor = f"{texto}\n{subtexto}"
+            
+            excel_r_start = grid_start_row + r_start - 1
+            excel_r_end = grid_start_row + r_end - 1
+            
+            if excel_r_end > excel_r_start:
+                ws.merge_cells(start_row=excel_r_start, start_column=c_idx, end_row=excel_r_end, end_column=c_idx)
+                
+            cell = ws.cell(row=excel_r_start, column=c_idx, value=valor)
+            cell.alignment = align_center
+            cell.border = thin_border
+            # Aplicar color basado en CSS a HEX (usamos un fallback genérico pastel por simplicidad en Excel)
+            cell.fill = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid")
+            
+            for merge_r in range(excel_r_start, excel_r_end + 1):
+                ws.cell(row=merge_r, column=c_idx).border = thin_border
+                
+        row_num = grid_start_row + 11 + 2 # Espacio para el siguiente grupo
+
+    # Ajustar ancho columnas
+    ws.column_dimensions['A'].width = 15
+    for l in ['B', 'C', 'D', 'E', 'F']:
+        ws.column_dimensions[l].width = 25
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename=horarios_exportados_{datetime.datetime.now().strftime("%Y%m%d_%H%M")}.xlsx'
+    wb.save(response)
+    return response
 
 @login_required
 @require_POST

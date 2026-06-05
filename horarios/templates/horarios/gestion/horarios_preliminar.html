@@ -1,0 +1,174 @@
+{% extends 'horarios/gestion/base_gestion.html' %}
+
+{% block title %}Vista Preliminar de Horarios — La Dolorosa{% endblock %}
+
+{% block extra_head %}
+<style>
+/* Estilos para que la cuadrícula se vea bien en 2 columnas en pantalla */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Estilos específicos para impresión */
+@media print {
+    /* Ocultar elementos de navegación y cabeceras que no deben salir en PDF */
+    header, aside, nav, .print-hidden, form {
+        display: none !important;
+    }
+    
+    /* El contenedor principal debe ocupar el 100% */
+    main, .gestion-content {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        background: transparent !important;
+    }
+    
+    body {
+        background: white !important;
+    }
+    
+    /* Forzar 2 columnas en impresión horizontal (landscape) o 1 si es vertical (portrait), pero general asumen landscape para grids */
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    /* Evitar que una cuadrícula se corte a la mitad de una página */
+    .schedule-card {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        background: white !important;
+    }
+    
+    /* Colores forzados para los bloques en PDF */
+    .schedule-item {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block gestion_content %}
+
+<!-- Header + Actions -->
+<div class="flex items-center justify-between flex-wrap gap-md mb-6 print-hidden">
+    <h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">view_quilt</span>
+        {{ titulo_seccion }}
+    </h3>
+    
+    <div class="flex items-center gap-3">
+        <a href="{% url 'horarios:gestion_horarios_cursos' %}" class="flex items-center gap-2 px-4 py-2 bg-surface border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors font-medium text-sm">
+            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            Volver
+        </a>
+        
+        <button type="button" onclick="window.print()" class="flex items-center gap-2 px-4 py-2 bg-surface-container-high border border-outline-variant rounded-lg text-on-surface hover:bg-surface-variant transition-colors font-medium text-sm">
+            <span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+            Exportar a PDF
+        </button>
+        
+        <a href="{% url 'horarios:exportar_horarios_excel' %}?{{ request.GET.urlencode }}" download class="flex items-center gap-2 px-4 py-2 bg-[#107C41] text-white rounded-lg hover:bg-[#0b5e31] transition-colors font-medium text-sm shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">table_view</span>
+            Descargar Excel
+        </a>
+    </div>
+</div>
+
+<!-- Filters (Same as horarios.html but hidden on print) -->
+<form method="get" class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md shadow-sm grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-md items-end mb-6 print-hidden">
+    <div class="flex flex-col gap-xs">
+        <label class="font-label-md text-label-md text-on-surface-variant text-xs uppercase">Curso</label>
+        <select name="curso" class="w-full px-3 py-2 bg-surface border border-outline-variant rounded-lg text-sm focus:outline-none focus:border-primary">
+            <option value="">Todos</option>
+            {% for c in cursos %}
+            <option value="{{ c.id }}" {% if filtros.curso == c.id|stringformat:"s" %}selected{% endif %}>{{ c.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="flex gap-sm">
+        <button type="submit" class="flex-1 py-2 bg-primary text-on-primary rounded-lg font-button text-button hover:bg-primary/90 transition-colors">Filtrar</button>
+        <a href="{{ request.path }}" class="flex items-center justify-center px-3 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+        </a>
+    </div>
+</form>
+
+<!-- Grid de Horarios -->
+<div class="grid-container">
+    {% for grupo in grupos %}
+    <div class="schedule-card bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col">
+        <!-- Header del grupo -->
+        <div class="bg-surface-container-low p-3 border-b border-outline-variant flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm shrink-0">
+                {{ grupo.titulo|first|upper }}
+            </div>
+            <h4 class="font-title-md text-on-surface truncate">{{ grupo.titulo }}</h4>
+        </div>
+        
+        <!-- Cuadrícula -->
+        <div class="p-3 overflow-x-auto flex-1 bg-surface-container-lowest">
+            <div class="schedule-grid" style="font-size: 0.8em; gap: 2px;">
+                <div style="grid-column: 1; grid-row: 1;"></div>
+                <div class="day-header" style="grid-column: 2; grid-row: 1; padding: 2px; min-height: 20px;">Lu</div>
+                <div class="day-header" style="grid-column: 3; grid-row: 1; padding: 2px; min-height: 20px;">Ma</div>
+                <div class="day-header" style="grid-column: 4; grid-row: 1; padding: 2px; min-height: 20px;">Mi</div>
+                <div class="day-header" style="grid-column: 5; grid-row: 1; padding: 2px; min-height: 20px;">Ju</div>
+                <div class="day-header" style="grid-column: 6; grid-row: 1; padding: 2px; min-height: 20px;">Vi</div>
+
+                <div class="time-slot" style="grid-column: 1; grid-row: 2; padding: 2px; min-height: 30px;"><strong>1</strong></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 3; padding: 2px; min-height: 30px;"><strong>2</strong></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 4; padding: 2px; min-height: 30px;"><strong>3</strong></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 5; padding: 2px; min-height: 30px;"><strong>4</strong></div>
+
+                <div class="time-slot" style="grid-column: 1; grid-row: 6; padding: 2px; min-height: 20px;"><strong>R</strong></div>
+                <div class="schedule-recreo" style="padding: 2px; min-height: 20px;">REC</div>
+
+                <div class="time-slot" style="grid-column: 1; grid-row: 7; padding: 2px; min-height: 30px;"><strong>5</strong></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 8; padding: 2px; min-height: 30px;"><strong>6</strong></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 9; padding: 2px; min-height: 30px;"><strong>7</strong></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 10; padding: 2px; min-height: 30px;"><strong>8</strong></div>
+                <div class="time-slot" style="grid-column: 1; grid-row: 11; padding: 2px; min-height: 30px;"><strong>9</strong></div>
+
+                {% for item in grupo.horarios_grid %}
+                    <div class="schedule-item rounded shadow-sm flex flex-col justify-center text-center overflow-hidden" 
+                         style="grid-column: {{ item.grid_col }}; grid-row: {{ item.grid_row_start }} / {{ item.grid_row_end }}; background-color: {{ item.color_bg }}; border: 1px solid {{ item.color_border }}; border-left: 2px solid {{ item.color_border }}; color: {{ item.color_text }}; padding: 2px;">
+                        <span class="font-bold truncate text-[10px] leading-tight" title="{{ item.horario.materia|default:item.horario.asignatura.nombre }}">{{ item.horario.materia|default:item.horario.asignatura.nombre }}</span>
+                        <span class="truncate text-[9px] opacity-80 leading-tight" title="{{ item.horario.docente.usuario.get_full_name|default:item.horario.docente.usuario.username }}">
+                            {% if es_docentes %}{{ item.horario.curso.nombre }} "{{ item.horario.paralelo.identificador }}"{% else %}{{ item.horario.docente.usuario.get_full_name|default:item.horario.docente.usuario.username }}{% endif %}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full bg-surface-container-lowest rounded-xl border border-outline-variant p-xl flex flex-col items-center justify-center text-center">
+        <span class="material-symbols-outlined text-[48px] text-on-surface-variant/40 mb-3">event_busy</span>
+        <h4 class="font-h3 text-h3 text-on-surface mb-1">No hay horarios registrados</h4>
+        <p class="font-body-sm text-body-sm text-on-surface-variant max-w-md">
+            No se encontraron horarios con los filtros actuales.
+        </p>
+    </div>
+    {% endfor %}
+</div>
+
+{% if hay_resultados %}
+<div class="mt-md px-lg py-sm text-right text-on-surface-variant font-body-sm text-body-sm print-hidden">
+    {{ grupos|length }} grupo{{ grupos|length|pluralize }} encontrado{{ grupos|length|pluralize }}
+</div>
+{% endif %}
+
+{% endblock %}

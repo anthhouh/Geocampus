@@ -10,6 +10,10 @@
         <span class="material-symbols-outlined text-primary">{% if es_docentes %}badge{% else %}calendar_month{% endif %}</span>
         {{ titulo_seccion }}
     </h3>
+    <a href="{% url 'horarios:gestion_horarios_preliminar' %}?{{ request.GET.urlencode }}" class="flex items-center gap-2 px-4 py-2 bg-surface border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors font-medium text-sm">
+        <span class="material-symbols-outlined text-[20px]">view_quilt</span>
+        Vista Preliminar
+    </a>
 </div>
 
 <!-- Filters -->
