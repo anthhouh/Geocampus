@@ -118,6 +118,17 @@ class Asignatura(models.Model):
     def __str__(self):
         return self.nombre
 
+class Aula(models.Model):
+    nombre = models.CharField(max_length=50, unique=True, help_text="Ej: Laboratorio de Informática, Aula 101")
+    capacidad = models.IntegerField(default=30)
+    tipo = models.CharField(max_length=50, default='ordinaria', help_text="Ej: ordinaria, laboratorio, cancha")
+
+    class Meta:
+        ordering = ['nombre']
+
+    def __str__(self):
+        return self.nombre
+
 class Horario(models.Model):
     DIAS = (
         ('lunes', 'Lunes'),
@@ -136,6 +147,7 @@ class Horario(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE, related_name='horarios')
     paralelo = models.ForeignKey(Paralelo, on_delete=models.CASCADE, related_name='horarios')
     asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE, related_name='horarios', null=True, blank=True)
+    aula = models.ForeignKey(Aula, on_delete=models.SET_NULL, related_name='horarios', null=True, blank=True)
     dia = models.CharField(max_length=15, choices=DIAS)
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()
@@ -149,3 +161,57 @@ class Horario(models.Model):
         if not nombre_docente.strip():
             nombre_docente = self.docente.usuario.username
         return f"{self.asignatura.nombre} - {nombre_docente} ({self.dia} {self.hora_inicio.strftime('%H:%M')} - {self.hora_fin.strftime('%H:%M')})"
+
+import uuid
+
+class Leccion(models.Model):
+    docente            = models.ForeignKey(Docente, on_delete=models.CASCADE)
+    asignatura         = models.ForeignKey(Asignatura, on_delete=models.CASCADE)
+    curso              = models.ForeignKey(Curso, on_delete=models.CASCADE)
+    paralelo           = models.ForeignKey(Paralelo, on_delete=models.CASCADE)
+    aula_requerida     = models.ForeignKey(Aula, on_delete=models.SET_NULL, null=True, blank=True, help_text="Si requiere un aula específica (ej. Laboratorio)")
+    horas_semanales    = models.PositiveSmallIntegerField()
+    max_horas_seguidas = models.PositiveSmallIntegerField(default=2)
+    permitir_doble     = models.BooleanField(default=True)
+    dias_separados     = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('docente', 'asignatura', 'paralelo')
+
+    def __str__(self):
+        return f"{self.asignatura.nombre} - {self.docente} ({self.curso} {self.paralelo.identificador})"
+
+class DisponibilidadDocente(models.Model):
+    TIPOS = [('bloqueado', 'Bloqueado'), ('preferido', 'Preferido')]
+    docente     = models.ForeignKey(Docente, on_delete=models.CASCADE, related_name='disponibilidades')
+    dia         = models.CharField(max_length=15, choices=Horario.DIAS)
+    hora_inicio = models.TimeField()
+    hora_fin    = models.TimeField()
+    tipo        = models.CharField(max_length=15, choices=TIPOS, default='bloqueado')
+
+    class Meta:
+        unique_together = ('docente', 'dia', 'hora_inicio')
+
+class SesionGenerador(models.Model):
+    ESTADOS = [('pendiente','Pendiente'),('corriendo','Corriendo'),
+               ('completado','Completado'),('fallido','Fallido')]
+    sesion_id   = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    creado_en   = models.DateTimeField(auto_now_add=True)
+    estado      = models.CharField(max_length=15, choices=ESTADOS, default='pendiente')
+    modo        = models.CharField(max_length=15, default='estandar')
+    advertencias = models.JSONField(default=list, blank=True)
+    sin_asignar  = models.JSONField(default=list, blank=True)
+    publicado    = models.BooleanField(default=False)
+
+class BorradorHorario(models.Model):
+    sesion      = models.ForeignKey(SesionGenerador, on_delete=models.CASCADE, related_name='borradores')
+    leccion     = models.ForeignKey(Leccion, on_delete=models.CASCADE)
+    dia         = models.CharField(max_length=15, choices=Horario.DIAS)
+    hora_inicio = models.TimeField()
+    hora_fin    = models.TimeField()
+    aula        = models.ForeignKey(Aula, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    docente_id_cache    = models.IntegerField()
+    curso_id_cache      = models.IntegerField()
+    paralelo_id_cache   = models.IntegerField()
+    asignatura_id_cache = models.IntegerField()

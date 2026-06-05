@@ -1,14 +1,16 @@
 import json
 from functools import wraps
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.template.loader import render_to_string
 from django.contrib import messages
-from .models import Docente, Curso, Paralelo, Horario, Usuario, Asignatura
+from .models import Docente, Curso, Paralelo, Horario, Usuario, Asignatura, Leccion, DisponibilidadDocente, SesionGenerador, BorradorHorario, Aula
 from .forms import HorarioForm, HorarioAdminForm, DocenteEditForm, DocenteCreateForm, CursoForm, ParaleloForm, AsignaturaForm, DocenteFotoForm
+from .forms_scheduler import LeccionForm
 
 
 def admin_required(view_func):
@@ -564,6 +566,21 @@ def _paralelos_json():
     return json.dumps(mapa)
 
 
+def _todos_paralelos_json():
+    """Lista plana de todos los paralelos con metadata del curso para JS."""
+    datos = []
+    for p in Paralelo.objects.select_related('curso').all().order_by('curso__nombre', 'identificador'):
+        datos.append({
+            'id': p.id,
+            'identificador': p.identificador,
+            'curso_nombre': p.curso.nombre,
+            'curso_nombre_lower': p.curso.nombre.lower(),
+            'especialidad': p.especialidad_bachillerato or '',
+            'label': f"{p.curso.nombre} – {p.identificador}"
+        })
+    return json.dumps(datos)
+
+
 @admin_required
 def gestion_dashboard(request):
     context = {
@@ -685,8 +702,9 @@ def api_guardar_horario(request):
             return JsonResponse({'status': 'error', 'message': "Solo puedes editar tus propios horarios."}, status=403)
 
     try:
-        docente = Docente.objects.get(id=docente_id)
-        curso = Curso.objects.get(id=curso_id)
+        with transaction.atomic():
+            docente = Docente.objects.get(id=docente_id)
+            curso = Curso.objects.get(id=curso_id)
         paralelo = Paralelo.objects.get(id=paralelo_id)
         asignatura = Asignatura.objects.get(id=asignatura_id)
         
@@ -714,6 +732,23 @@ def api_guardar_horario(request):
             periodos_a_guardar = [(hora_inicio, hora_fin)]
 
         # Validación de cruce de horarios para todos los periodos
+        # Primero recopilamos los IDs de los bloques que vamos a sobrescribir (si es un edit de un bloque fusionado)
+        ids_a_excluir = []
+        if horario_id and horario_id != "null" and horario_id != "":
+            h_base = Horario.objects.get(id=horario_id)
+            ids_a_excluir.append(h_base.id)
+            # Buscar otros bloques continuos de la misma clase que conforman el bloque fusionado actual
+            # para excluirlos todos de la validación de choque y luego sobrescribirlos/eliminarlos.
+            bloques_fusionados = Horario.objects.filter(
+                docente=h_base.docente, curso=h_base.curso, paralelo=h_base.paralelo,
+                asignatura=h_base.asignatura, dia=h_base.dia
+            ).exclude(id=h_base.id)
+            
+            # Simple heurística: Si un bloque adyacente tiene la misma materia, asumimos que era parte del bloque fusionado
+            # En la práctica, es más seguro eliminar TODOS los bloques de esta materia continuos e insertar los nuevos
+            for bf in bloques_fusionados:
+                ids_a_excluir.append(bf.id)
+        
         for p_inicio, p_fin in periodos_a_guardar:
             # Check docente
             choques_docente = Horario.objects.filter(
@@ -722,8 +757,8 @@ def api_guardar_horario(request):
                 hora_inicio__lt=p_fin,
                 hora_fin__gt=p_inicio
             )
-            if horario_id and p_inicio == periodos_a_guardar[0][0]:
-                choques_docente = choques_docente.exclude(id=horario_id)
+            if ids_a_excluir:
+                choques_docente = choques_docente.exclude(id__in=ids_a_excluir)
                 
             if choques_docente.exists():
                 choque = choques_docente.first()
@@ -740,8 +775,8 @@ def api_guardar_horario(request):
                 hora_inicio__lt=p_fin,
                 hora_fin__gt=p_inicio
             )
-            if horario_id and p_inicio == periodos_a_guardar[0][0]:
-                choques_curso = choques_curso.exclude(id=horario_id)
+            if ids_a_excluir:
+                choques_curso = choques_curso.exclude(id__in=ids_a_excluir)
                 
             if choques_curso.exists():
                 choque = choques_curso.first()
@@ -750,40 +785,26 @@ def api_guardar_horario(request):
                 hora_f = choque.hora_fin.strftime('%H:%M')
                 return JsonResponse({'status': 'error', 'message': f"¡Choque de Horario! El curso {curso.nombre} '{paralelo.identificador}' ya tiene la clase '{choque.asignatura.nombre}' con el docente {doc_choque_nombre} el {dia} de {hora_i} a {hora_f}."})
         
+        # Eliminar los bloques anteriores si estamos editando
+        if ids_a_excluir:
+            Horario.objects.filter(id__in=ids_a_excluir).delete()
+        
         first_h = None
         tipo = 'docente' if request.POST.get('es_docentes') == '1' else 'clase'
         
         saved_horarios = []
         for idx, (p_inicio, p_fin) in enumerate(periodos_a_guardar):
-            if idx == 0 and horario_id:
-                h = Horario.objects.get(id=horario_id)
-                
-                # Verificación de seguridad adicional
-                if not (request.user.is_admin() or request.user.is_superuser):
-                    if h.docente_id != request.user.perfil_docente.id:
-                        return JsonResponse({'status': 'error', 'message': "No autorizado para editar este horario."}, status=403)
-                        
-                h.dia = dia
-                h.hora_inicio = p_inicio
-                h.hora_fin = p_fin
-                h.asignatura = asignatura
-                h.docente = docente
-                h.curso = curso
-                h.paralelo = paralelo
-                h.save()
-                saved_horarios.append(h)
-            else:
-                h = Horario.objects.create(
-                    dia=dia,
-                    hora_inicio=p_inicio,
-                    hora_fin=p_fin,
-                    asignatura=asignatura,
-                    docente=docente,
-                    curso=curso,
-                    paralelo=paralelo,
-                    tipo=tipo
-                )
-                saved_horarios.append(h)
+            h = Horario.objects.create(
+                dia=dia,
+                hora_inicio=p_inicio,
+                hora_fin=p_fin,
+                asignatura=asignatura,
+                docente=docente,
+                curso=curso,
+                paralelo=paralelo,
+                tipo=tipo
+            )
+            saved_horarios.append(h)
 
         msg = f"Se guardaron {len(periodos_a_guardar)} periodos exitosamente." if len(periodos_a_guardar) > 1 else ("Horario actualizado exitosamente." if horario_id else "Horario guardado exitosamente.")
 
@@ -1079,3 +1100,396 @@ def gestion_eliminar_asignatura(request, asignatura_id):
     asignatura.delete()
     messages.success(request, f'Asignatura "{nombre}" eliminada.')
     return redirect('horarios:gestion_asignaturas')
+
+# ──────────────────────────────────────────────────────────────────────────────
+# MÓDULO GENERADOR AUTOMÁTICO
+# ──────────────────────────────────────────────────────────────────────────────
+
+@admin_required
+def gestion_lecciones(request):
+    lecciones_qs = Leccion.objects.select_related('docente__usuario', 'asignatura', 'curso', 'paralelo', 'aula_requerida').all().order_by('docente__usuario__first_name', 'asignatura__nombre', 'curso__nombre', 'paralelo__identificador')
+    
+    agrupadas = {}
+    for l in lecciones_qs:
+        key = (l.docente_id, l.asignatura_id)
+        if key not in agrupadas:
+            agrupadas[key] = {
+                'leccion_base': l,
+                'docente': l.docente,
+                'asignatura': l.asignatura,
+                'cursos': set(),
+                'ids': [],
+                'horas_totales': 0
+            }
+        agrupadas[key]['cursos'].add(l.curso.nombre)
+        agrupadas[key]['ids'].append(l.id)
+        agrupadas[key]['horas_totales'] += l.horas_semanales
+        
+    lecciones_list = []
+    for data in agrupadas.values():
+        leccion = data['leccion_base']
+        docente = data['docente']
+        
+        # Pluralizar cursos (ej: Octavo -> Octavos)
+        cursos_plural = []
+        for c in sorted(data['cursos']):
+            if c.endswith('o') or c.endswith('a'):
+                cursos_plural.append(c + 's')
+            else:
+                cursos_plural.append(c)
+                
+        lecciones_list.append({
+            'id': leccion.id,
+            'docente': docente,
+            'asignaturas_str': data['asignatura'].nombre,
+            'horas_totales': data['horas_totales'],
+            'es_grupo': len(data['ids']) > 1,
+            'paralelos_str': ", ".join(cursos_plural),
+            'curso': leccion.curso,
+            'paralelo': leccion.paralelo,
+            'ids_grupo': ",".join(map(str, data['ids']))
+        })
+        
+    return render(request, 'horarios/gestion/lecciones.html', {'lecciones': lecciones_list})
+
+from django.db.models import Q
+
+@admin_required
+def gestion_crear_leccion(request):
+    docente_preseleccionado = request.GET.get('docente')
+    if request.method == 'POST':
+        docente_id = request.POST.get('docente')
+        if not docente_id:
+            messages.error(request, 'Debe seleccionar un docente.')
+            return redirect('horarios:gestion_crear_leccion')
+
+        num_blocks = int(request.POST.get('num_blocks', 0))
+        aula_id = request.POST.get('aula_requerida')
+        max_horas = request.POST.get('max_horas_seguidas', 2)
+        permitir_doble = request.POST.get('permitir_doble') == 'on'
+        dias_separados = request.POST.get('dias_separados') == 'on'
+
+        creadas = 0
+        razon_salto = []
+
+        for i in range(1, num_blocks + 1):
+            asignatura_id = request.POST.get(f'asignatura_{i}')
+            horas = request.POST.get(f'horas_{i}')
+            paralelos_ids = request.POST.getlist(f'paralelos_{i}')
+
+            if not asignatura_id:
+                razon_salto.append(f'Fila {i}: no se seleccionó asignatura.')
+                continue
+            if not horas:
+                razon_salto.append(f'Fila {i}: no se indicaron horas.')
+                continue
+            if not paralelos_ids:
+                razon_salto.append(f'Fila {i}: no se seleccionó ningún paralelo.')
+                continue
+
+            for paralelo_id in paralelos_ids:
+                try:
+                    paralelo = Paralelo.objects.get(pk=paralelo_id)
+                    Leccion.objects.update_or_create(
+                        docente_id=docente_id,
+                        asignatura_id=asignatura_id,
+                        paralelo_id=paralelo_id,
+                        defaults={
+                            'curso_id': paralelo.curso_id,
+                            'aula_requerida_id': aula_id if aula_id else None,
+                            'horas_semanales': horas,
+                            'max_horas_seguidas': max_horas,
+                            'permitir_doble': permitir_doble,
+                            'dias_separados': dias_separados
+                        }
+                    )
+                    creadas += 1
+                except Paralelo.DoesNotExist:
+                    pass
+
+        if creadas > 0:
+            messages.success(request, f'Se crearon/actualizaron {creadas} lecciones exitosamente.')
+            if 'guardar_y_otro' in request.POST:
+                url = reverse('horarios:gestion_crear_leccion')
+                return redirect(url)
+            return redirect('horarios:gestion_lecciones')
+        else:
+            detalles = ' | '.join(razon_salto) if razon_salto else 'No se enviaron datos.'
+            messages.warning(request, f'No se procesó ninguna lección. {detalles}')
+            url = reverse('horarios:gestion_crear_leccion') + '?docente=' + str(docente_id)
+            return redirect(url)
+            
+    else:
+        form = LeccionForm()
+    return render(request, 'horarios/gestion/leccion_form.html', {
+        'form': form, 'titulo': 'Crear Lección', 'accion': 'Crear',
+        'docente_preseleccionado': docente_preseleccionado,
+        'paralelos_json': _paralelos_json(),
+        'todos_paralelos_json': _todos_paralelos_json(),
+        'asignaturas_all': Asignatura.objects.order_by('nombre'),
+        'aulas_all': Aula.objects.all(),
+        'cursos_all': Curso.objects.all(),
+        'paralelos_all': Paralelo.objects.all(),
+    })
+
+@admin_required
+def gestion_editar_leccion(request, leccion_id):
+    leccion = get_object_or_404(Leccion, pk=leccion_id)
+    if request.method == 'POST':
+        form = LeccionForm(request.POST, instance=leccion)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Lección actualizada.')
+            return redirect('horarios:gestion_lecciones')
+    else:
+        form = LeccionForm(instance=leccion)
+    return render(request, 'horarios/gestion/leccion_form.html', {
+        'form': form, 'titulo': 'Editar Lección', 'accion': 'Guardar',
+        'paralelos_json': _paralelos_json()
+    })
+
+@admin_required
+@require_POST
+def gestion_eliminar_leccion(request, leccion_id):
+    leccion = get_object_or_404(Leccion, pk=leccion_id)
+    leccion.delete()
+    messages.success(request, 'Lección eliminada.')
+    return redirect('horarios:gestion_lecciones')
+
+@admin_required
+@require_POST
+def gestion_eliminar_lecciones_masivo(request):
+    ids_str = request.POST.get('lecciones_ids', '')
+    if ids_str:
+        ids = [int(i) for i in ids_str.split(',') if i.strip().isdigit()]
+        count = Leccion.objects.filter(id__in=ids).count()
+        if count > 0:
+            Leccion.objects.filter(id__in=ids).delete()
+            messages.success(request, f'Se eliminaron {count} lecciones.')
+        else:
+            messages.warning(request, 'No se encontraron las lecciones especificadas.')
+    else:
+        messages.warning(request, 'No se seleccionó ninguna lección.')
+    return redirect('horarios:gestion_lecciones')
+
+@admin_required
+@require_POST
+def gestion_eliminar_todas_lecciones(request):
+    count = Leccion.objects.count()
+    if count > 0:
+        Leccion.objects.all().delete()
+        messages.success(request, f'Se eliminaron todas las lecciones ({count} en total).')
+    else:
+        messages.warning(request, 'No hay lecciones para eliminar.')
+    return redirect('horarios:gestion_lecciones')
+
+
+@admin_required
+def gestion_disponibilidad(request):
+    docente_id = request.GET.get('docente')
+    docentes = Docente.objects.select_related('usuario').all().order_by('usuario__first_name')
+    
+    context = {'docentes': docentes, 'docente_seleccionado': None, 'dias': Horario.DIAS, 'periodos': PERIODOS_ROWS}
+    
+    if docente_id:
+        docente = get_object_or_404(Docente, pk=docente_id)
+        bloqueos = DisponibilidadDocente.objects.filter(docente=docente)
+        
+        # Mapa: (dia, hora_inicio_str) -> tipo
+        mapa_bloqueos = {}
+        for b in bloqueos:
+            mapa_bloqueos[(b.dia.lower(), b.hora_inicio.strftime('%H:%M:%S'))] = b.tipo
+            
+        context['docente_seleccionado'] = docente
+        context['mapa_bloqueos'] = mapa_bloqueos
+        
+    return render(request, 'horarios/gestion/disponibilidad.html', context)
+
+
+@admin_required
+@require_POST
+def api_guardar_disponibilidad(request):
+    import json
+    data = json.loads(request.body)
+    docente_id = data.get('docente_id')
+    dia = data.get('dia')
+    hora_inicio = data.get('hora_inicio')
+    hora_fin = data.get('hora_fin')
+    tipo = data.get('tipo')  # 'bloqueado', 'preferido' o 'libre'
+    
+    docente = get_object_or_404(Docente, pk=docente_id)
+    
+    if tipo == 'libre':
+        DisponibilidadDocente.objects.filter(docente=docente, dia=dia, hora_inicio=hora_inicio).delete()
+    else:
+        obj, created = DisponibilidadDocente.objects.update_or_create(
+            docente=docente, dia=dia, hora_inicio=hora_inicio,
+            defaults={'hora_fin': hora_fin, 'tipo': tipo}
+        )
+        
+    return JsonResponse({'status': 'ok'})
+
+
+@admin_required
+def gestion_generador(request):
+    lecciones_count = Leccion.objects.count()
+    horas_totales = sum(l.horas_semanales for l in Leccion.objects.all())
+    docentes_count = Leccion.objects.values('docente').distinct().count()
+    
+    sesiones_recientes = SesionGenerador.objects.order_by('-creado_en')[:5]
+    
+    context = {
+        'lecciones_count': lecciones_count,
+        'horas_totales': horas_totales,
+        'docentes_count': docentes_count,
+        'sesiones_recientes': sesiones_recientes
+    }
+    return render(request, 'horarios/gestion/generador.html', context)
+
+@admin_required
+@require_POST
+def api_verificar_coherencia(request):
+    from .scheduler import _cargar_datos_generacion, _verificar_coherencia
+    import asyncio
+    
+    # Para ser simple y síncrono en la vista:
+    lecciones = list(Leccion.objects.all())
+    disp = DisponibilidadDocente.objects.filter(tipo='bloqueado')
+    bloqueos = []
+    for d in disp:
+        dia_idx = DAY_TO_COL.get(d.dia.lower(), 2) - 2 # Mapeo rápido a 0-4
+        hora_str = d.hora_inicio.strftime("%H:%M:%S")
+        per_idx = next((i for i, r in enumerate(PERIODOS_ROWS) if r[1] == hora_str), None)
+        if per_idx is not None:
+            bloqueos.append({'docente_id': d.docente_id, 'dia_idx': dia_idx, 'per_idx': per_idx})
+            
+    valido, advertencias = _verificar_coherencia(lecciones, bloqueos)
+    return JsonResponse({'valido': valido, 'advertencias': advertencias})
+
+@admin_required
+@require_POST
+def api_ejecutar_generador(request):
+    import json
+    data = json.loads(request.body)
+    modo = data.get('modo', 'estandar')
+    max_intentos = 2000000 if modo == 'complejo' else 50000
+    
+    sesion = SesionGenerador.objects.create(modo=modo)
+    
+    # Lanzar tarea asíncrona en segundo plano real requiere Celery o threading.
+    # Dado que estamos usando python estándar sin dependencias fuertes de workers,
+    # usaremos un Thread simple por practicidad.
+    import threading
+    import asyncio
+    from .scheduler import generar_horario_async
+    
+    def run_async_task(sid, max_int):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(generar_horario_async(sid, max_int))
+        loop.close()
+        
+    t = threading.Thread(target=run_async_task, args=(str(sesion.sesion_id), max_intentos))
+    t.daemon = True
+    t.start()
+    
+    return JsonResponse({'status': 'ok', 'sesion_id': str(sesion.sesion_id)})
+
+@admin_required
+def api_estado_generador(request, sesion_id):
+    sesion = get_object_or_404(SesionGenerador, sesion_id=sesion_id)
+    return JsonResponse({
+        'estado': sesion.estado,
+        'advertencias': sesion.advertencias,
+        'sin_asignar': sesion.sin_asignar,
+        'publicado': sesion.publicado
+    })
+
+@admin_required
+def gestion_borrador(request, sesion_id):
+    sesion = get_object_or_404(SesionGenerador, sesion_id=sesion_id)
+    borradores = sesion.borradores.select_related(
+        'leccion__docente__usuario', 'leccion__asignatura',
+        'leccion__curso', 'leccion__paralelo', 'aula'
+    ).order_by('dia', 'hora_inicio')
+    
+    # Adaptamos borradores al formato de grid
+    base_items = []
+    for b in borradores:
+        start_str = b.hora_inicio.strftime("%H:%M:%S")
+        end_str = b.hora_fin.strftime("%H:%M:%S")
+        
+        row_start = TIME_TO_ROW.get(start_str, 2)
+        row_end = TIME_TO_ROW.get(end_str, row_start + 1)
+        col = DAY_TO_COL.get(b.dia.lower(), 2)
+
+        clave_color = f"{b.leccion.asignatura.nombre}|{b.leccion.curso_id}|{b.leccion.paralelo_id}"
+        colors = get_color_for_materia(clave_color)
+        
+        # Mapear atributos para reusar schedule_item.html
+        b.asignatura = b.leccion.asignatura
+        b.docente = b.leccion.docente
+        b.curso = b.leccion.curso
+        b.paralelo = b.leccion.paralelo
+        b.id_borrador = b.id
+        
+        base_items.append({
+            'horario': b,
+            'grid_row_start': row_start,
+            'grid_row_end': row_end,
+            'grid_col': col,
+            'color_bg':     colors['bg'],
+            'color_border': colors['border'],
+            'color_text':   colors['text'],
+        })
+
+    # Fusionar bloques contiguos (doble período visual)
+    base_items.sort(key=lambda x: (x['grid_col'], x['grid_row_start']))
+    merged = []
+    for item in base_items:
+        if not merged:
+            merged.append(item)
+            continue
+        last = merged[-1]
+        can_merge = (
+            last['grid_col'] == item['grid_col'] and
+            last['grid_row_end'] == item['grid_row_start'] and
+            last['horario'].asignatura.id == item['horario'].asignatura.id and
+            last['horario'].docente.id == item['horario'].docente.id and
+            last['horario'].curso.id == item['horario'].curso.id and
+            last['horario'].paralelo.id == item['horario'].paralelo.id
+        )
+        if can_merge:
+            last['grid_row_end'] = item['grid_row_end']
+            # Actualizar hora_fin para el badge de horario
+            last['horario'].hora_fin = item['horario'].hora_fin
+        else:
+            merged.append(item)
+        
+    context = {
+        'sesion': sesion,
+        'items': merged,
+        'dias': Horario.DIAS,
+        'periodos': PERIODOS_ROWS
+    }
+    return render(request, 'horarios/gestion/borrador.html', context)
+
+@admin_required
+@require_POST
+def api_publicar_borrador(request, sesion_id):
+    from .scheduler import publicar_horario
+    nuevos, grupos = publicar_horario(sesion_id)
+    return JsonResponse({'status': 'ok', 'nuevos': nuevos, 'grupos': grupos})
+
+@admin_required
+@require_POST
+def api_descartar_borrador(request, sesion_id):
+    try:
+        sesion = SesionGenerador.objects.get(sesion_id=sesion_id)
+        sesion.delete()
+        return JsonResponse({'status': 'ok'})
+    except SesionGenerador.DoesNotExist:
+        return JsonResponse({'status': 'ok', 'msg': 'La sesión ya no existe.'})  
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'msg': str(e)}, status=500)
+

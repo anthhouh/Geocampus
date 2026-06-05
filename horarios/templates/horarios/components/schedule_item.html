@@ -1,0 +1,29 @@
+<div class="relative rounded-lg p-2 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-md transition-shadow group/card"
+     style="grid-column: {{ item.grid_col }}; grid-row: {{ item.grid_row_start }} / {{ item.grid_row_end }}; background-color: {{ item.color_bg }}; border-left: 4px solid {{ item.color_border }}; border-top: 1px solid {{ item.color_border }}; border-right: 1px solid {{ item.color_border }}; border-bottom: 1px solid {{ item.color_border }}; z-index: 10;">
+    
+    <div class="flex justify-between items-start gap-2 mb-0.5">
+        <h4 class="font-bold text-[12px] leading-tight" style="color: {{ item.color_text }}">
+            {{ item.horario.asignatura.nombre }}
+        </h4>
+        <span class="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-white/40 text-on-surface-variant whitespace-nowrap shadow-sm border border-white/20">
+            {{ item.horario.hora_inicio|time:"H:i" }} - {{ item.horario.hora_fin|time:"H:i" }}
+        </span>
+    </div>
+    
+    <div class="flex flex-col gap-0.5 mt-auto">
+        <p class="flex items-center gap-1 opacity-90 text-[10.5px] font-medium leading-tight" style="color: {{ item.color_text }}">
+            <span class="material-symbols-outlined text-[12px] opacity-70">person</span>
+            {{ item.horario.docente.usuario.get_full_name|default:item.horario.docente }}
+        </p>
+        <p class="flex items-center gap-1 opacity-90 text-[10.5px] font-medium leading-tight" style="color: {{ item.color_text }}">
+            <span class="material-symbols-outlined text-[12px] opacity-70">groups</span>
+            {{ item.horario.curso.nombre }} "{{ item.horario.paralelo.identificador }}"
+        </p>
+        {% if item.horario.aula %}
+        <p class="flex items-center gap-1 opacity-90 text-[10px] font-medium leading-tight mt-0.5 pt-0.5 border-t border-black/5" style="color: {{ item.color_text }}">
+            <span class="material-symbols-outlined text-[11px] opacity-70">meeting_room</span>
+            {{ item.horario.aula.nombre }}
+        </p>
+        {% endif %}
+    </div>
+</div>

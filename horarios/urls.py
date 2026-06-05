@@ -46,4 +46,21 @@ urlpatterns = [
     path('gestion/asignaturas/crear/',                       views.gestion_crear_asignatura,      name='gestion_crear_asignatura'),
     path('gestion/asignaturas/<int:asignatura_id>/editar/',       views.gestion_editar_asignatura,     name='gestion_editar_asignatura'),
     path('gestion/asignaturas/<int:asignatura_id>/eliminar/',     views.gestion_eliminar_asignatura,   name='gestion_eliminar_asignatura'),
+    
+    # ── Módulo: Generador Automático (solo admin) ─────────────────────────────
+    path('gestion/lecciones/',                               views.gestion_lecciones,        name='gestion_lecciones'),
+    path('gestion/lecciones/crear/',                         views.gestion_crear_leccion,    name='gestion_crear_leccion'),
+    path('gestion/lecciones/<int:leccion_id>/editar/',       views.gestion_editar_leccion,   name='gestion_editar_leccion'),
+    path('gestion/lecciones/<int:leccion_id>/eliminar/',     views.gestion_eliminar_leccion, name='gestion_eliminar_leccion'),
+    path('gestion/lecciones/eliminar-masivo/',               views.gestion_eliminar_lecciones_masivo, name='gestion_eliminar_lecciones_masivo'),
+    path('gestion/lecciones/eliminar-todas/',                views.gestion_eliminar_todas_lecciones, name='gestion_eliminar_todas_lecciones'),
+    path('gestion/disponibilidad/',                          views.gestion_disponibilidad,   name='gestion_disponibilidad'),
+    path('gestion/disponibilidad/api/guardar/',              views.api_guardar_disponibilidad, name='api_guardar_disponibilidad'),
+    path('gestion/generador/',                               views.gestion_generador,        name='gestion_generador'),
+    path('gestion/generador/api/verificar/',                 views.api_verificar_coherencia, name='api_verificar_coherencia'),
+    path('gestion/generador/api/ejecutar/',                  views.api_ejecutar_generador,   name='api_ejecutar_generador'),
+    path('gestion/generador/api/estado/<str:sesion_id>/',    views.api_estado_generador,     name='api_estado_generador'),
+    path('gestion/generador/borrador/<str:sesion_id>/',      views.gestion_borrador,         name='gestion_borrador'),
+    path('gestion/generador/borrador/<str:sesion_id>/publicar/', views.api_publicar_borrador, name='api_publicar_borrador'),
+    path('gestion/generador/borrador/<str:sesion_id>/descartar/', views.api_descartar_borrador, name='api_descartar_borrador'),
 ]

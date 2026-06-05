@@ -1,0 +1,145 @@
+{% extends 'horarios/gestion/base_gestion.html' %}
+
+{% block title %}Borrador de Horario{% endblock %}
+{% block section_title %}Previsualización del Borrador (ID: {{ sesion.sesion_id|stringformat:"s"|slice:":8" }}){% endblock %}
+
+{% block content %}
+<div class="mb-md flex justify-between items-center bg-surface border border-outline-variant p-4 rounded-xl shadow-sm">
+    <div>
+        <p class="text-on-surface-variant font-body-md">
+            El motor ha generado esta propuesta. Revisa que todo esté en orden.
+        </p>
+        {% if sesion.publicado %}
+            <span class="inline-block mt-2 px-3 py-1 rounded bg-primary/20 text-primary border border-primary/50 font-label-md">
+                ✅ ESTE BORRADOR YA FUE PUBLICADO
+            </span>
+        {% endif %}
+    </div>
+    
+    {% if not sesion.publicado %}
+    <div class="flex gap-4">
+        <button onclick="document.getElementById('modal-descartar').classList.remove('hidden')" class="px-md py-sm bg-error/10 text-error rounded-lg font-label-md hover:bg-error/20 transition-colors">
+            Descartar
+        </button>
+        <button onclick="document.getElementById('modal-publicar').classList.remove('hidden')" class="px-md py-sm bg-primary text-on-primary rounded-lg font-label-md hover:bg-primary/90 transition-all shadow-md flex items-center gap-2">
+            <span class="material-symbols-outlined">publish</span>
+            Publicar Definitivo
+        </button>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal Publicar -->
+<div id="modal-publicar" class="hidden fixed inset-0 z-50 bg-[#00000080] backdrop-blur-sm flex items-center justify-center">
+    <div class="bg-surface border border-outline-variant rounded-xl p-6 max-w-md w-full shadow-2xl">
+        <div class="flex items-center gap-3 text-error mb-4">
+            <span class="material-symbols-outlined text-[32px]">warning</span>
+            <h3 class="font-title-lg text-on-surface">Confirmar Publicación</h3>
+        </div>
+        <p class="text-on-surface-variant font-body-md mb-6">
+            <strong>ADVERTENCIA:</strong> Al publicar, se eliminarán y sobrescribirán por completo los horarios definitivos actuales de todos los grupos (Cursos/Paralelos) involucrados en esta generación. <br><br>
+            ¿Estás completamente seguro de que deseas reemplazar el horario oficial?
+        </p>
+        <div class="flex justify-end gap-4">
+            <button onclick="document.getElementById('modal-publicar').classList.add('hidden')" class="px-4 py-2 rounded-lg font-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                Cancelar
+            </button>
+            <button id="btn-confirmar-publicar" class="px-4 py-2 rounded-lg font-label-md bg-error text-white hover:bg-error/90 transition-colors">
+                Sí, Sobrescribir y Publicar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Descartar -->
+<div id="modal-descartar" class="hidden fixed inset-0 z-50 bg-[#00000080] backdrop-blur-sm flex items-center justify-center">
+    <div class="bg-surface border border-outline-variant rounded-xl p-6 max-w-md w-full shadow-2xl">
+        <h3 class="font-title-lg text-on-surface mb-2">Descartar Borrador</h3>
+        <p class="text-on-surface-variant font-body-md mb-6">
+            Esta acción eliminará permanentemente esta propuesta de horario. No afectará a los horarios definitivos actuales.
+        </p>
+        <div class="flex justify-end gap-4">
+            <button onclick="document.getElementById('modal-descartar').classList.add('hidden')" class="px-4 py-2 rounded-lg font-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                Cancelar
+            </button>
+            <button id="btn-confirmar-descartar" class="px-4 py-2 rounded-lg font-label-md bg-error text-white hover:bg-error/90 transition-colors">
+                Descartar Definitivamente
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Vista de Grid -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-sm p-4">
+    <div class="overflow-x-auto pb-4">
+        <div class="grid relative"
+             style="grid-template-columns: 100px repeat(5, 1fr); grid-template-rows: 40px repeat(9, 70px); min-width: 900px; gap: 4px;">
+            
+            <div class="border-b border-r border-outline-variant"></div>
+            
+            {% for dia_val, dia_name in dias %}
+            <div class="border-b border-outline-variant bg-surface-container flex items-center justify-center font-label-md text-on-surface-variant capitalize rounded-t-lg">
+                {{ dia_name }}
+            </div>
+            {% endfor %}
+
+            <!-- Líneas de fondo -->
+            {% for r in "123456789" %}
+                <div class="border-b border-r border-outline-variant bg-surface-container flex flex-col items-center justify-center font-label-sm text-on-surface-variant rounded-l-lg" style="grid-column: 1; grid-row: {{ forloop.counter|add:1 }};">
+                    Período {{ forloop.counter }}
+                </div>
+                {% for c in "12345" %}
+                    <div class="border-b border-outline-variant bg-surface/50" style="grid-column: {{ forloop.counter|add:1 }}; grid-row: {{ forloop.parentloop.counter|add:1 }};"></div>
+                {% endfor %}
+            {% endfor %}
+
+            <!-- Elementos generados -->
+            {% for item in items %}
+                {% include 'horarios/components/schedule_item.html' with item=item %}
+            {% empty %}
+                <div class="absolute inset-0 flex items-center justify-center text-on-surface-variant font-body-lg" style="grid-row: 2/11; grid-column: 2/7;">
+                    El borrador está vacío.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    const csrfToken = '{{ csrf_token }}';
+    const sesionId = '{{ sesion.sesion_id }}';
+
+    document.getElementById('btn-confirmar-publicar').addEventListener('click', async () => {
+        try {
+            const res = await fetch(`{% url 'horarios:api_publicar_borrador' sesion.sesion_id %}`, {
+                method: 'POST',
+                headers: {'X-CSRFToken': csrfToken}
+            });
+            const data = await res.json();
+            if(data.status === 'ok') {
+                alert(`¡Horario publicado! Se crearon ${data.nuevos} bloques definitivos en ${data.grupos} grupos.`);
+                window.location.reload();
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Error al publicar.");
+        }
+    });
+
+    document.getElementById('btn-confirmar-descartar').addEventListener('click', async () => {
+        try {
+            const res = await fetch(`{% url 'horarios:api_descartar_borrador' sesion.sesion_id %}`, {
+                method: 'POST',
+                headers: {'X-CSRFToken': csrfToken}
+            });
+            const data = await res.json();
+            if(data.status === 'ok') {
+                window.location.href = "{% url 'horarios:gestion_generador' %}";
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Error al descartar.");
+        }
+    });
+</script>
+{% endblock %}

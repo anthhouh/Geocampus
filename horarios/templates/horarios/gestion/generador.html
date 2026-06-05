@@ -1,0 +1,186 @@
+{% extends 'horarios/gestion/base_gestion.html' %}
+
+{% block title %}Generador de Horarios{% endblock %}
+{% block section_title %}Generador Automático Inteligente{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-surface border border-outline-variant rounded-xl p-6 flex flex-col justify-center shadow-sm">
+        <span class="text-on-surface-variant font-label-md uppercase tracking-wider mb-2">Lecciones Configuradas</span>
+        <span class="text-on-surface font-display-md text-[#e2b96f]">{{ lecciones_count }}</span>
+    </div>
+    <div class="bg-surface border border-outline-variant rounded-xl p-6 flex flex-col justify-center shadow-sm">
+        <span class="text-on-surface-variant font-label-md uppercase tracking-wider mb-2">Horas Semanales a Ubicar</span>
+        <span class="text-on-surface font-display-md text-primary">{{ horas_totales }}</span>
+    </div>
+    <div class="bg-surface border border-outline-variant rounded-xl p-6 flex flex-col justify-center shadow-sm">
+        <span class="text-on-surface-variant font-label-md uppercase tracking-wider mb-2">Docentes Involucrados</span>
+        <span class="text-on-surface font-display-md">{{ docentes_count }}</span>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    
+    <!-- Lanzar Generación -->
+    <div class="bg-surface border border-outline-variant rounded-xl p-6 shadow-sm flex flex-col">
+        <h3 class="text-on-surface font-title-lg mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#e2b96f]">magic_button</span>
+            Nuevo Cálculo
+        </h3>
+        <p class="text-on-surface-variant font-body-md mb-6 flex-grow">
+            El motor utilizará un algoritmo de <em>Backtracking con Heurística MRV</em> para encajar todas las lecciones respetando: 
+            solapamientos, aulas requeridas, bloqueos de docentes, horas máximas seguidas y periodos dobles.
+        </p>
+        
+        <div id="status-panel" class="hidden mb-6 p-4 rounded-lg bg-surface-container-high border border-outline-variant">
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-label-md text-on-surface" id="status-text">Generando...</span>
+                <span class="loader-spinner w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
+            </div>
+            <div class="w-full bg-surface rounded-full h-2 overflow-hidden">
+                <div id="progress-bar" class="bg-primary h-full w-1/3 transition-all duration-300 animate-pulse"></div>
+            </div>
+        </div>
+
+        <div id="error-panel" class="hidden mb-6 p-4 rounded-lg bg-error/10 border border-error/50">
+            <h4 class="text-error font-title-sm mb-2 flex items-center gap-2">
+                <span class="material-symbols-outlined">warning</span> Coherencia Fallida
+            </h4>
+            <ul id="error-list" class="text-on-surface-variant font-body-sm list-disc pl-5 space-y-1"></ul>
+        </div>
+
+        <button id="btn-generar" class="w-full py-4 bg-primary text-on-primary rounded-xl font-label-lg hover:bg-primary/90 transition-all shadow-md flex justify-center items-center gap-2">
+            <span class="material-symbols-outlined">play_arrow</span> INICIAR GENERACIÓN
+        </button>
+    </div>
+
+    <!-- Historial de Sesiones -->
+    <div class="bg-surface border border-outline-variant rounded-xl p-6 shadow-sm">
+        <h3 class="text-on-surface font-title-lg mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined">history</span>
+            Sesiones Recientes
+        </h3>
+        
+        <div class="space-y-3">
+            {% for sesion in sesiones_recientes %}
+            <div class="p-4 rounded-lg border border-outline-variant flex justify-between items-center hover:bg-surface-container-low transition-colors">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="font-label-md text-on-surface">{{ sesion.creado_en|date:"d M Y, H:i" }}</span>
+                        {% if sesion.estado == 'completado' %}
+                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-[#1a2e1a] text-[#6fe26f]">Completado</span>
+                        {% elif sesion.estado == 'fallido' %}
+                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-error/20 text-error">Fallido</span>
+                        {% elif sesion.estado == 'corriendo' %}
+                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-secondary/20 text-secondary animate-pulse">Corriendo...</span>
+                        {% endif %}
+                        
+                        {% if sesion.publicado %}
+                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-primary/20 text-primary border border-primary/50">PUBLICADO</span>
+                        {% endif %}
+                    </div>
+                    <div class="font-body-sm text-on-surface-variant text-xs">
+                        ID: {{ sesion.sesion_id|stringformat:"s"|slice:":8" }}...
+                    </div>
+                </div>
+                
+                {% if sesion.estado == 'completado' %}
+                    <a href="{% url 'horarios:gestion_borrador' sesion.sesion_id %}" class="p-2 rounded-full text-primary hover:bg-primary/10 transition-colors" title="Ver Borrador">
+                        <span class="material-symbols-outlined">visibility</span>
+                    </a>
+                {% endif %}
+            </div>
+            {% empty %}
+            <p class="text-on-surface-variant font-body-sm text-center py-4">No hay sesiones generadas aún.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    const csrfToken = '{{ csrf_token }}';
+    const btnGenerar = document.getElementById('btn-generar');
+    const statusPanel = document.getElementById('status-panel');
+    const errorPanel = document.getElementById('error-panel');
+    const errorList = document.getElementById('error-list');
+    const statusText = document.getElementById('status-text');
+    let pollingInterval = null;
+
+    btnGenerar.addEventListener('click', async () => {
+        // Reset UI
+        btnGenerar.disabled = true;
+        btnGenerar.classList.add('opacity-50', 'cursor-not-allowed');
+        errorPanel.classList.add('hidden');
+        statusPanel.classList.remove('hidden');
+        statusText.textContent = "1. Verificando coherencia matemática...";
+
+        try {
+            // Paso 1: Coherencia
+            const resCoh = await fetch("{% url 'horarios:api_verificar_coherencia' %}", {
+                method: 'POST',
+                headers: {'X-CSRFToken': csrfToken}
+            });
+            const dataCoh = await resCoh.json();
+            
+            if(!dataCoh.valido) {
+                mostrarError(dataCoh.advertencias);
+                return;
+            }
+
+            // Paso 2: Lanzar generador asíncrono
+            statusText.textContent = "2. Calculando espacio de búsqueda (Backtracking MRV)...";
+            const resEjec = await fetch("{% url 'horarios:api_ejecutar_generador' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ modo: 'estandar' })
+            });
+            const dataEjec = await resEjec.json();
+            
+            if(dataEjec.status === 'ok') {
+                iniciarPolling(dataEjec.sesion_id);
+            }
+
+        } catch (e) {
+            console.error(e);
+            mostrarError(["Error de conexión con el servidor."]);
+        }
+    });
+
+    function mostrarError(advertencias) {
+        statusPanel.classList.add('hidden');
+        errorPanel.classList.remove('hidden');
+        errorList.innerHTML = advertencias.map(a => `<li>${a}</li>`).join('');
+        btnGenerar.disabled = false;
+        btnGenerar.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+
+    function iniciarPolling(sesion_id) {
+        pollingInterval = setInterval(async () => {
+            try {
+                const res = await fetch(`/gestion/generador/api/estado/${sesion_id}/`);
+                const data = await res.json();
+                
+                if (data.estado === 'completado') {
+                    clearInterval(pollingInterval);
+                    statusText.textContent = "¡Horario Generado con Éxito!";
+                    document.querySelector('.loader-spinner').classList.add('hidden');
+                    document.getElementById('progress-bar').classList.remove('animate-pulse', 'w-1/3');
+                    document.getElementById('progress-bar').classList.add('w-full', 'bg-success');
+                    
+                    setTimeout(() => {
+                        window.location.href = `/gestion/generador/borrador/${sesion_id}/`;
+                    }, 1000);
+                } else if (data.estado === 'fallido') {
+                    clearInterval(pollingInterval);
+                    mostrarError(data.advertencias);
+                }
+            } catch (e) {
+                console.error("Polling error", e);
+            }
+        }, 2000);
+    }
+</script>
+{% endblock %}

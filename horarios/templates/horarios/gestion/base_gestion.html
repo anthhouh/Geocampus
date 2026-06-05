@@ -58,6 +58,24 @@
             <span class="material-symbols-outlined text-[18px]">book</span>
             Asignaturas
         </a>
+        <a href="{% url 'horarios:gestion_lecciones' %}"
+           class="flex items-center gap-2 px-md py-sm rounded-lg font-label-md text-label-md transition-all duration-150
+                  {% if 'lecciones' in request.path %}bg-[#1a1a2e] text-[#e2b96f]{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %}">
+            <span class="material-symbols-outlined text-[18px]">list_alt</span>
+            Lecciones
+        </a>
+        <a href="{% url 'horarios:gestion_disponibilidad' %}"
+           class="flex items-center gap-2 px-md py-sm rounded-lg font-label-md text-label-md transition-all duration-150
+                  {% if 'disponibilidad' in request.path %}bg-[#1a1a2e] text-[#e2b96f]{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %}">
+            <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+            Disponibilidad
+        </a>
+        <a href="{% url 'horarios:gestion_generador' %}"
+           class="flex items-center gap-2 px-md py-sm rounded-lg font-label-md text-label-md transition-all duration-150
+                  {% if 'generador' in request.path %}bg-[#1a1a2e] text-[#e2b96f]{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %}">
+            <span class="material-symbols-outlined text-[18px]">bolt</span>
+            Generar Horario
+        </a>
     </nav>
 
     <!-- Messages -->

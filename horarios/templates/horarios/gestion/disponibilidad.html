@@ -1,0 +1,151 @@
+{% extends 'horarios/gestion/base_gestion.html' %}
+
+{% block title %}Disponibilidad Docente{% endblock %}
+{% block section_title %}Disponibilidad y Bloqueos{% endblock %}
+
+{% block content %}
+<div class="mb-md">
+    <p class="text-on-surface-variant font-body-md mb-4">
+        Por defecto, todos los docentes están disponibles en todos los bloques horarios.<br>
+        Selecciona un docente y haz clic en las celdas para bloquear los horarios en los que <strong>NO</strong> puede trabajar.
+    </p>
+
+    <form method="get" class="flex gap-4 items-center">
+        <select name="docente" class="w-64 px-4 py-2 bg-surface border border-outline-variant rounded-lg focus:outline-none focus:border-primary text-on-surface" onchange="this.form.submit()">
+            <option value="">-- Selecciona un Docente --</option>
+            {% for d in docentes %}
+            <option value="{{ d.id }}" {% if docente_seleccionado and docente_seleccionado.id == d.id %}selected{% endif %}>
+                {{ d }}
+            </option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+{% if docente_seleccionado %}
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-sm p-4 mt-6">
+    <h3 class="text-on-surface font-title-md mb-4">Bloqueos de {{ docente_seleccionado }}</h3>
+    
+    <div class="flex items-center gap-6 mb-4">
+        <div class="flex items-center gap-2"><span class="w-4 h-4 bg-surface border border-outline-variant rounded"></span> <span class="text-on-surface-variant font-body-sm">Disponible (Libre)</span></div>
+        <div class="flex items-center gap-2"><span class="w-4 h-4 bg-error/20 border border-error/50 rounded"></span> <span class="text-on-surface-variant font-body-sm">Bloqueado (No puede)</span></div>
+    </div>
+
+    <div class="overflow-x-auto pb-4">
+        <div class="grid relative border-t border-l border-outline-variant"
+             style="grid-template-columns: 100px repeat(5, 1fr); grid-template-rows: 40px repeat(9, 60px); min-width: 800px;">
+             
+            <!-- Esquina vacía -->
+            <div class="border-b border-r border-outline-variant bg-surface-container"></div>
+            
+            <!-- Días (Headers) -->
+            {% for dia_val, dia_name in dias %}
+            <div class="border-b border-r border-outline-variant bg-surface-container flex items-center justify-center font-label-md text-on-surface-variant capitalize">
+                {{ dia_name }}
+            </div>
+            {% endfor %}
+
+            <!-- Filas de horas -->
+            {% for row, h_ini, h_fin in periodos %}
+            <!-- Etiqueta de hora -->
+            <div class="border-b border-r border-outline-variant bg-surface-container flex items-center justify-center font-label-sm text-on-surface-variant">
+                {{ h_ini|slice:":5" }}<br>{{ h_fin|slice:":5" }}
+            </div>
+            
+            <!-- Celdas clickeables -->
+            {% for dia_val, dia_name in dias %}
+                {% with key=dia_val|lower|add:"_"|add:h_ini %}
+                <div class="border-b border-r border-outline-variant cursor-pointer transition-colors hover:brightness-95 flex items-center justify-center cell-disponibilidad"
+                     data-dia="{{ dia_val }}" data-hini="{{ h_ini }}" data-hfin="{{ h_fin }}"
+                     id="cell_{{ dia_val }}_{{ h_ini|slugify }}">
+                     <!-- JS llenará el color basado en mapa_bloqueos -->
+                </div>
+                {% endwith %}
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    const docenteId = {{ docente_seleccionado.id }};
+    const bloqueosInit = {{ mapa_bloqueos|safe|default:"{}" }};
+    const csrfToken = '{{ csrf_token }}';
+
+    function actualizarUI(cell, tipo) {
+        if (tipo === 'bloqueado') {
+            cell.classList.add('bg-error/20', 'border-error/50');
+            cell.classList.remove('bg-surface', 'border-transparent');
+            cell.dataset.tipo = 'bloqueado';
+            cell.innerHTML = '<span class="material-symbols-outlined text-error text-[20px]">block</span>';
+        } else {
+            cell.classList.remove('bg-error/20', 'border-error/50');
+            cell.classList.add('bg-surface', 'border-transparent');
+            cell.dataset.tipo = 'libre';
+            cell.innerHTML = '';
+        }
+    }
+
+    document.querySelectorAll('.cell-disponibilidad').forEach(cell => {
+        const dia = cell.dataset.dia;
+        const hini = cell.dataset.hini;
+        const key = dia + '_' + hini;
+        
+        // Cargar estado inicial
+        let tipo = 'libre';
+        Object.keys(bloqueosInit).forEach(k => {
+            const arr = k.split(',');
+            // workaround para leer el dict de python en js:
+            // si la key es ('lunes', '07:00:00') el template lo renderiza raro a veces, 
+            // pero podemos limpiar:
+        });
+        // Mejor construyamos un lookup más simple
+    });
+    
+    // Lookup de bloqueos inicial
+    const dictBloqueos = {
+        {% for key, val in mapa_bloqueos.items %}
+            "{{ key.0 }}_{{ key.1 }}": "{{ val }}",
+        {% endfor %}
+    };
+
+    document.querySelectorAll('.cell-disponibilidad').forEach(cell => {
+        const key = cell.dataset.dia + '_' + cell.dataset.hini;
+        const inicial = dictBloqueos[key] || 'libre';
+        actualizarUI(cell, inicial);
+
+        cell.addEventListener('click', async () => {
+            const current = cell.dataset.tipo;
+            const next = current === 'libre' ? 'bloqueado' : 'libre';
+            
+            // UI Optimistic Update
+            actualizarUI(cell, next);
+
+            try {
+                const res = await fetch("{% url 'horarios:api_guardar_disponibilidad' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        docente_id: docenteId,
+                        dia: cell.dataset.dia,
+                        hora_inicio: cell.dataset.hini,
+                        hora_fin: cell.dataset.hfin,
+                        tipo: next
+                    })
+                });
+                
+                if(!res.ok) throw new Error("Network error");
+            } catch (e) {
+                console.error(e);
+                // Revert
+                actualizarUI(cell, current);
+                alert("Error al guardar. Intenta de nuevo.");
+            }
+        });
+    });
+</script>
+{% endif %}
+{% endblock %}

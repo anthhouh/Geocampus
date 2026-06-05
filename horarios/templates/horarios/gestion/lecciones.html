@@ -1,0 +1,149 @@
+{% extends 'horarios/gestion/base_gestion.html' %}
+
+{% block title %}Gestión de Lecciones{% endblock %}
+{% block section_title %}Lecciones (Contratos Docentes){% endblock %}
+
+{% block content %}
+<div class="mb-md flex flex-wrap justify-between items-center gap-4">
+    <p class="text-on-surface-variant font-body-md w-full md:w-auto">Configura la cantidad de horas semanales que debe dar cada profesor por materia.</p>
+    
+    <div class="flex flex-wrap items-center gap-3">
+        <!-- Formulario oculto para borrado masivo -->
+        <form id="form-eliminar-masivo" action="{% url 'horarios:gestion_eliminar_lecciones_masivo' %}" method="post" class="hidden">
+            {% csrf_token %}
+            <input type="hidden" name="lecciones_ids" id="input-lecciones-ids">
+        </form>
+
+        <button type="button" id="btn-eliminar-seleccionados" class="hidden px-md py-sm bg-error/10 text-error rounded-lg font-label-md hover:bg-error/20 transition-colors flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">delete_sweep</span>
+            Eliminar Selección
+        </button>
+        
+        <form action="{% url 'horarios:gestion_eliminar_todas_lecciones' %}" method="post" onsubmit="return confirm('¿ESTÁS SEGURO? Esta acción eliminará TODAS las lecciones configuradas de forma permanente.');">
+            {% csrf_token %}
+            <button type="submit" class="px-md py-sm border border-error text-error rounded-lg font-label-md hover:bg-error/10 transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">delete_forever</span>
+                Eliminar Todas
+            </button>
+        </form>
+
+        <a href="{% url 'horarios:gestion_crear_leccion' %}" class="px-md py-sm bg-[#1a1a2e] text-[#e2b96f] rounded-lg font-label-md hover:bg-[#252542] transition-colors flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            Añadir Lección
+        </a>
+    </div>
+</div>
+
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden">
+    <table class="w-full text-left border-collapse">
+        <thead>
+            <tr class="bg-surface-container-low text-on-surface-variant font-label-md border-b border-outline-variant">
+                <th class="p-4 font-medium w-12 text-center">
+                    <input type="checkbox" id="chk-todos" class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 cursor-pointer">
+                </th>
+                <th class="p-4 font-medium w-1/4">Docente</th>
+                <th class="p-4 font-medium">Asignatura</th>
+                <th class="p-4 font-medium">Curso / Paralelo</th>
+                <th class="p-4 font-medium text-center">Horas/Semana</th>
+                <th class="p-4 font-medium text-center">Opciones</th>
+                <th class="p-4 font-medium text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lec in lecciones %}
+            <tr class="border-b border-outline-variant hover:bg-surface-container-low/50 transition-colors">
+                <td class="p-4 text-center">
+                    <input type="checkbox" class="chk-item rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 cursor-pointer" data-ids="{% if lec.es_grupo %}{{ lec.ids_grupo }}{% else %}{{ lec.id }}{% endif %}">
+                </td>
+                <td class="p-4 font-body-md text-on-surface">{{ lec.docente }}</td>
+                <td class="p-4 font-body-md text-on-surface">{{ lec.asignaturas_str }}</td>
+                <td class="p-4 font-body-md text-on-surface">
+                    {% if lec.es_grupo %}
+                        <div class="flex items-center gap-1 flex-wrap">
+                            <span class="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-bold">Varias Clases</span>
+                            <span class="text-sm opacity-80">{{ lec.paralelos_str }}</span>
+                        </div>
+                    {% else %}
+                        {{ lec.curso.nombre }} "{{ lec.paralelo.identificador }}"
+                    {% endif %}
+                </td>
+                <td class="p-4 font-body-md text-on-surface text-center font-bold">{{ lec.horas_totales }}</td>
+                <td class="p-4 font-body-sm text-on-surface-variant text-center">
+                    Ver en detalle
+                </td>
+                <td class="p-4 text-center">
+                    <div class="flex items-center justify-center gap-2">
+                        <a href="{% url 'horarios:gestion_editar_leccion' lec.id %}" class="text-on-surface-variant hover:text-primary transition-colors" title="Editar (La primera lección del grupo si son varias)">
+                            <span class="material-symbols-outlined text-[20px]">edit</span>
+                        </a>
+                        <form action="{% url 'horarios:gestion_eliminar_lecciones_masivo' %}" method="post" class="inline" onsubmit="return confirm('¿Eliminar esta lección{% if lec.es_grupo %} y todos sus paralelos vinculados{% endif %}?');">
+                            {% csrf_token %}
+                            <input type="hidden" name="lecciones_ids" value="{% if lec.es_grupo %}{{ lec.ids_grupo }}{% else %}{{ lec.id }}{% endif %}">
+                            <button type="submit" class="text-on-surface-variant hover:text-error transition-colors" title="Eliminar">
+                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="p-8 text-center text-on-surface-variant font-body-md">
+                    No hay lecciones configuradas. Empieza a añadir la carga horaria de los docentes.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chkTodos = document.getElementById('chk-todos');
+    const chkItems = document.querySelectorAll('.chk-item');
+    const btnEliminarSeleccionados = document.getElementById('btn-eliminar-seleccionados');
+    const formEliminarMasivo = document.getElementById('form-eliminar-masivo');
+    const inputLeccionesIds = document.getElementById('input-lecciones-ids');
+
+    function actualizarBotonSeleccionados() {
+        const haySeleccionados = Array.from(chkItems).some(chk => chk.checked);
+        if (haySeleccionados) {
+            btnEliminarSeleccionados.classList.remove('hidden');
+        } else {
+            btnEliminarSeleccionados.classList.add('hidden');
+        }
+    }
+
+    if (chkTodos) {
+        chkTodos.addEventListener('change', function() {
+            chkItems.forEach(chk => chk.checked = this.checked);
+            actualizarBotonSeleccionados();
+        });
+    }
+
+    chkItems.forEach(chk => {
+        chk.addEventListener('change', function() {
+            if (!this.checked) chkTodos.checked = false;
+            if (Array.from(chkItems).every(c => c.checked)) chkTodos.checked = true;
+            actualizarBotonSeleccionados();
+        });
+    });
+
+    if (btnEliminarSeleccionados) {
+        btnEliminarSeleccionados.addEventListener('click', function() {
+            if (confirm('¿Estás seguro de que deseas eliminar las lecciones seleccionadas?')) {
+                let ids = [];
+                chkItems.forEach(chk => {
+                    if (chk.checked) {
+                        // Puede haber múltiples IDs separados por coma (en caso de es_grupo)
+                        ids.push(chk.getAttribute('data-ids'));
+                    }
+                });
+                inputLeccionesIds.value = ids.join(',');
+                formEliminarMasivo.submit();
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

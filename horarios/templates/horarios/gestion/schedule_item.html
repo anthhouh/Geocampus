@@ -7,11 +7,11 @@
     color: {{ item.color_text }};
     z-index: 10;
 ">
-    <div class="flex items-center gap-1.5 text-left h-full">
-        <span class="material-symbols-outlined shrink-0" style="font-size:1.6rem; opacity:0.85;">{{ item.horario.asignatura.nombre|subject_icon }}</span>
+    <div class="flex items-center gap-1.5 text-left h-full px-1 py-0.5">
+        <span class="material-symbols-outlined shrink-0" style="font-size:1.4rem; opacity:0.85;">{{ item.horario.asignatura.nombre|subject_icon }}</span>
         <div>
-            <strong style="font-size:0.78rem; display:block; line-height:1.2;">{{ item.horario.asignatura.nombre }}</strong>
-            <small style="opacity:0.85; font-size:0.68rem; display:block; margin-top:2px;">
+            <strong style="font-size:0.75rem; display:block; line-height:1.15; font-weight:600;">{{ item.horario.asignatura.nombre }}</strong>
+            <small style="opacity:0.9; font-size:0.65rem; display:block; margin-top:1px; font-weight:500;">
                 {% if es_docentes %}
                     {{ item.horario.curso.nombre }} "{{ item.horario.paralelo.identificador }}"
                 {% else %}
