@@ -141,11 +141,13 @@ class Horario(models.Model):
     TIPOS = (
         ('docente', 'Horario del Docente'),
         ('clase',   'Horario de Clase'),
+        ('atencion', 'Atención a Padres'),
     )
     
     docente = models.ForeignKey(Docente, on_delete=models.CASCADE, related_name='horarios')
-    curso = models.ForeignKey(Curso, on_delete=models.CASCADE, related_name='horarios')
-    paralelo = models.ForeignKey(Paralelo, on_delete=models.CASCADE, related_name='horarios')
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE, related_name='horarios', null=True, blank=True)
+    paralelo = models.ForeignKey(Paralelo, on_delete=models.CASCADE, related_name='horarios', null=True, blank=True)
+    lugar_atencion = models.CharField(max_length=100, blank=True, null=True, help_text="Ej: Sala de profesores, Oficina 3")
     asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE, related_name='horarios', null=True, blank=True)
     aula = models.ForeignKey(Aula, on_delete=models.SET_NULL, related_name='horarios', null=True, blank=True)
     dia = models.CharField(max_length=15, choices=DIAS)

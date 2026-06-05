@@ -93,3 +93,22 @@ class DocenteFotoForm(forms.ModelForm):
         model = Docente
         fields = ['foto']
 
+class AtencionPadresForm(forms.ModelForm):
+    class Meta:
+        model = Horario
+        fields = ['docente', 'lugar_atencion', 'dia', 'hora_inicio', 'hora_fin']
+        widgets = {
+            'docente':     forms.Select(attrs={'class': _SELECT}),
+            'lugar_atencion': forms.TextInput(attrs={'class': _INPUT, 'placeholder': 'Ej: Sala de profesores, Inspección'}),
+            'dia':         forms.Select(attrs={'class': _SELECT}),
+            'hora_inicio': forms.TimeInput(attrs={'type': 'time', 'class': _INPUT}),
+            'hora_fin':    forms.TimeInput(attrs={'type': 'time', 'class': _INPUT}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance.pk:
+            # Valores por defecto para nuevos registros
+            self.initial['hora_inicio'] = '13:00'
+            self.initial['hora_fin'] = '15:00'
+            self.initial['dia'] = 'lunes'

@@ -1,4 +1,5 @@
 import json
+import datetime
 from functools import wraps
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -9,7 +10,7 @@ from django.views.decorators.http import require_POST
 from django.template.loader import render_to_string
 from django.contrib import messages
 from .models import Docente, Curso, Paralelo, Horario, Usuario, Asignatura, Leccion, DisponibilidadDocente, SesionGenerador, BorradorHorario, Aula
-from .forms import HorarioForm, HorarioAdminForm, DocenteEditForm, DocenteCreateForm, CursoForm, ParaleloForm, AsignaturaForm, DocenteFotoForm
+from .forms import HorarioForm, HorarioAdminForm, DocenteEditForm, DocenteCreateForm, CursoForm, ParaleloForm, AsignaturaForm, DocenteFotoForm, AtencionPadresForm
 from .forms_scheduler import LeccionForm
 
 
@@ -270,8 +271,17 @@ def index(request):
     # Excluir el propio perfil si el usuario autenticado es docente
     if request.user.is_docente():
         docentes = docentes.exclude(usuario=request.user)
+        
+    hoy = datetime.datetime.now().weekday()
+    dias_semana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
+    dia_actual_str = dias_semana[hoy]
+    
+    hay_atencion_hoy = Horario.objects.filter(tipo='atencion', dia=dia_actual_str).exists()
+        
     context = {
-        'docentes': docentes
+        'docentes': docentes,
+        'hay_atencion_hoy': hay_atencion_hoy,
+        'dia_actual_str': dia_actual_str.capitalize(),
     }
     return render(request, 'horarios/index.html', context)
 
@@ -295,7 +305,7 @@ def dashboard_docente(request):
         else:
             messages.error(request, 'Error al subir la foto de perfil.')
 
-    horarios = Horario.objects.filter(docente=docente).order_by('dia', 'hora_inicio')
+    horarios = Horario.objects.filter(docente=docente).exclude(tipo='atencion').order_by('dia', 'hora_inicio')
     
     # Para el grid interactivo, fusionamos bloques y necesitamos celdas vacías
     horarios_grid, celdas_vacias = preparar_horarios_grid(horarios, incluir_vacios=True, fusionar_bloques=True)
@@ -327,18 +337,18 @@ def imprimir_horario(request):
         es_clase = True
         curso = get_object_or_404(Curso, id=curso_id)
         paralelo = get_object_or_404(Paralelo, id=paralelo_id)
-        horarios = Horario.objects.filter(curso=curso, paralelo=paralelo).select_related('asignatura', 'docente__usuario').order_by('dia', 'hora_inicio')
+        horarios = Horario.objects.filter(curso=curso, paralelo=paralelo).exclude(tipo='atencion').select_related('asignatura', 'docente__usuario').order_by('dia', 'hora_inicio')
         titulo_horario = f"{curso.nombre} '{paralelo.identificador}'"
         if paralelo.tutor:
             tutor_nombre = paralelo.tutor.usuario.get_full_name() or paralelo.tutor.usuario.username
     elif docente_id:
         docente = get_object_or_404(Docente, id=docente_id)
-        horarios = Horario.objects.filter(docente=docente).select_related('asignatura', 'curso', 'paralelo').order_by('dia', 'hora_inicio')
+        horarios = Horario.objects.filter(docente=docente).exclude(tipo='atencion').select_related('asignatura', 'curso', 'paralelo').order_by('dia', 'hora_inicio')
         titulo_horario = docente.usuario.get_full_name() or docente.usuario.username
     else:
         if hasattr(request.user, 'perfil_docente'):
             docente = request.user.perfil_docente
-            horarios = Horario.objects.filter(docente=docente).select_related('asignatura', 'curso', 'paralelo').order_by('dia', 'hora_inicio')
+            horarios = Horario.objects.filter(docente=docente).exclude(tipo='atencion').select_related('asignatura', 'curso', 'paralelo').order_by('dia', 'hora_inicio')
             titulo_horario = docente.usuario.get_full_name() or docente.usuario.username
         else:
             messages.error(request, 'No tienes un perfil de docente y no seleccionaste un horario específico.')
@@ -620,14 +630,22 @@ def _get_curso_order(titulo):
     return 99
 
 def _render_horarios_list(request, tipo_agrupacion, titulo):
-    horarios_qs = Horario.objects.select_related('docente__usuario', 'curso', 'paralelo').all()
+    horarios_qs = Horario.objects.select_related('docente__usuario', 'curso', 'paralelo').exclude(tipo='atencion')
+    atencion_qs = Horario.objects.select_related('docente__usuario', 'curso', 'paralelo', 'asignatura').filter(tipo='atencion')
+    
     docente_id = request.GET.get('docente')
     curso_id   = request.GET.get('curso')
     dia        = request.GET.get('dia')
 
-    if docente_id: horarios_qs = horarios_qs.filter(docente_id=docente_id)
-    if curso_id:   horarios_qs = horarios_qs.filter(curso_id=curso_id)
-    if dia:        horarios_qs = horarios_qs.filter(dia=dia)
+    if docente_id: 
+        horarios_qs = horarios_qs.filter(docente_id=docente_id)
+        atencion_qs = atencion_qs.filter(docente_id=docente_id)
+    if curso_id:   
+        horarios_qs = horarios_qs.filter(curso_id=curso_id)
+        atencion_qs = atencion_qs.filter(curso_id=curso_id)
+    if dia:        
+        horarios_qs = horarios_qs.filter(dia=dia)
+        atencion_qs = atencion_qs.filter(dia=dia)
 
     grupos = []
     
@@ -638,6 +656,7 @@ def _render_horarios_list(request, tipo_agrupacion, titulo):
         
         for p in paralelos:
             hs = horarios_qs.filter(curso=p.curso, paralelo=p).order_by('dia', 'hora_inicio')
+            atencion_hs = atencion_qs.filter(curso=p.curso, paralelo=p).order_by('dia', 'hora_inicio')
             filled, empty = preparar_horarios_grid(hs, incluir_vacios=True, fusionar_bloques=True)
             grupos.append({
                 'id': f"curso_{p.curso_id}_paralelo_{p.id}",
@@ -645,7 +664,8 @@ def _render_horarios_list(request, tipo_agrupacion, titulo):
                 'curso_id': p.curso_id,
                 'paralelo_id': p.id,
                 'horarios_grid': filled,
-                'celdas_vacias': empty
+                'celdas_vacias': empty,
+                'horarios_atencion': atencion_hs
             })
         # Ordenar cronológicamente (Octavo -> Tercero) y luego por identificador
         grupos.sort(key=lambda x: (_get_curso_order(x['titulo']), x['titulo']))
@@ -656,13 +676,15 @@ def _render_horarios_list(request, tipo_agrupacion, titulo):
             
         for d in docentes_qs:
             hs = horarios_qs.filter(docente=d).order_by('dia', 'hora_inicio')
+            atencion_hs = atencion_qs.filter(docente=d).order_by('dia', 'hora_inicio')
             filled, empty = preparar_horarios_grid(hs, incluir_vacios=True, fusionar_bloques=True)
             grupos.append({
                 'id': f"docente_{d.id}",
                 'titulo': d.usuario.get_full_name() or d.usuario.username,
                 'docente_id': d.id,
                 'horarios_grid': filled,
-                'celdas_vacias': empty
+                'celdas_vacias': empty,
+                'horarios_atencion': atencion_hs
             })
 
     context = {
@@ -1492,4 +1514,115 @@ def api_descartar_borrador(request, sesion_id):
         return JsonResponse({'status': 'ok', 'msg': 'La sesión ya no existe.'})  
     except Exception as e:
         return JsonResponse({'status': 'error', 'msg': str(e)}, status=500)
+
+
+@admin_required
+def gestion_atencion_padres(request):
+    horarios_atencion = Horario.objects.filter(tipo='atencion').select_related(
+        'docente__usuario'
+    ).order_by('dia', 'hora_inicio')
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'create':
+            form = AtencionPadresForm(request.POST)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.tipo = 'atencion'
+                obj.save()
+                messages.success(request, "Horario de atención añadido correctamente.")
+                return redirect('horarios:gestion_atencion_padres')
+            else:
+                messages.error(request, "Error al crear el horario. Revisa los campos.")
+        elif action == 'edit':
+            obj_id = request.POST.get('horario_id')
+            obj = get_object_or_404(Horario, id=obj_id, tipo='atencion')
+            form = AtencionPadresForm(request.POST, instance=obj)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Horario de atención modificado correctamente.")
+                return redirect('horarios:gestion_atencion_padres')
+            else:
+                messages.error(request, "Error al modificar el horario.")
+        elif action == 'delete':
+            obj_id = request.POST.get('horario_id')
+            obj = get_object_or_404(Horario, id=obj_id, tipo='atencion')
+            obj.delete()
+            messages.success(request, "Horario de atención eliminado.")
+            return redirect('horarios:gestion_atencion_padres')
+        elif action == 'move_all':
+            dia_origen = request.POST.get('dia_origen', '').strip().lower()
+            dia_destino = request.POST.get('dia_destino', '').strip().lower()
+            dias_validos = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes']
+            if dia_origen in dias_validos and dia_destino in dias_validos and dia_origen != dia_destino:
+                count = Horario.objects.filter(tipo='atencion', dia=dia_origen).update(dia=dia_destino)
+                messages.success(request, f"Se movieron {count} horario(s) de {dia_origen.capitalize()} a {dia_destino.capitalize()}.")
+            else:
+                messages.error(request, "Selecciona un día de destino válido diferente al de origen.")
+            return redirect('horarios:gestion_atencion_padres')
+
+    form = AtencionPadresForm()
+    
+    dias_list = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes']
+    horarios_por_dia = {dia: [] for dia in dias_list}
+    for h in horarios_atencion:
+        if h.dia in horarios_por_dia:
+            horarios_por_dia[h.dia].append(h)
+            
+    # Convertir a lista de tuplas para mantener el orden de días
+    dias_ordenados = [(dia, dia.capitalize(), horarios_por_dia[dia]) for dia in dias_list]
+    
+    context = {
+        'titulo_seccion': 'Atención a Padres de Familia',
+        'horarios': horarios_atencion,
+        'dias_ordenados': dias_ordenados,
+        'form': form,
+        'dias_choices': Horario.DIAS,
+    }
+    return render(request, 'horarios/gestion/atencion_padres.html', context)
+
+
+@login_required
+def atencion_padres_publico(request):
+    horarios_qs = Horario.objects.filter(tipo='atencion').select_related(
+        'docente__usuario'
+    ).order_by('dia', 'hora_inicio', 'docente__usuario__first_name')
+    
+    dias_list = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes']
+    horarios_por_dia = {dia: [] for dia in dias_list}
+    for h in horarios_qs:
+        if h.dia in horarios_por_dia:
+            horarios_por_dia[h.dia].append(h)
+    
+    # Lista de tuplas (dia_id, dia_nombre, horarios) — solo los que tienen datos
+    dias_con_datos = [(dia, dia.capitalize(), horarios_por_dia[dia]) for dia in dias_list if horarios_por_dia[dia]]
+    # Todos los días para la cuadrícula
+    dias_ordenados = [(dia, dia.capitalize(), horarios_por_dia[dia]) for dia in dias_list]
+    
+    dias_disponibles = [d[1] for d in dias_con_datos]
+    if len(dias_disponibles) == 0:
+        dias_texto = "No hay horarios disponibles"
+    elif len(dias_disponibles) == 1:
+        dias_texto = dias_disponibles[0]
+    elif len(dias_disponibles) == 2:
+        dias_texto = f"{dias_disponibles[0]} y {dias_disponibles[1]}"
+    elif len(dias_disponibles) == 5:
+        dias_texto = "Lunes a Viernes"
+    else:
+        dias_texto = ", ".join(dias_disponibles[:-1]) + " y " + dias_disponibles[-1]
+    
+    # Detectar si hoy hay atención
+    hoy = datetime.datetime.now().weekday()
+    dias_semana_map = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
+    dia_hoy = dias_semana_map[hoy]
+    hay_atencion_hoy = dia_hoy in horarios_por_dia and len(horarios_por_dia.get(dia_hoy, [])) > 0
+        
+    return render(request, 'horarios/atencion_padres_publico.html', {
+        'dias_ordenados': dias_ordenados,
+        'dias_texto': dias_texto,
+        'hay_atencion_hoy': hay_atencion_hoy,
+        'dia_hoy': dia_hoy,
+        'total_docentes': horarios_qs.values('docente').distinct().count(),
+    })
+
 

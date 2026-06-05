@@ -61,6 +61,9 @@ urlpatterns = [
     path('gestion/generador/api/ejecutar/',                  views.api_ejecutar_generador,   name='api_ejecutar_generador'),
     path('gestion/generador/api/estado/<str:sesion_id>/',    views.api_estado_generador,     name='api_estado_generador'),
     path('gestion/generador/borrador/<str:sesion_id>/',      views.gestion_borrador,         name='gestion_borrador'),
-    path('gestion/generador/borrador/<str:sesion_id>/publicar/', views.api_publicar_borrador, name='api_publicar_borrador'),
-    path('gestion/generador/borrador/<str:sesion_id>/descartar/', views.api_descartar_borrador, name='api_descartar_borrador'),
+    path('gestion/generador/api/publicar/<uuid:sesion_id>/', views.api_publicar_borrador, name='api_publicar_borrador'),
+    path('gestion/generador/api/descartar/<uuid:sesion_id>/', views.api_descartar_borrador, name='api_descartar_borrador'),
+
+    path('gestion/atencion-padres/', views.gestion_atencion_padres, name='gestion_atencion_padres'),
+    path('atencion-padres/', views.atencion_padres_publico, name='atencion_padres_publico'),
 ]

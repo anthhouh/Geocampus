@@ -32,6 +32,12 @@
                     Horarios de Clases
                 </a>
 
+                <!-- Atención a Padres -->
+                <a href="{% url 'horarios:atencion_padres_publico' %}" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl {% if request.resolver_match.url_name == 'atencion_padres_publico' %}text-white font-bold{% else %}text-white hover:bg-white/5 font-medium{% endif %} text-sm transition-all duration-200">
+                    <span class="material-symbols-outlined" style="font-size: 1.3rem;">family_restroom</span>
+                    Atención a Padres
+                </a>
+
                 <!-- Dashboard (Solo Docentes o Admins) -->
                 {% if user.is_authenticated and user.is_docente or user.is_admin or user.is_superuser %}
                 <a href="{% url 'horarios:dashboard_docente' %}" class="cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl {% if request.resolver_match.url_name == 'dashboard_docente' %}text-white font-bold{% else %}text-white hover:bg-white/5 font-medium{% endif %} text-sm transition-all duration-200">

@@ -108,6 +108,31 @@
                     {% include 'horarios/gestion/schedule_item.html' with item=item es_docentes=es_docentes %}
                 {% endfor %}
             </div>
+
+            {% if grupo.horarios_atencion %}
+            <div class="mt-4 border-t border-outline-variant pt-4">
+                <h5 class="text-sm font-semibold text-primary mb-2 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[18px]">family_restroom</span>
+                    Horas de Atención a Padres
+                </h5>
+                <div class="flex flex-wrap gap-3">
+                    {% for haten in grupo.horarios_atencion %}
+                    <div class="bg-primary/5 border border-primary/20 rounded-md px-3 py-2 text-sm text-on-surface flex items-center gap-2">
+                        <span class="font-medium capitalize">{{ haten.dia }}</span>
+                        <span class="text-on-surface-variant text-xs">{{ haten.hora_inicio|time:"H:i" }} - {{ haten.hora_fin|time:"H:i" }}</span>
+                        <span class="text-primary/50 mx-1">|</span>
+                        {% if es_docentes %}
+                            <span class="font-medium">{{ haten.curso.nombre }} "{{ haten.paralelo.identificador }}"</span>
+                        {% else %}
+                            <span class="font-medium">{{ haten.docente.usuario.get_full_name|default:haten.docente.usuario.username }}</span>
+                        {% endif %}
+                        <span class="text-on-surface-variant text-xs ml-1">({{ haten.asignatura.nombre }})</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
         </div>
     </details>
     {% empty %}
