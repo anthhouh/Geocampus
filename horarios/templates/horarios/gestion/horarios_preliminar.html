@@ -43,9 +43,7 @@
     #sidebar, 
     #sidebar-overlay,
     .toast-overlay, 
-    .toast-container,
-    .page-transition,
-    .page-transition-out {
+    .toast-container {
         display: none !important;
     }
 
@@ -58,6 +56,11 @@
         overflow: visible !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        /* Neutralizar page-transition animation que puede dejar opacity:0 */
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        pointer-events: auto !important;
     }
 
     body * {
@@ -160,15 +163,15 @@
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
         grid-template-rows: repeat(2, auto) !important;
-        gap: 8mm 6mm !important;
+        gap: 10mm 6mm !important;
         width: 275mm !important;
         margin: 0 auto;
-        padding-top: 4mm;
+        padding-top: 0.1mm;
     }
 
     .print-page-wrapper {
         width: 100% !important;
-        height: 88mm !important; /* Very safe height to ensure 2 fit vertically (176mm + gap < 210mm) */
+        height: 85mm !important; /* Reduced to ensure 2 fit vertically even with browser default margins */
         display: flex;
         flex-direction: column;
         page-break-inside: avoid !important;
@@ -266,7 +269,7 @@
     }
     
     table.simple-print-table th, table.simple-print-table td {
-        border: 1px solid #9fa8da;
+        border: 1px solid #000000;
         text-align: center;
         vertical-align: middle;
         padding: 0;
@@ -466,8 +469,14 @@
 </div>
 
 <!-- Plantillas de Impresión (Solo Visible al Imprimir) -->
-<div class="print-only-container">
-    {% for grupo in grupos %}
+{% for grupo in grupos %}
+    {% if forloop.counter0|divisibleby:4 %}
+        {% if not forloop.first %}
+            </div>
+            <div style="page-break-before: always !important; break-before: page !important; width: 100%; height: 0;"></div>
+        {% endif %}
+        <div class="print-only-container">
+    {% endif %}
     <div class="print-page-wrapper">
         
         <!-- HEADER MINIMALISTA -->
@@ -546,13 +555,15 @@
             {% if es_docentes %}
                 Horario Docente elaborado por JRSZ
             {% else %}
-                Elaborado por JRSZ
+                Elaborado por Jorge Sarmiento
             {% endif %}
         </div>
 
     </div><!-- /print-page-wrapper -->
-    {% endfor %}
-</div>
+    {% if forloop.last %}
+        </div>
+    {% endif %}
+{% endfor %}
 
 
 {% if hay_resultados %}
