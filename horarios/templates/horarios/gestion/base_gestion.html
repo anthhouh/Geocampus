@@ -4,7 +4,7 @@
 <div class="max-w-container-max mx-auto space-y-lg">
 
     <!-- Admin Header Badge -->
-    <div class="flex items-center justify-between flex-wrap gap-md">
+    <div class="flex items-center justify-between flex-wrap gap-md print-hidden">
         <div class="flex items-center gap-md">
             <div class="w-10 h-10 rounded-xl bg-[#1a1a2e] flex items-center justify-center shadow-md">
                 <span class="material-symbols-outlined text-[20px] text-[#e2b96f]">admin_panel_settings</span>
@@ -21,7 +21,7 @@
     </div>
 
     <!-- Sub-Navigation -->
-    <nav class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-sm flex items-center gap-xs flex-wrap">
+    <nav class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-sm flex items-center gap-xs flex-wrap print-hidden">
         <a href="{% url 'horarios:gestion_dashboard' %}"
            class="flex items-center gap-2 px-md py-sm rounded-lg font-label-md text-label-md transition-all duration-150
                   {% if request.resolver_match.url_name == 'gestion_dashboard' %}bg-[#1a1a2e] text-[#e2b96f]{% else %}text-on-surface-variant hover:bg-surface-container-high{% endif %}">
