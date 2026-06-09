@@ -355,81 +355,7 @@ def imprimir_horario(request):
             messages.error(request, 'No tienes un perfil de docente y no seleccionaste un horario específico.')
             return redirect('horarios:index')
 
-    PERIODOS = [
-        {'num': '1',  'inicio': '07:00', 'fin': '07:45', 'key': '07:00:00'},
-        {'num': '2',  'inicio': '07:45', 'fin': '08:30', 'key': '07:45:00'},
-        {'num': '3',  'inicio': '08:30', 'fin': '09:15', 'key': '08:30:00'},
-        {'num': '4',  'inicio': '09:15', 'fin': '10:00', 'key': '09:15:00'},
-        {'num': 'R',  'inicio': '10:00', 'fin': '10:25', 'key': '10:00:00', 'recreo': True},
-        {'num': '5',  'inicio': '10:25', 'fin': '11:05', 'key': '10:25:00'},
-        {'num': '6',  'inicio': '11:05', 'fin': '11:45', 'key': '11:05:00'},
-        {'num': '7',  'inicio': '11:45', 'fin': '12:25', 'key': '11:45:00'},
-        {'num': '8',  'inicio': '12:25', 'fin': '13:05', 'key': '12:25:00'},
-        {'num': '9',  'inicio': '13:05', 'fin': '13:45', 'key': '13:05:00'},
-    ]
-    DIAS = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes']
-
-    # Organizar horarios en un dict {dia: {hora_inicio_str: horario_obj}}
-    horario_map = {}
-    for h in horarios:
-        key_dia = h.dia.lower()
-        key_hora = h.hora_inicio.strftime("%H:%M:%S")
-        horario_map[(key_dia, key_hora)] = h
-
-    # Calcular color por clase
-    def color_para(h):
-        if es_clase:
-            clave = f"{h.asignatura.nombre if h.asignatura else ''}|{h.docente_id}"
-        else:
-            clave = f"{h.asignatura.nombre if h.asignatura else ''}|{h.curso_id}|{h.paralelo_id}"
-        return get_color_for_materia(clave)
-
-    # Construir tabla: lista de filas, cada fila tiene celdas por día
-    tabla = []
-    skip_map = {}
-    for row_idx, periodo in enumerate(PERIODOS):
-        if periodo.get('recreo'):
-            tabla.append({'periodo': periodo, 'recreo': True})
-            continue
-            
-        fila = {'periodo': periodo, 'recreo': False, 'dias': []}
-        for dia_idx, dia in enumerate(DIAS):
-            if skip_map.get((dia_idx, row_idx)):
-                continue
-                
-            h = horario_map.get((dia, periodo['key']))
-            if h:
-                rowspan = 1
-                for next_row_idx in range(row_idx + 1, len(PERIODOS)):
-                    next_periodo = PERIODOS[next_row_idx]
-                    if next_periodo.get('recreo'):
-                        break
-                    next_h = horario_map.get((dia, next_periodo['key']))
-                    if next_h:
-                        if es_clase:
-                            mismo_bloque = (next_h.asignatura_id == h.asignatura_id and next_h.docente_id == h.docente_id)
-                        else:
-                            mismo_bloque = (next_h.asignatura_id == h.asignatura_id and next_h.curso_id == h.curso_id and next_h.paralelo_id == h.paralelo_id)
-                        
-                        if mismo_bloque:
-                            rowspan += 1
-                            skip_map[(dia_idx, next_row_idx)] = True
-                        else:
-                            break
-                    else:
-                        break
-                        
-                colors = color_para(h)
-                fila['dias'].append({
-                    'horario': h,
-                    'color_bg': colors['bg'],
-                    'color_border': colors['border'],
-                    'color_text': colors['text'],
-                    'rowspan': rowspan,
-                })
-            else:
-                fila['dias'].append(None)
-        tabla.append(fila)
+    tabla = generar_tabla_impresion(horarios, es_clase)
 
     from django.utils import timezone
     fecha_hoy = timezone.localdate()
@@ -634,6 +560,81 @@ def _get_curso_order(titulo):
     if 'tercero' in t: return 6
     return 99
 
+def generar_tabla_impresion(horarios, es_clase=True):
+    PERIODOS = [
+        {'num': '1',  'inicio': '07:00', 'fin': '07:45', 'key': '07:00:00'},
+        {'num': '2',  'inicio': '07:45', 'fin': '08:30', 'key': '07:45:00'},
+        {'num': '3',  'inicio': '08:30', 'fin': '09:15', 'key': '08:30:00'},
+        {'num': '4',  'inicio': '09:15', 'fin': '10:00', 'key': '09:15:00'},
+        {'num': 'R',  'inicio': '10:00', 'fin': '10:25', 'key': '10:00:00', 'recreo': True},
+        {'num': '5',  'inicio': '10:25', 'fin': '11:05', 'key': '10:25:00'},
+        {'num': '6',  'inicio': '11:05', 'fin': '11:45', 'key': '11:05:00'},
+        {'num': '7',  'inicio': '11:45', 'fin': '12:25', 'key': '11:45:00'},
+        {'num': '8',  'inicio': '12:25', 'fin': '13:05', 'key': '12:25:00'},
+        {'num': '9',  'inicio': '13:05', 'fin': '13:45', 'key': '13:05:00'},
+    ]
+    DIAS = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes']
+
+    horario_map = {}
+    for h in horarios:
+        key_dia = h.dia.lower()
+        key_hora = h.hora_inicio.strftime("%H:%M:%S")
+        horario_map[(key_dia, key_hora)] = h
+
+    def color_para(h):
+        if es_clase:
+            clave = f"{h.asignatura.nombre if h.asignatura else ''}|{h.docente_id}"
+        else:
+            clave = f"{h.asignatura.nombre if h.asignatura else ''}|{h.curso_id}|{h.paralelo_id}"
+        return get_color_for_materia(clave)
+
+    tabla = []
+    skip_map = {}
+    for row_idx, periodo in enumerate(PERIODOS):
+        if periodo.get('recreo'):
+            tabla.append({'periodo': periodo, 'recreo': True})
+            continue
+            
+        fila = {'periodo': periodo, 'recreo': False, 'dias': []}
+        for dia_idx, dia in enumerate(DIAS):
+            if skip_map.get((dia_idx, row_idx)):
+                continue
+                
+            h = horario_map.get((dia, periodo['key']))
+            if h:
+                rowspan = 1
+                for next_row_idx in range(row_idx + 1, len(PERIODOS)):
+                    next_periodo = PERIODOS[next_row_idx]
+                    if next_periodo.get('recreo'):
+                        break
+                    next_h = horario_map.get((dia, next_periodo['key']))
+                    if next_h:
+                        if es_clase:
+                            mismo_bloque = (next_h.asignatura_id == h.asignatura_id and next_h.docente_id == h.docente_id)
+                        else:
+                            mismo_bloque = (next_h.asignatura_id == h.asignatura_id and next_h.curso_id == h.curso_id and next_h.paralelo_id == h.paralelo_id)
+                        
+                        if mismo_bloque:
+                            rowspan += 1
+                            skip_map[(dia_idx, next_row_idx)] = True
+                        else:
+                            break
+                    else:
+                        break
+                        
+                colors = color_para(h)
+                fila['dias'].append({
+                    'horario': h,
+                    'color_bg': colors['bg'],
+                    'color_border': colors['border'],
+                    'color_text': colors['text'],
+                    'rowspan': rowspan,
+                })
+            else:
+                fila['dias'].append(None)
+        tabla.append(fila)
+    return tabla
+
 def _render_horarios_list(request, tipo_agrupacion, titulo, template_name='horarios/gestion/horarios.html'):
     horarios_qs = Horario.objects.select_related('docente__usuario', 'curso', 'paralelo').exclude(tipo='atencion')
     atencion_qs = Horario.objects.select_related('docente__usuario', 'curso', 'paralelo', 'asignatura').filter(tipo='atencion')
@@ -663,14 +664,19 @@ def _render_horarios_list(request, tipo_agrupacion, titulo, template_name='horar
             hs = horarios_qs.filter(curso=p.curso, paralelo=p).order_by('dia', 'hora_inicio')
             atencion_hs = atencion_qs.filter(curso=p.curso, paralelo=p).order_by('dia', 'hora_inicio')
             filled, empty = preparar_horarios_grid(hs, incluir_vacios=True, fusionar_bloques=True)
+            tutor_nombre = ""
+            if p.tutor:
+                tutor_nombre = p.tutor.usuario.get_full_name() or p.tutor.usuario.username
             grupos.append({
                 'id': f"curso_{p.curso_id}_paralelo_{p.id}",
                 'titulo': f"{p.curso.nombre} '{p.identificador}'",
                 'curso_id': p.curso_id,
                 'paralelo_id': p.id,
+                'tutor_nombre': tutor_nombre,
                 'horarios_grid': filled,
                 'celdas_vacias': empty,
-                'horarios_atencion': atencion_hs
+                'horarios_atencion': atencion_hs,
+                'tabla': generar_tabla_impresion(hs, True),
             })
         # Ordenar cronológicamente (Octavo -> Tercero) y luego por identificador
         grupos.sort(key=lambda x: (_get_curso_order(x['titulo']), x['titulo']))
@@ -689,7 +695,8 @@ def _render_horarios_list(request, tipo_agrupacion, titulo, template_name='horar
                 'docente_id': d.id,
                 'horarios_grid': filled,
                 'celdas_vacias': empty,
-                'horarios_atencion': atencion_hs
+                'horarios_atencion': atencion_hs,
+                'tabla': generar_tabla_impresion(hs, False),
             })
 
     context = {

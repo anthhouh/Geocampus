@@ -1,8 +1,12 @@
 {% extends 'horarios/gestion/base_gestion.html' %}
 
+{% load static %}
+{% load horarios_tags %}
+
 {% block title %}Vista Preliminar de Horarios — La Dolorosa{% endblock %}
 
 {% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 <style>
 /* Estilos para que la cuadrícula se vea bien en 2 columnas en pantalla */
 .grid-container {
@@ -13,6 +17,13 @@
 @media (max-width: 768px) {
     .grid-container {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Ocultar contenedor de impresión en pantalla */
+@media screen {
+    .print-only-container {
+        display: none !important;
     }
 }
 
@@ -109,96 +120,241 @@
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 6mm !important;
         padding: 0 !important;
+        width: 100% !important;
+        /* Escalar todo el contenedor para que quepan 2 filas (4 tarjetas) en una sola página landscape */
+        zoom: 0.72;
     }
 
     /* Cada tarjeta de horario */
     .schedule-card {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
-        border: 1px solid #999 !important;
+        border: 2px solid #0d2b5e !important;
         box-shadow: none !important;
         background: white !important;
-        border-radius: 4px !important;
+        border-radius: 6px !important;
         overflow: hidden !important;
         font-size: 7pt !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 4px !important;
     }
 
-    /* Header del grupo (nombre del curso) más compacto */
-    .schedule-card > div:first-child {
-        padding: 3px 6px !important;
-        border-bottom: 1px solid #999 !important;
+    .inner-border-card {
+        border: 1px solid #c9a84c;
+        border-radius: 4px;
+        padding: 6px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
     }
 
-    .schedule-card > div:first-child .w-8 {
-        width: 18px !important;
-        height: 18px !important;
-        font-size: 8pt !important;
-        min-width: 18px !important;
+    /* Header del grupo (nombre del curso) en pantalla: oculto al imprimir si usamos plantilla */
+    .schedule-card > div.print-hidden {
+        display: none !important;
     }
 
-    .schedule-card > div:first-child h4 {
-        font-size: 8pt !important;
-        line-height: 1.2 !important;
+    /* --- ESTILOS DE IMPRESION MINIMALISTA (EXACTO A IMAGEN) --- */
+    
+    .print-only-container {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-rows: repeat(2, auto) !important;
+        gap: 8mm 6mm !important;
+        width: 275mm !important;
+        margin: 0 auto;
+        padding-top: 4mm;
     }
 
-    /* Cuadrícula compacta */
-    .schedule-card .p-3 {
-        padding: 2px !important;
-    }
-
-    /* Schedule grid compacto para impresión */
-    .schedule-grid {
-        min-width: unset !important;
+    .print-page-wrapper {
         width: 100% !important;
-        font-size: 6pt !important;
-        grid-template-columns: 20px repeat(5, 1fr) !important;
-        grid-template-rows: 16px repeat(11, minmax(18px, auto)) !important;
-        gap: 0 !important;
-        border-radius: 2px !important;
+        height: 88mm !important; /* Very safe height to ensure 2 fit vertically (176mm + gap < 210mm) */
+        display: flex;
+        flex-direction: column;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        background: #fff;
     }
 
-    .day-header {
-        padding: 1px 2px !important;
-        min-height: 14px !important;
-        font-size: 6pt !important;
+    /* HEADER MINIMALISTA MEJORADO */
+    .print-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2px;
+        padding: 2px 4px 4px 4px;
+        height: 42px;
+        border-bottom: 1.5px solid #3949ab;
     }
 
-    .time-slot {
-        padding: 1px !important;
-        min-height: 16px !important;
-        font-size: 5pt !important;
+    .print-logo-left {
+        width: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-right: 8px;
+    }
+    .print-logo-left img {
+        max-height: 40px;
+        width: auto;
     }
 
-    .time-slot strong {
-        font-size: 6pt !important;
+    .print-header-center {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
     }
 
-    .schedule-recreo {
-        font-size: 5pt !important;
-        letter-spacing: 2px !important;
-        min-height: 12px !important;
-        padding: 0 !important;
+    .print-main-title {
+        color: #1a237e; /* Deep Blue */
+        font-family: 'Merriweather', serif;
+        font-style: italic;
+        font-weight: 700;
+        font-size: 13.5pt;
+        margin: -30px 0 10px 0;
+        line-height: 1;
+        text-align: center;
+        letter-spacing: -0.2px;
     }
 
-    .schedule-item {
-        padding: 1px !important;
-        margin: 1px !important;
-        border-radius: 2px !important;
-        box-shadow: none !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+    .print-subtitle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 1px;
+        padding-left: 10px;
+        padding-right: 4px;
     }
 
-    .schedule-item .font-bold,
-    .schedule-item span.font-bold {
-        font-size: 5.5pt !important;
-        line-height: 1.1 !important;
+    .print-motto {
+        color: #5c6bc0;
+        font-family: 'Arial', sans-serif;
+        font-size: 8.5pt;
+        font-weight: normal;
+        font-style: italic;
     }
 
-    .schedule-item .truncate:last-child,
-    .schedule-item span:last-child {
-        font-size: 5pt !important;
-        line-height: 1.1 !important;
+    .print-course-pill {
+        background: linear-gradient(135deg, #7986cb 0%, #5c6bc0 100%);
+        color: #fff;
+        border-radius: 14px;
+        padding: 2px 22px;
+        font-family: 'Arial', sans-serif;
+        font-size: 10pt;
+        font-weight: bold;
+        box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+        letter-spacing: 0.5px;
+    }
+
+    /* TABLE MINIMALISTA MEJORADA */
+    .print-table-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-top: 4px;
+    }
+
+    table.simple-print-table {
+        width: 100%;
+        height: 100%;
+        border-collapse: collapse;
+        border: 1.5px solid #283593;
+        table-layout: fixed;
+    }
+    
+    table.simple-print-table th, table.simple-print-table td {
+        border: 1px solid #9fa8da;
+        text-align: center;
+        vertical-align: middle;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+    }
+    
+    table.simple-print-table thead th {
+        font-size: 7.5pt;
+        font-weight: bold;
+        color: #1a237e;
+        height: 16px;
+        border-bottom: 1.5px solid #283593;
+        background-color: #f8f9fa;
+    }
+    
+    table.simple-print-table thead th:first-child {
+        width: 45px;
+        border-right: 1.5px solid #283593;
+    }
+    
+    table.simple-print-table tbody td {
+        height: auto;
+    }
+    
+    .print-time-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        height: 100%;
+        padding: 1px 0;
+        border-right: 1px solid #283593;
+    }
+    .print-time-num {
+        font-size: 6.5pt;
+        color: #3949ab;
+        font-weight: bold;
+        line-height: 1;
+        margin-bottom: 1px;
+    }
+    .print-time-hours {
+        font-size: 4.5pt;
+        color: #555;
+        line-height: 1;
+    }
+    
+    .print-cell-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        line-height: 1.1;
+        padding: 2px 1px;
+    }
+    
+    .print-subject {
+        font-size: 7.5pt;
+        font-weight: normal;
+        color: #111;
+        margin-bottom: 1px;
+    }
+    
+    .print-teacher {
+        font-size: 5.5pt;
+        color: #333;
+        font-style: italic;
+    }
+
+    tr.print-recreo-row td {
+        background: #e8eaf6;
+        font-weight: bold;
+        font-size: 7.5pt;
+        color: #283593;
+        height: 16px;
+        letter-spacing: 1px;
+    }
+
+    .print-footer {
+        display: flex;
+        justify-content: flex-end;
+        font-size: 6pt;
+        font-family: 'Arial', sans-serif;
+        color: #5c6bc0;
+        margin-top: 3px;
+        padding-right: 4px;
+        font-style: italic;
     }
 }
 </style>
@@ -250,11 +406,11 @@
     </div>
 </form>
 
-<!-- Grid de Horarios -->
-<div class="grid-container">
+<!-- Grid de Horarios (Pantalla) -->
+<div class="grid-container print-hidden">
     {% for grupo in grupos %}
     <div class="schedule-card bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col">
-        <!-- Header del grupo -->
+        <!-- Header del grupo (Pantalla) -->
         <div class="bg-surface-container-low p-3 border-b border-outline-variant flex items-center gap-3">
             <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm shrink-0">
                 {{ grupo.titulo|first|upper }}
@@ -262,7 +418,7 @@
             <h4 class="font-title-md text-on-surface truncate">{{ grupo.titulo }}</h4>
         </div>
         
-        <!-- Cuadrícula -->
+        <!-- Cuadrícula (Compacta) -->
         <div class="p-3 overflow-x-auto flex-1 bg-surface-container-lowest">
             <div class="schedule-grid" style="font-size: 0.8em; gap: 2px;">
                 <div style="grid-column: 1; grid-row: 1;"></div>
@@ -308,6 +464,96 @@
     </div>
     {% endfor %}
 </div>
+
+<!-- Plantillas de Impresión (Solo Visible al Imprimir) -->
+<div class="print-only-container">
+    {% for grupo in grupos %}
+    <div class="print-page-wrapper">
+        
+        <!-- HEADER MINIMALISTA -->
+        <div class="print-header">
+            <div class="print-logo-left">
+                <img src="{% static 'images/logo_dolorosa.png' %}" alt="Logo La Dolorosa" onerror="this.style.display='none'">
+            </div>
+            <div class="print-header-center">
+                <h2 class="print-main-title">Unidad Educativa Fiscomisional La Dolorosa</h2>
+                <div class="print-subtitle-row">
+                    <span class="print-motto">¡Siempre! ... un paso adelante</span>
+                    <div class="print-course-pill">{{ grupo.titulo }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCHEDULE TABLE -->
+        <div class="print-table-wrapper">
+            <table class="simple-print-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Lu</th>
+                        <th>Ma</th>
+                        <th>Mi</th>
+                        <th>Ju</th>
+                        <th>Vi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fila in grupo.tabla %}
+                        {% if fila.recreo %}
+                            <tr class="print-recreo-row">
+                                <td>
+                                    <div class="print-time-col" style="background:#fff;">
+                                        <span class="print-time-hours">10:00 - 10:25</span>
+                                    </div>
+                                </td>
+                                <td colspan="5">Recreo</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>
+                                    <div class="print-time-col">
+                                        <span class="print-time-num">{{ fila.periodo.num }}</span>
+                                        <span class="print-time-hours">{{ fila.periodo.inicio }} - {{ fila.periodo.fin }}</span>
+                                    </div>
+                                </td>
+                                {% for celda in fila.dias %}
+                                    <td {% if celda and celda.rowspan and celda.rowspan > 1 %}rowspan="{{ celda.rowspan }}"{% endif %} style="background-color: {% if celda %}{{ celda.color_bg }}{% else %}#fff{% endif %};">
+                                        {% if celda %}
+                                            <div class="print-cell-content">
+                                                <span class="print-subject">{{ celda.horario.materia|default:celda.horario.asignatura.nombre }}</span>
+                                                <span class="print-teacher">
+                                                    {% if not es_docentes %}
+                                                        {{ celda.horario.docente.usuario.get_full_name|default:celda.horario.docente.usuario.username }}
+                                                    {% else %}
+                                                        {% if celda.horario.curso and celda.horario.paralelo %}
+                                                            {{ celda.horario.curso.nombre }} "{{ celda.horario.paralelo.identificador }}"
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="print-footer">
+            {% if es_docentes %}
+                Horario Docente elaborado por JRSZ
+            {% else %}
+                Elaborado por JRSZ
+            {% endif %}
+        </div>
+
+    </div><!-- /print-page-wrapper -->
+    {% endfor %}
+</div>
+
 
 {% if hay_resultados %}
 <div class="mt-md px-lg py-sm text-right text-on-surface-variant font-body-sm text-body-sm print-hidden">
