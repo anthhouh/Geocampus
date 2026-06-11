@@ -30,4 +30,12 @@
         {% block auth_content %}{% endblock %}
     </section>
 </main>
+
+<!-- Floating Help Button -->
+<div class="help-fab-wrapper">
+    <span class="help-fab-tooltip">Ayuda</span>
+    <button onclick="abrirAyuda()" class="help-fab" id="help-fab-auth" aria-label="Abrir ayuda">
+        <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">help</span>
+    </button>
+</div>
 {% endblock %}
