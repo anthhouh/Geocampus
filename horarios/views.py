@@ -2027,17 +2027,13 @@ def enviar_notificacion_padres_view(request):
     correos = list(Usuario.objects.filter(rol='estudiante').exclude(email='').values_list('email', flat=True))
     site_url = "https://geocampus.vercel.app" + reverse('horarios:atencion_padres_publico')
     
-    thread = threading.Thread(
-        target=send_mass_html_email_thread,
-        args=(
-            f"Hoy hay Atención a Padres de Familia - {dia_hoy}",
-            f"El día de hoy ({dia_hoy}) tenemos jornada de Atención a Padres de Familia en la Unidad Educativa La Dolorosa. Revise los horarios en: {site_url}",
-            'horarios/emails/notificacion_padres.html',
-            {'dia_hoy': dia_hoy, 'site_url': site_url},
-            correos
-        )
+    send_mass_html_email_thread(
+        f"Hoy hay Atención a Padres de Familia - {dia_hoy}",
+        f"El día de hoy ({dia_hoy}) tenemos jornada de Atención a Padres de Familia en la Unidad Educativa La Dolorosa. Revise los horarios en: {site_url}",
+        'horarios/emails/notificacion_padres.html',
+        {'dia_hoy': dia_hoy, 'site_url': site_url},
+        correos
     )
-    thread.start()
     
     messages.success(request, f'Se ha iniciado el envío del boletín a {len(correos)} usuarios registrados. Esto puede tardar un par de minutos en completarse.')
     return redirect('horarios:gestion_atencion_padres')
@@ -2059,16 +2055,12 @@ def cron_notificar_padres_view(request):
     correos = list(Usuario.objects.filter(rol='estudiante').exclude(email='').values_list('email', flat=True))
     site_url = "https://geocampus.vercel.app" + reverse('horarios:atencion_padres_publico')
     
-    thread = threading.Thread(
-        target=send_mass_html_email_thread,
-        args=(
-            f"Hoy hay Atención a Padres de Familia - {dia_hoy_capitalized}",
-            f"El día de hoy ({dia_hoy_capitalized}) tenemos jornada de Atención a Padres de Familia en la Unidad Educativa La Dolorosa. Revise los horarios en: {site_url}",
-            'horarios/emails/notificacion_padres.html',
-            {'dia_hoy': dia_hoy_capitalized, 'site_url': site_url},
-            correos
-        )
+    send_mass_html_email_thread(
+        f"Hoy hay Atención a Padres de Familia - {dia_hoy_capitalized}",
+        f"El día de hoy ({dia_hoy_capitalized}) tenemos jornada de Atención a Padres de Familia en la Unidad Educativa La Dolorosa. Revise los horarios en: {site_url}",
+        'horarios/emails/notificacion_padres.html',
+        {'dia_hoy': dia_hoy_capitalized, 'site_url': site_url},
+        correos
     )
-    thread.start()
     
     return JsonResponse({'status': 'ok', 'message': f'Notificaciones enviadas a {len(correos)} usuarios.'})
