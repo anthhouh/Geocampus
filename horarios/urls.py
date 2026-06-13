@@ -70,5 +70,6 @@ urlpatterns = [
 
     path('gestion/atencion-padres/', views.gestion_atencion_padres, name='gestion_atencion_padres'),
     path('gestion/atencion-padres/notificar/', views.enviar_notificacion_padres_view, name='notificar_atencion_padres'),
+    path('api/cron/notificar-padres/', views.cron_notificar_padres_view, name='cron_notificar_padres'),
     path('atencion-padres/', views.atencion_padres_publico, name='atencion_padres_publico'),
 ]

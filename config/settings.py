@@ -191,3 +191,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+
+# Configuración de Cron Jobs
+CRON_SECRET_KEY = os.environ.get('CRON_SECRET_KEY', 'default-cron-secret-2026')

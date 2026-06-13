@@ -192,6 +192,9 @@ def preparar_horarios_grid(horarios_qs, incluir_vacios=False, fusionar_bloques=F
 
 def login_view(request):
     if request.user.is_authenticated:
+        next_url = request.GET.get('next')
+        if next_url:
+            return redirect(next_url)
         if request.user.is_docente():
             return redirect('horarios:dashboard_docente')
         elif request.user.is_admin() or request.user.is_superuser:
@@ -243,6 +246,11 @@ def login_view(request):
                 return redirect('horarios:verify_2fa')
                 
             login(request, user)
+            
+            next_url = request.POST.get('next') or request.GET.get('next')
+            if next_url:
+                return redirect(next_url)
+                
             if user.is_docente():
                 return redirect('horarios:dashboard_docente')
             elif user.is_admin() or user.is_superuser:
@@ -295,6 +303,9 @@ def registro_view(request):
                 Docente.objects.create(usuario=user)
                 
             messages.success(request, '¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.')
+            next_url = request.POST.get('next') or request.GET.get('next')
+            if next_url:
+                return redirect(f"{reverse('horarios:login')}?next={next_url}")
             return redirect('horarios:login')
         except Exception as e:
             messages.error(request, f'Ocurrió un error al crear la cuenta: {str(e)}')
@@ -2013,8 +2024,8 @@ def enviar_notificacion_padres_view(request):
     dias_semana_map = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
     dia_hoy = dias_semana_map[datetime.datetime.now().weekday()].capitalize()
     
-    correos = list(Usuario.objects.exclude(email='').values_list('email', flat=True))
-    site_url = request.build_absolute_uri(reverse('horarios:atencion_padres_publico'))
+    correos = list(Usuario.objects.filter(rol='estudiante').exclude(email='').values_list('email', flat=True))
+    site_url = "https://geocampus.vercel.app" + reverse('horarios:atencion_padres_publico')
     
     thread = threading.Thread(
         target=send_mass_html_email_thread,
@@ -2030,3 +2041,34 @@ def enviar_notificacion_padres_view(request):
     
     messages.success(request, f'Se ha iniciado el envío del boletín a {len(correos)} usuarios registrados. Esto puede tardar un par de minutos en completarse.')
     return redirect('horarios:gestion_atencion_padres')
+
+def cron_notificar_padres_view(request):
+    key = request.GET.get('key')
+    if key != getattr(settings, 'CRON_SECRET_KEY', 'default-cron-secret-2026'):
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+        
+    dias_semana_map = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
+    dia_hoy_str = dias_semana_map[datetime.datetime.now().weekday()]
+    
+    hay_atencion_hoy = Horario.objects.filter(tipo='atencion', dia=dia_hoy_str).exists()
+    
+    if not hay_atencion_hoy:
+        return JsonResponse({'status': 'ok', 'message': f'No hay atencion a padres el {dia_hoy_str}.'})
+        
+    dia_hoy_capitalized = dia_hoy_str.capitalize()
+    correos = list(Usuario.objects.filter(rol='estudiante').exclude(email='').values_list('email', flat=True))
+    site_url = "https://geocampus.vercel.app" + reverse('horarios:atencion_padres_publico')
+    
+    thread = threading.Thread(
+        target=send_mass_html_email_thread,
+        args=(
+            f"Hoy hay Atención a Padres de Familia - {dia_hoy_capitalized}",
+            f"El día de hoy ({dia_hoy_capitalized}) tenemos jornada de Atención a Padres de Familia en la Unidad Educativa La Dolorosa. Revise los horarios en: {site_url}",
+            'horarios/emails/notificacion_padres.html',
+            {'dia_hoy': dia_hoy_capitalized, 'site_url': site_url},
+            correos
+        )
+    )
+    thread.start()
+    
+    return JsonResponse({'status': 'ok', 'message': f'Notificaciones enviadas a {len(correos)} usuarios.'})

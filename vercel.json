@@ -11,5 +11,11 @@
             "src": "/(.*)",
             "dest": "config/wsgi.py"
         }
+    ],
+    "crons": [
+        {
+            "path": "/api/cron/notificar-padres/?key=default-cron-secret-2026",
+            "schedule": "0 12 * * 1-5"
+        }
     ]
 }

@@ -15,6 +15,9 @@
     <!-- Form Section -->
     <form action="{% url 'horarios:registro' %}" method="POST" class="flex flex-col gap-md">
         {% csrf_token %}
+        {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% endif %}
         
         <div class="grid grid-cols-2 gap-md">
             <div class="flex flex-col gap-xs">
@@ -74,7 +77,7 @@
     <!-- Footer / Help Link -->
     <div class="mt-lg pt-md border-t border-surface-variant text-center">
         <p class="font-body-sm text-body-sm text-on-surface-variant">
-            ¿Ya tienes una cuenta? <a class="text-primary font-semibold hover:underline" href="{% url 'horarios:login' %}">Inicia sesión aquí</a>
+            ¿Ya tienes una cuenta? <a class="text-primary font-semibold hover:underline" href="{% url 'horarios:login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">Inicia sesión aquí</a>
         </p>
     </div>
 </div>
