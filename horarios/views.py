@@ -1,9 +1,18 @@
 import json
 import datetime
+import random
+from django.utils import timezone
+from datetime import timedelta
+from django.core.mail import send_mail, EmailMultiAlternatives, get_connection
+from email.mime.image import MIMEImage
+import os
+import threading
+from django.conf import settings
 from functools import wraps
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
 import openpyxl
@@ -199,6 +208,40 @@ def login_view(request):
                 messages.warning(request, 'El correo asociado a esta cuenta no pertenece a la institución (@ladolorosa-loja.edu.ec). Acceso denegado.')
                 return render(request, 'horarios/login.html')
                 
+            if user.two_factor_enabled:
+                code = str(random.randint(100000, 999999))
+                user.two_factor_code = code
+                user.two_factor_expires = timezone.now() + timedelta(minutes=10)
+                user.save()
+                
+                html_content = render_to_string('horarios/emails/2fa_code.html', {
+                    'username': user.first_name or user.username,
+                    'code': code
+                })
+                text_content = f"Tu código de inicio de sesión es: {code}. Expirará en 10 minutos."
+                
+                msg = EmailMultiAlternatives(
+                    subject="Tu código de verificación - La Dolorosa",
+                    body=text_content,
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=[user.email]
+                )
+                msg.attach_alternative(html_content, "text/html")
+                
+                # Adjuntar imagen
+                logo_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'logo_dolorosa.png')
+                if os.path.exists(logo_path):
+                    with open(logo_path, 'rb') as f:
+                        logo_img = MIMEImage(f.read())
+                        logo_img.add_header('Content-ID', '<logo>')
+                        logo_img.add_header('Content-Disposition', 'inline', filename='logo_dolorosa.png')
+                        msg.attach(logo_img)
+                        
+                msg.send(fail_silently=False)
+                
+                request.session['pre_2fa_user_id'] = user.id
+                return redirect('horarios:verify_2fa')
+                
             login(request, user)
             if user.is_docente():
                 return redirect('horarios:dashboard_docente')
@@ -261,6 +304,68 @@ def registro_view(request):
 def logout_view(request):
     logout(request)
     return redirect('horarios:login')
+
+def verify_2fa_view(request):
+    user_id = request.session.get('pre_2fa_user_id')
+    if not user_id:
+        return redirect('horarios:login')
+        
+    user = get_object_or_404(Usuario, id=user_id)
+    
+    if request.method == 'POST':
+        code = request.POST.get('code')
+        if user.two_factor_code == code and user.two_factor_expires and user.two_factor_expires > timezone.now():
+            user.two_factor_code = None
+            user.two_factor_expires = None
+            user.save()
+            
+            login(request, user)
+            del request.session['pre_2fa_user_id']
+            
+            if user.is_docente():
+                return redirect('horarios:dashboard_docente')
+            elif user.is_admin() or user.is_superuser:
+                return redirect('horarios:gestion_dashboard')
+            else:
+                return redirect('horarios:index')
+        else:
+            messages.error(request, 'Código inválido o expirado.')
+            
+    return render(request, 'horarios/verify_2fa.html', {'user_email': user.email})
+
+@login_required
+def configuracion_view(request):
+    user = request.user
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'change_password':
+            password_form = PasswordChangeForm(user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, 'Tu contraseña ha sido actualizada exitosamente.')
+                return redirect('horarios:configuracion')
+            else:
+                messages.error(request, 'Por favor corrige los errores abajo para cambiar tu contraseña.')
+                
+        elif action == 'toggle_2fa':
+            password = request.POST.get('password')
+            if user.check_password(password):
+                user.two_factor_enabled = not user.two_factor_enabled
+                user.save()
+                estado = 'activada' if user.two_factor_enabled else 'desactivada'
+                messages.success(request, f'La verificación de dos pasos ha sido {estado}.')
+                return redirect('horarios:configuracion')
+            else:
+                messages.error(request, 'Contraseña incorrecta. No se pudo cambiar la configuración de 2FA.')
+                password_form = PasswordChangeForm(user)
+    else:
+        password_form = PasswordChangeForm(user)
+        
+    return render(request, 'horarios/configuracion.html', {
+        'password_form': password_form,
+    })
 
 @login_required
 def index(request):
@@ -1869,4 +1974,59 @@ def atencion_padres_publico(request):
         'total_docentes': horarios_qs.values('docente').distinct().count(),
     })
 
+def send_mass_html_email_thread(subject, text_content, template_name, context, recipient_list):
+    html_content = render_to_string(template_name, context)
+    connection = get_connection()
+    messages = []
+    
+    logo_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'logo_dolorosa.png')
+    logo_data = None
+    if os.path.exists(logo_path):
+        with open(logo_path, 'rb') as f:
+            logo_data = f.read()
 
+    for email in recipient_list:
+        if not email:
+            continue
+        msg = EmailMultiAlternatives(
+            subject=subject,
+            body=text_content,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[email]
+        )
+        msg.attach_alternative(html_content, "text/html")
+        if logo_data:
+            logo_img = MIMEImage(logo_data)
+            logo_img.add_header('Content-ID', '<logo>')
+            logo_img.add_header('Content-Disposition', 'inline', filename='logo_dolorosa.png')
+            msg.attach(logo_img)
+        messages.append(msg)
+        
+    try:
+        connection.send_messages(messages)
+    except Exception as e:
+        print(f"Error sending mass email: {e}")
+
+@login_required
+@admin_required
+def enviar_notificacion_padres_view(request):
+    dias_semana_map = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
+    dia_hoy = dias_semana_map[datetime.datetime.now().weekday()].capitalize()
+    
+    correos = list(Usuario.objects.exclude(email='').values_list('email', flat=True))
+    site_url = request.build_absolute_uri(reverse('horarios:atencion_padres_publico'))
+    
+    thread = threading.Thread(
+        target=send_mass_html_email_thread,
+        args=(
+            f"Hoy hay Atención a Padres de Familia - {dia_hoy}",
+            f"El día de hoy ({dia_hoy}) tenemos jornada de Atención a Padres de Familia en la Unidad Educativa La Dolorosa. Revise los horarios en: {site_url}",
+            'horarios/emails/notificacion_padres.html',
+            {'dia_hoy': dia_hoy, 'site_url': site_url},
+            correos
+        )
+    )
+    thread.start()
+    
+    messages.success(request, f'Se ha iniciado el envío del boletín a {len(correos)} usuarios registrados. Esto puede tardar un par de minutos en completarse.')
+    return redirect('horarios:gestion_atencion_padres')

@@ -4,10 +4,10 @@ from .models import Usuario, Docente, Curso, Paralelo, Horario, Asignatura
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
-        ('Roles', {'fields': ('rol',)}),
+        ('Roles y Seguridad', {'fields': ('rol', 'two_factor_enabled')}),
     )
-    list_display = ('username', 'email', 'first_name', 'last_name', 'rol', 'is_staff')
-    list_filter = ('rol', 'is_staff', 'is_superuser')
+    list_display = ('username', 'email', 'first_name', 'last_name', 'rol', 'two_factor_enabled', 'is_staff')
+    list_filter = ('rol', 'two_factor_enabled', 'is_staff', 'is_superuser')
 
 class HorarioInline(admin.TabularInline):
     model = Horario

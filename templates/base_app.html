@@ -99,9 +99,9 @@
                 </div>
             </div>
             {% if user.is_authenticated %}
-            <a href="{% url 'horarios:logout' %}" class="cursor-pointer flex items-center gap-3 px-4 py-2.5 rounded-xl border border-white/20 text-white hover:bg-white/10 font-semibold text-sm transition-all duration-200 justify-center">
-                <span class="material-symbols-outlined">logout</span>
-                Cerrar Sesión
+            <a href="{% url 'horarios:configuracion' %}" class="cursor-pointer flex items-center gap-3 px-4 py-2.5 rounded-xl border border-white/20 text-white hover:bg-white/10 font-semibold text-sm transition-all duration-200 justify-center">
+                <span class="material-symbols-outlined">settings</span>
+                Configuración
             </a>
             {% else %}
             <a href="{% url 'horarios:login' %}" class="cursor-pointer flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/10 text-white hover:bg-white/20 font-semibold text-sm transition-all duration-200 justify-center">

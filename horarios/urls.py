@@ -9,6 +9,8 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('registro/', views.registro_view, name='registro'),
     path('logout/', views.logout_view, name='logout'),
+    path('verificar-2fa/', views.verify_2fa_view, name='verify_2fa'),
+    path('configuracion/', views.configuracion_view, name='configuracion'),
 
     # Docente
     path('dashboard/', views.dashboard_docente, name='dashboard_docente'),
@@ -67,5 +69,6 @@ urlpatterns = [
     path('gestion/generador/api/descartar/<uuid:sesion_id>/', views.api_descartar_borrador, name='api_descartar_borrador'),
 
     path('gestion/atencion-padres/', views.gestion_atencion_padres, name='gestion_atencion_padres'),
+    path('gestion/atencion-padres/notificar/', views.enviar_notificacion_padres_view, name='notificar_atencion_padres'),
     path('atencion-padres/', views.atencion_padres_publico, name='atencion_padres_publico'),
 ]

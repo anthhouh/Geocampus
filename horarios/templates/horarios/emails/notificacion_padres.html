@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atención a Padres de Familia</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            background-color: #059669; /* Verde para atención a padres */
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header img {
+            max-height: 80px;
+            width: auto;
+        }
+        .content {
+            padding: 40px 30px;
+            text-align: left;
+            color: #1f2937;
+        }
+        .content h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #111827;
+            text-align: center;
+        }
+        .content p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+        .highlight-box {
+            background-color: #ecfdf5;
+            border-left: 4px solid #059669;
+            padding: 15px 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 35px;
+            margin-bottom: 10px;
+        }
+        .button {
+            background-color: #059669;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            display: inline-block;
+        }
+        .footer {
+            background-color: #f9fafb;
+            padding: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="cid:logo" alt="Logo La Dolorosa">
+        </div>
+        <div class="content">
+            <h1>Boletín Informativo Institucional</h1>
+            <p>Estimado/a usuario/a de la comunidad educativa,</p>
+            
+            <p>Le informamos que el día de hoy, <strong>{{ dia_hoy }}</strong>, la Unidad Educativa "La Dolorosa" tiene programada una jornada de <strong>Atención a Padres de Familia</strong>.</p>
+            
+            <div class="highlight-box">
+                <p style="margin: 0;"><strong>Importante:</strong> Puede consultar el directorio de profesores y sus horarios específicos de atención a través de nuestra plataforma en línea para planificar su visita.</p>
+            </div>
+            
+            <p>Recomendamos asistir puntualmente dentro de los horarios establecidos para cada docente, asegurando así un servicio organizado y de calidad para todos.</p>
+            
+            <div class="button-container">
+                <a href="{{ site_url }}" class="button">Ver Horarios de Atención</a>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Unidad Educativa Fisco Misional "La Dolorosa"<br>Sistema de Gestión de Horarios</p>
+            <p style="font-size: 11px;">Ha recibido este correo porque su cuenta está registrada en nuestro sistema.</p>
+        </div>
+    </div>
+</body>
+</html>

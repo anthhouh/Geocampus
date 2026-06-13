@@ -15,6 +15,12 @@
             Gestiona los horarios disponibles para atención a padres agrupados por días.
         </p>
     </div>
+    <div class="flex gap-2">
+        <a href="{% url 'horarios:notificar_atencion_padres' %}" onclick="return confirm('¿Estás seguro de que quieres enviar un correo electrónico masivo a todos los usuarios registrados avisando de la Atención a Padres el día de hoy?');" class="py-2 px-4 bg-primary text-on-primary rounded-lg font-button hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm flex items-center gap-2">
+            <span class="material-symbols-outlined">mark_email_read</span>
+            Notificar Atención de Hoy
+        </a>
+    </div>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Código de Verificación</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            background-color: #4450CF;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header img {
+            max-height: 80px;
+            width: auto;
+        }
+        .content {
+            padding: 40px 30px;
+            text-align: center;
+            color: #1f2937;
+        }
+        .content h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #111827;
+        }
+        .content p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #4b5563;
+            margin-bottom: 30px;
+        }
+        .code-box {
+            background-color: #f3f4f6;
+            border: 2px dashed #4450CF;
+            border-radius: 8px;
+            padding: 20px;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+        .code {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4450CF;
+            letter-spacing: 6px;
+            margin: 0;
+        }
+        .footer {
+            background-color: #f9fafb;
+            padding: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="cid:logo" alt="Logo La Dolorosa">
+        </div>
+        <div class="content">
+            <h1>Verificación de Seguridad</h1>
+            <p>Hola, <strong>{{ username }}</strong>.<br>Alguien está intentando iniciar sesión en tu cuenta. Para completar el acceso, ingresa el siguiente código de 6 dígitos:</p>
+            
+            <div class="code-box">
+                <p class="code">{{ code }}</p>
+            </div>
+            
+            <p>Este código <strong>expirará en 10 minutos</strong>. Si no solicitaste este código, por favor ignora este correo o cambia tu contraseña inmediatamente.</p>
+        </div>
+        <div class="footer">
+            <p>Unidad Educativa Fiscomisional "La Dolorosa"<br>Sistema de Gestión de Horarios</p>
+        </div>
+    </div>
+</body>
+</html>

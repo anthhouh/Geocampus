@@ -1,0 +1,51 @@
+{% extends 'base_auth.html' %}
+
+{% block title %}Verificación de Dos Pasos - La Dolorosa{% endblock %}
+
+{% block auth_content %}
+<div class="w-full max-w-[440px] bg-surface-container-lowest rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.04)] border border-outline-variant/30 p-xl flex flex-col relative overflow-hidden">
+    <!-- Subtle Top Accent Line -->
+    <div class="absolute top-0 left-0 w-full h-1 bg-secondary"></div>
+    
+    <!-- Header Section -->
+    <div class="mb-xl text-center sm:text-left flex flex-col items-center sm:items-start">
+        <div class="flex items-center gap-sm mb-md sm:hidden">
+            <span class="material-symbols-outlined text-primary text-[28px]" style="font-variation-settings: 'FILL' 1;">security</span>
+            <h1 class="font-h3 text-h3 text-on-surface">La Dolorosa</h1>
+        </div>
+        <h2 class="font-h2 text-h2 text-on-surface mb-xs">Verificación Requerida</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant">Hemos enviado un código de 6 dígitos a <strong>{{ user_email }}</strong>. Revisa tu código de verificación en la bandeja de entrada o en spam.</p>
+    </div>
+
+    <!-- Form Section -->
+    <form action="{% url 'horarios:verify_2fa' %}" method="POST" class="flex flex-col gap-lg">
+        {% csrf_token %}
+        
+        <!-- Code Input Group -->
+        <div class="flex flex-col gap-xs">
+            <label class="font-label-md text-label-md text-on-surface" for="code">Código de Verificación</label>
+            <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-md text-outline-variant pointer-events-none">pin</span>
+                <input class="w-full pl-[48px] pr-md py-[12px] bg-surface border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors tracking-widest text-center text-xl" id="code" name="code" placeholder="------" required="" type="text" maxlength="6" pattern="\d{6}" title="Debe ingresar 6 dígitos numéricos"/>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="pt-sm flex flex-col gap-md">
+            <button class="w-full py-[14px] px-lg bg-primary text-on-primary rounded-lg font-button text-button shadow-sm hover:shadow-md hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-sm group" type="submit">
+                Verificar y Entrar
+                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">check_circle</span>
+            </button>
+        </div>
+    </form>
+
+    <!-- Footer / Cancel Link -->
+    <div class="mt-xl pt-lg border-t border-surface-variant text-center">
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+            <a class="text-error font-semibold hover:underline flex items-center justify-center gap-1" href="{% url 'horarios:login' %}">
+                <span class="material-symbols-outlined text-[18px]">cancel</span> Cancelar inicio de sesión
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}
