@@ -2012,21 +2012,28 @@ def send_mass_html_email_thread(subject, text_content, template_name, context, r
         with open(logo_path, 'rb') as f:
             logo_data = f.read()
 
-    for email in recipient_list:
-        if not email:
+    # Enviar en lotes de 90 usando Copia Oculta (BCC)
+    tamano_lote = 90
+    for i in range(0, len(recipient_list), tamano_lote):
+        lote_correos = recipient_list[i:i + tamano_lote]
+        if not lote_correos:
             continue
+            
         msg = EmailMultiAlternatives(
             subject=subject,
             body=text_content,
             from_email=settings.EMAIL_HOST_USER,
-            to=[email]
+            to=[settings.EMAIL_HOST_USER], # Enviar a nosotros mismos
+            bcc=lote_correos               # Copia oculta a los estudiantes
         )
         msg.attach_alternative(html_content, "text/html")
+        
         if logo_data:
             logo_img = MIMEImage(logo_data)
             logo_img.add_header('Content-ID', '<logo>')
             logo_img.add_header('Content-Disposition', 'inline', filename='logo_dolorosa.png')
             msg.attach(logo_img)
+            
         messages.append(msg)
         
     try:
