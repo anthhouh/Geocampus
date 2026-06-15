@@ -12,11 +12,7 @@
             "dest": "config/wsgi.py"
         }
     ],
-    "functions": {
-        "config/wsgi.py": {
-            "maxDuration": 60
-        }
-    },
+
     "crons": [
         {
             "path": "/api/cron/notificar-padres/?key=default-cron-secret-2026",
