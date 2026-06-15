@@ -11,6 +11,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('verificar-2fa/', views.verify_2fa_view, name='verify_2fa'),
     path('configuracion/', views.configuracion_view, name='configuracion'),
+    path('api/toggle-modo-oscuro/', views.toggle_modo_oscuro, name='toggle_modo_oscuro'),
 
     # Docente
     path('dashboard/', views.dashboard_docente, name='dashboard_docente'),

@@ -5,7 +5,7 @@
         <h4 class="font-bold text-[12px] leading-tight" style="color: {{ item.color_text }}">
             {{ item.horario.asignatura.nombre }}
         </h4>
-        <span class="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-white/40 text-on-surface-variant whitespace-nowrap shadow-sm border border-white/20">
+        <span class="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-white dark:bg-gray-800/40 text-on-surface dark:text-gray-100-variant dark:text-gray-400 whitespace-nowrap shadow-sm border border-white/20">
             {{ item.horario.hora_inicio|time:"H:i" }} - {{ item.horario.hora_fin|time:"H:i" }}
         </span>
     </div>

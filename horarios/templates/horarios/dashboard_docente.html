@@ -7,18 +7,18 @@
     <!-- Page Header & Status -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h2 class="font-extrabold text-3xl text-[#0B1A40] mb-1">¡Buenos días, {{ user.get_full_name|default:user.username }}! 👋</h2>
-            <p class="text-sm font-medium text-gray-500">Aquí está tu resumen académico de hoy.</p>
+            <h2 class="font-extrabold text-3xl text-[#0B1A40] dark:text-white mb-1">¡Buenos días, {{ user.get_full_name|default:user.username }}! 👋</h2>
+            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Aquí está tu resumen académico de hoy.</p>
         </div>
         <!-- Status Toggle -->
-        <div class="bg-white p-1.5 rounded-full border border-gray-100 flex items-center shadow-sm" id="status-container">
+        <div class="bg-white dark:bg-gray-800 p-1.5 rounded-full border border-gray-100 dark:border-gray-700 flex items-center shadow-sm" id="status-container">
             <button onclick="toggleEstado(true)" id="btn-estado-disponible"
-                class="px-4 py-2 rounded-full {% if docente.estado_disponible %}bg-green-50 text-green-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 font-medium{% endif %} text-[13px] flex items-center gap-2 transition-all">
+                class="px-4 py-2 rounded-full {% if docente.estado_disponible %}bg-green-50 dark:bg-green-900/30 text-green-700 font-bold{% else %}text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 font-medium{% endif %} text-[13px] flex items-center gap-2 transition-all">
                 <span id="dot-estado-disponible" class="w-2 h-2 rounded-full {% if docente.estado_disponible %}bg-green-500{% else %}bg-gray-300{% endif %}"></span>
                 Disponible
             </button>
             <button onclick="toggleEstado(false)" id="btn-estado-ocupado"
-                class="px-4 py-2 rounded-full {% if not docente.estado_disponible %}bg-red-50 text-red-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 font-medium{% endif %} text-[13px] flex items-center gap-2 transition-all">
+                class="px-4 py-2 rounded-full {% if not docente.estado_disponible %}bg-red-50 dark:bg-red-900/30 text-red-700 font-bold{% else %}text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 font-medium{% endif %} text-[13px] flex items-center gap-2 transition-all">
                 <span id="dot-estado-ocupado" class="w-2 h-2 rounded-full {% if not docente.estado_disponible %}bg-red-500{% else %}bg-gray-300{% endif %}"></span>
                 Ocupado
             </button>
@@ -30,9 +30,9 @@
 
         <!-- Profile Summary -->
         <div class="md:col-span-3 flex flex-col gap-6">
-            <div class="bg-white rounded-[1.5rem] border border-gray-100 flex flex-col items-center text-center shadow-sm overflow-hidden relative pb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-[1.5rem] border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center shadow-sm overflow-hidden relative pb-6">
                 <!-- Top Gradient Background -->
-                <div class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-100 to-white -z-0"></div>
+                <div class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-100 to-white dark:from-gray-700 dark:to-gray-800 -z-0"></div>
                 
                 <div class="relative z-10 mt-10 mb-4 group">
                     <form method="post" enctype="multipart/form-data" id="foto-form" class="relative">
@@ -55,19 +55,19 @@
                     <div class="absolute bottom-1 right-2 w-5 h-5 {% if docente.estado_disponible %}bg-green-500{% else %}bg-red-500{% endif %} border-[3px] border-white rounded-full z-10" id="status-indicator"></div>
                 </div>
                 
-                <h3 class="font-bold text-xl text-[#0B1A40] z-10">{{ user.get_full_name|default:user.username }}</h3>
+                <h3 class="font-bold text-xl text-[#0B1A40] dark:text-white z-10">{{ user.get_full_name|default:user.username }}</h3>
                 <p class="text-sm font-semibold text-[#3B82F6] mb-6 z-10">Docente de La Dolorosa</p>
 
-                <div class="w-full px-6 pt-6 border-t border-gray-100/80 z-10">
+                <div class="w-full px-6 pt-6 border-t border-gray-100 dark:border-gray-700/80 z-10">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="material-symbols-outlined text-blue-600 text-[18px]">location_on</span>
-                        <p class="font-bold text-[#0B1A40] text-sm">Ubicación actual</p>
+                        <p class="font-bold text-[#0B1A40] dark:text-white text-sm">Ubicación actual</p>
                     </div>
                     <input type="text" id="ubicacion-input" value="{{ docente.ubicacion_actual|default:'' }}"
-                        class="w-full px-4 py-2.5 bg-[#F4F7FB] border border-transparent rounded-xl focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 text-sm font-medium text-gray-700 placeholder:text-blue-400/70 mb-3 transition-all"
+                        class="w-full px-4 py-2.5 bg-[#F4F7FB] dark:bg-gray-700 border border-transparent rounded-xl focus:outline-none focus:border-blue-400 focus:bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-100 text-sm font-medium text-gray-700 dark:text-gray-200 placeholder:text-blue-400/70 mb-3 transition-all dark:text-white"
                         placeholder="Ej: Laboratorio 1">
                     <button onclick="actualizarUbicacion()"
-                        class="text-blue-600 font-bold text-sm bg-white hover:bg-blue-50 px-4 py-2.5 rounded-xl transition-colors border border-blue-200 w-full flex items-center justify-center gap-2">
+                        class="text-blue-600 font-bold text-sm bg-white dark:bg-gray-800 hover:bg-blue-50 dark:bg-blue-900/30 dark:hover:bg-blue-900/30 px-4 py-2.5 rounded-xl transition-colors border border-blue-200 dark:border-blue-800 w-full flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined text-[18px]">save</span>
                         Guardar ubicación
                     </button>
@@ -75,31 +75,31 @@
             </div>
 
             <!-- Tip Card -->
-            <div class="bg-[#F4F7FB] rounded-2xl p-5 border border-blue-50">
+            <div class="bg-[#F4F7FB] dark:bg-gray-700/50 rounded-2xl p-5 border border-blue-50 dark:border-gray-600">
                 <div class="flex items-center gap-2 mb-2 text-blue-600">
                     <span class="material-symbols-outlined text-[20px]">lightbulb</span>
                     <span class="font-bold text-sm">Tip</span>
                 </div>
-                <p class="text-[13px] text-gray-500 font-medium leading-relaxed">Mantén tu ubicación actualizada para que tus estudiantes te encuentren fácilmente.</p>
+                <p class="text-[13px] text-gray-500 dark:text-gray-400 font-medium leading-relaxed">Mantén tu ubicación actualizada para que tus estudiantes te encuentren fácilmente.</p>
             </div>
         </div>
 
         <!-- Schedule Grid -->
         <div class="md:col-span-9 flex flex-col gap-6" id="print-section">
-            <div class="bg-white rounded-[1.5rem] border border-gray-100 overflow-hidden shadow-sm flex flex-col h-full print-container">
+            <div class="bg-white dark:bg-gray-800 rounded-[1.5rem] border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm flex flex-col h-full print-container">
                 <div class="p-6 flex justify-between items-center print-header">
-                    <h3 class="font-bold text-xl text-[#0B1A40] flex items-center gap-2">
-                        <span class="material-symbols-outlined text-blue-600 text-[26px]">calendar_month</span>
+                    <h3 class="font-bold text-xl text-[#0B1A40] dark:text-white flex items-center gap-2">
+                        <span class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-[26px]">calendar_month</span>
                         Mi Horario de Clases
                     </h3>
                     <div class="flex items-center gap-3">
                         <a href="{% url 'horarios:imprimir_horario' %}" target="_blank"
-                            class="flex items-center gap-2 bg-white text-[#0B4A99] border border-blue-200 px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-50 transition-colors shadow-sm no-underline">
+                            class="flex items-center gap-2 bg-white dark:bg-gray-800 text-[#0B4A99] dark:text-blue-400 border border-blue-200 dark:border-blue-800 px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-50 dark:bg-blue-900/30 dark:hover:bg-blue-900/30 transition-colors shadow-sm no-underline">
                             <span class="material-symbols-outlined text-[18px]">print</span>
                             Imprimir
                         </a>
                         <button onclick="guardarHorarioPDF()"
-                            class="flex items-center gap-2 bg-white text-[#0B4A99] border border-blue-200 px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-50 transition-colors shadow-sm cursor-pointer">
+                            class="flex items-center gap-2 bg-white dark:bg-gray-800 text-[#0B4A99] dark:text-blue-400 border border-blue-200 dark:border-blue-800 px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-50 dark:bg-blue-900/30 dark:hover:bg-blue-900/30 transition-colors shadow-sm cursor-pointer">
                             <span class="material-symbols-outlined text-[18px]">download</span>
                             Guardar horario
                         </button>
@@ -151,7 +151,7 @@
                     </div>
                 </div>
                 
-                <div class="px-6 py-4 border-t border-gray-50 flex items-center gap-2 text-gray-500 mt-auto bg-gray-50/50">
+                <div class="px-6 py-4 border-t border-gray-50 flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-auto bg-gray-50 dark:bg-gray-800/50">
                     <span class="material-symbols-outlined text-[18px] text-teal-500">info</span>
                     <p class="text-xs font-medium">Los horarios se actualizan automáticamente.</p>
                 </div>
@@ -225,11 +225,11 @@
                         if (data.disponible) {
                             btnDisp.className = "px-4 py-2 rounded-full bg-green-50 text-green-700 font-bold text-[13px] flex items-center gap-2 transition-all";
                             dotDisp.className = "w-2 h-2 rounded-full bg-green-500";
-                            btnOcup.className = "px-4 py-2 rounded-full text-gray-500 hover:bg-gray-50 font-medium text-[13px] flex items-center gap-2 transition-all";
+                            btnOcup.className = "px-4 py-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium text-[13px] flex items-center gap-2 transition-all";
                             dotOcup.className = "w-2 h-2 rounded-full bg-gray-300";
                             if(indicator) indicator.className = "absolute bottom-1 right-2 w-5 h-5 bg-green-500 border-[3px] border-white rounded-full z-10";
                         } else {
-                            btnDisp.className = "px-4 py-2 rounded-full text-gray-500 hover:bg-gray-50 font-medium text-[13px] flex items-center gap-2 transition-all";
+                            btnDisp.className = "px-4 py-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium text-[13px] flex items-center gap-2 transition-all";
                             dotDisp.className = "w-2 h-2 rounded-full bg-gray-300";
                             btnOcup.className = "px-4 py-2 rounded-full bg-red-50 text-red-700 font-bold text-[13px] flex items-center gap-2 transition-all";
                             dotOcup.className = "w-2 h-2 rounded-full bg-red-500";

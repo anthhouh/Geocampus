@@ -1,21 +1,21 @@
 <!-- Delete Confirmation Modal -->
 <div id="modal-eliminar" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-md">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModal()"></div>
-    <div class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-2xl p-xl max-w-sm w-full">
+    <div class="relative bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-2xl border border-outline-variant dark:border-gray-700 shadow-2xl p-xl max-w-sm w-full">
         <div class="flex flex-col items-center text-center gap-md">
-            <div class="w-14 h-14 rounded-full bg-[#FFEBEE] flex items-center justify-center">
-                <span class="material-symbols-outlined text-[28px] text-[#C62828]">warning</span>
+            <div class="w-14 h-14 rounded-full bg-[#FFEBEE] dark:bg-red-900/30 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[28px] text-[#C62828] dark:text-red-400">warning</span>
             </div>
             <div>
-                <h4 class="font-h3 text-h3 text-on-surface mb-xs">¿Eliminar horario?</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">
-                    Se eliminará permanentemente el horario de <strong id="modal-materia" class="text-on-surface"></strong>.
+                <h4 class="font-h3 text-h3 text-on-surface dark:text-gray-100 mb-xs">¿Eliminar horario?</h4>
+                <p class="font-body-sm text-body-sm text-on-surface dark:text-gray-100-variant dark:text-gray-400">
+                    Se eliminará permanentemente el horario de <strong id="modal-materia" class="text-on-surface dark:text-gray-100"></strong>.
                     Esta acción no se puede deshacer.
                 </p>
             </div>
             <div class="flex gap-md w-full">
                 <button onclick="cerrarModal()"
-                        class="flex-1 py-sm border border-outline-variant rounded-lg text-on-surface hover:bg-surface-container-low font-button text-button transition-colors">
+                        class="flex-1 py-sm border border-outline-variant dark:border-gray-700 rounded-lg text-on-surface dark:text-gray-100 hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 font-button text-button transition-colors">
                     Cancelar
                 </button>
                 <form id="form-eliminar" method="post" action="" class="flex-1">
@@ -33,8 +33,8 @@
 <!-- Modal Interactivo para Crear/Editar Horario -->
 <div id="modal-horario" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-md">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalHorario()"></div>
-    <div class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-2xl p-xl max-w-md w-full">
-        <h4 id="modal-horario-titulo" class="font-h3 text-h3 text-on-surface mb-md">Gestión de Horario</h4>
+    <div class="relative bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-2xl border border-outline-variant dark:border-gray-700 shadow-2xl p-xl max-w-md w-full">
+        <h4 id="modal-horario-titulo" class="font-h3 text-h3 text-on-surface dark:text-gray-100 mb-md">Gestión de Horario</h4>
         
         <form id="form-horario" method="post" action="{% url 'horarios:api_guardar_horario' %}">
             {% csrf_token %}
@@ -53,8 +53,8 @@
 
             <div class="space-y-sm mb-lg">
                 <div class="flex flex-col gap-xs">
-                    <label class="font-label-md text-label-md text-on-surface">Asignatura</label>
-                    <select name="asignatura_id" id="h_asignatura_id" required class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-on-surface focus:border-primary">
+                    <label class="font-label-md text-label-md text-on-surface dark:text-gray-100">Asignatura</label>
+                    <select name="asignatura_id" id="h_asignatura_id" required class="w-full px-md py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg font-body-sm text-on-surface dark:text-gray-100 focus:border-primary dark:text-white dark:bg-gray-800">
                         <option value="">Seleccione una asignatura...</option>
                         {% for a in asignaturas %}
                         <option value="{{ a.id }}">{{ a.nombre }}</option>
@@ -62,8 +62,8 @@
                     </select>
                 </div>
                 <div class="flex flex-col gap-xs">
-                    <label class="font-label-md text-label-md text-on-surface">Cantidad de periodos seguidos</label>
-                    <select name="cantidad_periodos" id="h_cantidad_periodos" class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-on-surface focus:border-primary">
+                    <label class="font-label-md text-label-md text-on-surface dark:text-gray-100">Cantidad de periodos seguidos</label>
+                    <select name="cantidad_periodos" id="h_cantidad_periodos" class="w-full px-md py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg font-body-sm text-on-surface dark:text-gray-100 focus:border-primary dark:text-white dark:bg-gray-800">
                         <option value="1">1 periodo</option>
                         <option value="2">2 periodos</option>
                         <option value="3">3 periodos</option>
@@ -74,8 +74,8 @@
 
                 {% if es_docentes %}
                 <div class="flex flex-col gap-xs">
-                    <label class="font-label-md text-label-md text-on-surface">Curso</label>
-                    <select name="curso_id" id="h_curso_select" required class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-on-surface focus:border-primary" onchange="actualizarParalelosModal()">
+                    <label class="font-label-md text-label-md text-on-surface dark:text-gray-100">Curso</label>
+                    <select name="curso_id" id="h_curso_select" required class="w-full px-md py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg font-body-sm text-on-surface dark:text-gray-100 focus:border-primary dark:text-white dark:bg-gray-800" onchange="actualizarParalelosModal()">
                         <option value="">Seleccione un curso...</option>
                         {% for c in cursos %}
                         <option value="{{ c.id }}">{{ c.nombre }}</option>
@@ -83,15 +83,15 @@
                     </select>
                 </div>
                 <div class="flex flex-col gap-xs">
-                    <label class="font-label-md text-label-md text-on-surface">Paralelo</label>
-                    <select name="paralelo_id" id="h_paralelo_select" required class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-on-surface focus:border-primary">
+                    <label class="font-label-md text-label-md text-on-surface dark:text-gray-100">Paralelo</label>
+                    <select name="paralelo_id" id="h_paralelo_select" required class="w-full px-md py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg font-body-sm text-on-surface dark:text-gray-100 focus:border-primary dark:text-white dark:bg-gray-800">
                         <option value="">Seleccione un paralelo...</option>
                     </select>
                 </div>
                 {% else %}
                 <div class="flex flex-col gap-xs">
-                    <label class="font-label-md text-label-md text-on-surface">Docente</label>
-                    <select name="docente_id" id="h_docente_select" required class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-on-surface focus:border-primary">
+                    <label class="font-label-md text-label-md text-on-surface dark:text-gray-100">Docente</label>
+                    <select name="docente_id" id="h_docente_select" required class="w-full px-md py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg font-body-sm text-on-surface dark:text-gray-100 focus:border-primary dark:text-white dark:bg-gray-800">
                         <option value="">Seleccione un docente...</option>
                         {% for d in docentes %}
                         <option value="{{ d.id }}">{{ d.usuario.get_full_name|default:d.usuario.username }}</option>
@@ -102,7 +102,7 @@
             </div>
 
             <div class="flex gap-md w-full">
-                <button type="button" onclick="cerrarModalHorario()" class="flex-1 py-sm border border-outline-variant rounded-lg text-on-surface hover:bg-surface-container-low font-button text-button transition-colors">Cancelar</button>
+                <button type="button" onclick="cerrarModalHorario()" class="flex-1 py-sm border border-outline-variant dark:border-gray-700 rounded-lg text-on-surface dark:text-gray-100 hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 font-button text-button transition-colors">Cancelar</button>
                 <button type="submit" class="flex-1 py-sm bg-primary text-on-primary rounded-lg font-button text-button hover:bg-primary/90 transition-colors shadow-sm">Guardar</button>
             </div>
         </form>

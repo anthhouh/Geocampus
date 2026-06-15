@@ -23,14 +23,14 @@
     
     <!-- Hover Actions (Edit/Delete) -->
     <div class="absolute inset-0 bg-black/60 backdrop-blur-[1px] opacity-0 group-hover/item:opacity-100 flex items-center justify-center gap-2 transition-all duration-200 rounded-sm pointer-events-none group-hover/item:pointer-events-auto">
-        <div class="bg-surface rounded-lg shadow-lg overflow-hidden flex flex-col min-w-[100px] border border-outline-variant">
+        <div class="bg-surface dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden flex flex-col min-w-[100px] border border-outline-variant dark:border-gray-700">
             <button type="button" onclick="abrirModalHorario('{{ item.horario.id }}', '{{ item.horario.dia }}', '{{ item.horario.hora_inicio|time:'H:i' }}', '{{ item.horario.hora_fin|time:'H:i' }}', '{{ item.horario.asignatura_id }}', '{{ item.horario.docente_id }}', '{{ item.horario.curso_id }}', '{{ item.horario.paralelo_id }}')" 
-                    class="w-full text-left px-3 py-2 text-sm text-primary hover:bg-surface-container-low transition-colors flex items-center gap-2 border-b border-outline-variant">
+                    class="w-full text-left px-3 py-2 text-sm text-primary hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 transition-colors flex items-center gap-2 border-b border-outline-variant dark:border-gray-700">
                 <span class="material-symbols-outlined text-[16px]">edit</span>
                 Editar
             </button>
             <button type="button" onclick="confirmarEliminar('{{ item.horario.id }}', '{{ item.horario.asignatura.nombre|escapejs }}')" 
-                    class="w-full text-left px-3 py-2 text-sm text-error hover:bg-surface-container-low transition-colors flex items-center gap-2">
+                    class="w-full text-left px-3 py-2 text-sm text-error hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 transition-colors flex items-center gap-2">
                 <span class="material-symbols-outlined text-[16px]">delete</span>
                 Eliminar
             </button>

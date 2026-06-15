@@ -7,11 +7,11 @@
 {% block gestion_content %}
 <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
     <div>
-        <h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+        <h3 class="font-h3 text-h3 text-on-surface dark:text-gray-100 flex items-center gap-2">
             <span class="material-symbols-outlined text-primary text-[28px]">family_restroom</span>
             Atención a Padres
         </h3>
-        <p class="text-on-surface-variant font-body-md mt-1">
+        <p class="text-on-surface dark:text-gray-100-variant dark:text-gray-400 font-body-md mt-1">
             Gestiona los horarios disponibles para atención a padres agrupados por días.
         </p>
     </div>
@@ -26,31 +26,31 @@
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
     {% for dia_id, dia_nombre, horarios_dia in dias_ordenados %}
     <!-- Día Columna -->
-    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl flex flex-col h-full overflow-hidden">
+    <div class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 border border-outline-variant dark:border-gray-700 rounded-xl flex flex-col h-full overflow-hidden">
         <!-- Header Día -->
-        <div class="bg-surface-container-low border-b border-outline-variant p-4 flex items-center justify-between sticky top-0 z-10">
+        <div class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 border-b border-outline-variant dark:border-gray-700 p-4 flex items-center justify-between sticky top-0 z-10">
             <div class="flex items-center gap-2">
                 <span class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm">
                     {{ dia_nombre|first }}
                 </span>
-                <h4 class="font-title-md text-on-surface">{{ dia_nombre }}</h4>
+                <h4 class="font-title-md text-on-surface dark:text-gray-100">{{ dia_nombre }}</h4>
             </div>
             <div class="flex items-center gap-2">
-                <span class="text-xs font-medium bg-surface-variant text-on-surface-variant px-2 py-1 rounded-md">
+                <span class="text-xs font-medium bg-surface dark:bg-gray-900-variant dark:bg-gray-700 text-on-surface dark:text-gray-100-variant dark:text-gray-400 px-2 py-1 rounded-md">
                     {{ horarios_dia|length }}
                 </span>
                 {% if horarios_dia %}
                 <div class="relative" data-dropdown="move-{{ dia_id }}">
                     <button type="button" onclick="toggleMoveMenu('{{ dia_id }}')"
-                            class="w-7 h-7 rounded-md hover:bg-on-surface/10 flex items-center justify-center text-on-surface-variant transition-colors" title="Mover todos a otro día">
+                            class="w-7 h-7 rounded-md hover:bg-on-surface/10 flex items-center justify-center text-on-surface dark:text-gray-100-variant dark:text-gray-400 transition-colors" title="Mover todos a otro día">
                         <span class="material-symbols-outlined text-[18px]">drive_file_move</span>
                     </button>
-                    <div id="move-menu-{{ dia_id }}" class="hidden absolute right-0 top-full mt-1 bg-surface border border-outline-variant rounded-xl shadow-xl z-30 min-w-[180px] p-1.5 animate-in fade-in zoom-in duration-150">
-                        <p class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant px-3 py-1.5">Mover todos a:</p>
+                    <div id="move-menu-{{ dia_id }}" class="hidden absolute right-0 top-full mt-1 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-xl shadow-xl z-30 min-w-[180px] p-1.5 animate-in fade-in zoom-in duration-150">
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-on-surface dark:text-gray-100-variant dark:text-gray-400 px-3 py-1.5">Mover todos a:</p>
                         {% for dest_id, dest_nombre, dest_horarios in dias_ordenados %}
                         {% if dest_id != dia_id %}
                         <button type="button" onclick="confirmarMover('{{ dia_id }}', '{{ dia_nombre }}', '{{ dest_id }}', '{{ dest_nombre }}')"
-                                class="w-full text-left px-3 py-2 rounded-lg hover:bg-primary/10 text-sm text-on-surface font-medium transition-colors flex items-center gap-2">
+                                class="w-full text-left px-3 py-2 rounded-lg hover:bg-primary/10 text-sm text-on-surface dark:text-gray-100 font-medium transition-colors flex items-center gap-2">
                             <span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">{{ dest_nombre|first }}</span>
                             {{ dest_nombre }}
                         </button>
@@ -65,9 +65,9 @@
         <!-- Lista de Horarios -->
         <div class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto max-h-[600px] min-h-[150px]">
             {% for h in horarios_dia %}
-            <div class="bg-surface border border-outline-variant rounded-lg p-3 shadow-sm group hover:border-primary/50 transition-colors relative">
+            <div class="bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg p-3 shadow-sm group hover:border-primary/50 transition-colors relative">
                 <!-- Botón Eliminar / Editar -->
-                <div class="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-surface/90 rounded p-1">
+                <div class="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-surface dark:bg-gray-900/90 rounded p-1">
                     <button type="button" 
                         onclick="openModal('edit', '{{ h.id }}', '{{ h.docente_id }}', '{{ h.lugar_atencion|default:""|escapejs }}', '{{ h.dia }}', '{{ h.hora_inicio|time:"H:i" }}', '{{ h.hora_fin|time:"H:i" }}')" 
                         class="w-6 h-6 rounded hover:bg-primary/10 text-primary flex items-center justify-center transition-colors" title="Editar">
@@ -83,21 +83,21 @@
                 <div class="flex items-start gap-2 pr-12">
                     <span class="material-symbols-outlined text-primary/70 text-[20px]">person</span>
                     <div class="min-w-0">
-                        <h5 class="text-sm font-medium text-on-surface truncate leading-tight">{{ h.docente.usuario.get_full_name|default:h.docente.usuario.username }}</h5>
-                        <p class="text-xs text-on-surface-variant flex items-center gap-1 mt-1 truncate">
+                        <h5 class="text-sm font-medium text-on-surface dark:text-gray-100 truncate leading-tight">{{ h.docente.usuario.get_full_name|default:h.docente.usuario.username }}</h5>
+                        <p class="text-xs text-on-surface dark:text-gray-100-variant dark:text-gray-400 flex items-center gap-1 mt-1 truncate">
                             <span class="material-symbols-outlined text-[12px]">location_on</span>
                             {{ h.lugar_atencion|default:"No especificado" }}
                         </p>
                     </div>
                 </div>
                 
-                <div class="mt-2 pt-2 border-t border-outline-variant flex items-center gap-1 text-xs font-medium text-secondary bg-secondary/5 rounded px-2 py-1 justify-center w-full">
+                <div class="mt-2 pt-2 border-t border-outline-variant dark:border-gray-700 flex items-center gap-1 text-xs font-medium text-secondary bg-secondary/5 rounded px-2 py-1 justify-center w-full">
                     <span class="material-symbols-outlined text-[14px]">schedule</span>
                     {{ h.hora_inicio|time:"H:i" }} - {{ h.hora_fin|time:"H:i" }}
                 </div>
             </div>
             {% empty %}
-            <div class="flex flex-col items-center justify-center text-center p-4 text-on-surface-variant/60 my-auto">
+            <div class="flex flex-col items-center justify-center text-center p-4 text-on-surface dark:text-gray-100-variant dark:text-gray-400/60 my-auto">
                 <span class="material-symbols-outlined text-[32px] mb-2 opacity-50">event_busy</span>
                 <span class="text-sm">Sin docentes<br>asignados</span>
             </div>
@@ -105,7 +105,7 @@
         </div>
         
         <!-- Botón Añadir Docente (Bottom) -->
-        <div class="p-3 border-t border-outline-variant bg-surface-container-lowest mt-auto">
+        <div class="p-3 border-t border-outline-variant dark:border-gray-700 bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 mt-auto">
             <button type="button" onclick="openModal('create', '', '', '', '{{ dia_id }}', '', '')" 
                     class="w-full flex items-center justify-center gap-2 py-2 px-3 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-sm font-medium transition-colors">
                 <span class="material-symbols-outlined text-[18px]">add</span>
@@ -118,18 +118,18 @@
 
 <!-- Modal Formulario -->
 <div id="modal-form" class="fixed inset-0 z-50 hidden bg-scrim/40 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-surface rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
+    <div class="bg-surface dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
         <form method="POST">
             {% csrf_token %}
             <input type="hidden" name="action" id="form-action" value="create">
             <input type="hidden" name="horario_id" id="form-horario-id" value="">
             
-            <div class="bg-surface-container-low border-b border-outline-variant px-6 py-4 flex items-center justify-between">
-                <h3 id="modal-title" class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+            <div class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 border-b border-outline-variant dark:border-gray-700 px-6 py-4 flex items-center justify-between">
+                <h3 id="modal-title" class="font-h3 text-h3 text-on-surface dark:text-gray-100 flex items-center gap-2">
                     <span class="material-symbols-outlined text-primary">add_circle</span>
                     <span>Nuevo Horario de Atención</span>
                 </h3>
-                <button type="button" onclick="document.getElementById('modal-form').classList.add('hidden')" class="w-8 h-8 rounded-full hover:bg-on-surface/10 flex items-center justify-center text-on-surface-variant transition-colors">
+                <button type="button" onclick="document.getElementById('modal-form').classList.add('hidden')" class="w-8 h-8 rounded-full hover:bg-on-surface/10 flex items-center justify-center text-on-surface dark:text-gray-100-variant dark:text-gray-400 transition-colors">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
@@ -137,37 +137,37 @@
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Docente</label>
+                        <label class="block text-sm font-medium text-on-surface dark:text-gray-100-variant dark:text-gray-400 mb-1">Docente</label>
                         {{ form.docente }}
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Lugar de Atención</label>
+                        <label class="block text-sm font-medium text-on-surface dark:text-gray-100-variant dark:text-gray-400 mb-1">Lugar de Atención</label>
                         {{ form.lugar_atencion }}
                     </div>
                     <div class="md:col-span-2" id="dia-visual-container">
-                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Día de la semana</label>
+                        <label class="block text-sm font-medium text-on-surface dark:text-gray-100-variant dark:text-gray-400 mb-1">Día de la semana</label>
                         <div id="dia-badge" class="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2.5 rounded-lg font-semibold text-sm">
                             <span class="material-symbols-outlined text-[18px]">calendar_today</span>
                             <span id="dia-badge-text">Lunes</span>
                         </div>
                     </div>
                     <div class="md:col-span-2 hidden" id="dia-select-container">
-                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Día de la semana</label>
+                        <label class="block text-sm font-medium text-on-surface dark:text-gray-100-variant dark:text-gray-400 mb-1">Día de la semana</label>
                         {{ form.dia }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Hora Inicio</label>
+                        <label class="block text-sm font-medium text-on-surface dark:text-gray-100-variant dark:text-gray-400 mb-1">Hora Inicio</label>
                         {{ form.hora_inicio }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-on-surface-variant mb-1">Hora Fin</label>
+                        <label class="block text-sm font-medium text-on-surface dark:text-gray-100-variant dark:text-gray-400 mb-1">Hora Fin</label>
                         {{ form.hora_fin }}
                     </div>
                 </div>
             </div>
             
-            <div class="bg-surface-container-low border-t border-outline-variant px-6 py-4 flex items-center justify-end gap-3">
-                <button type="button" onclick="document.getElementById('modal-form').classList.add('hidden')" class="px-4 py-2 text-on-surface-variant font-medium hover:bg-on-surface/5 rounded-lg transition-colors">
+            <div class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 border-t border-outline-variant dark:border-gray-700 px-6 py-4 flex items-center justify-end gap-3">
+                <button type="button" onclick="document.getElementById('modal-form').classList.add('hidden')" class="px-4 py-2 text-on-surface dark:text-gray-100-variant dark:text-gray-400 font-medium hover:bg-on-surface/5 rounded-lg transition-colors">
                     Cancelar
                 </button>
                 <button type="submit" class="px-5 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 shadow-sm transition-colors flex items-center gap-2">
@@ -181,7 +181,7 @@
 
 <!-- Modal Eliminar -->
 <div id="modal-delete" class="fixed inset-0 z-50 hidden bg-scrim/40 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-surface rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
+    <div class="bg-surface dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
         <form method="POST">
             {% csrf_token %}
             <input type="hidden" name="action" value="delete">
@@ -191,14 +191,14 @@
                 <div class="w-16 h-16 rounded-full bg-error/10 text-error flex items-center justify-center mx-auto mb-4">
                     <span class="material-symbols-outlined text-[32px]">warning</span>
                 </div>
-                <h3 class="font-h3 text-h3 text-on-surface mb-2">¿Eliminar horario?</h3>
-                <p class="text-on-surface-variant font-body-md">
+                <h3 class="font-h3 text-h3 text-on-surface dark:text-gray-100 mb-2">¿Eliminar horario?</h3>
+                <p class="text-on-surface dark:text-gray-100-variant dark:text-gray-400 font-body-md">
                     Esta acción no se puede deshacer y el horario de atención desaparecerá de la lista.
                 </p>
             </div>
             
-            <div class="bg-surface-container-lowest border-t border-outline-variant px-6 py-4 flex items-center justify-end gap-3">
-                <button type="button" onclick="document.getElementById('modal-delete').classList.add('hidden')" class="px-4 py-2 text-on-surface-variant font-medium hover:bg-on-surface/5 rounded-lg transition-colors">
+            <div class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 border-t border-outline-variant dark:border-gray-700 px-6 py-4 flex items-center justify-end gap-3">
+                <button type="button" onclick="document.getElementById('modal-delete').classList.add('hidden')" class="px-4 py-2 text-on-surface dark:text-gray-100-variant dark:text-gray-400 font-medium hover:bg-on-surface/5 rounded-lg transition-colors">
                     Cancelar
                 </button>
                 <button type="submit" class="px-5 py-2 bg-error text-white font-medium rounded-lg hover:bg-error/90 shadow-sm transition-colors">
@@ -210,7 +210,7 @@
 </div>
 <!-- Modal Mover Todos -->
 <div id="modal-move" class="fixed inset-0 z-50 hidden bg-scrim/40 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-surface rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
+    <div class="bg-surface dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
         <form method="POST">
             {% csrf_token %}
             <input type="hidden" name="action" value="move_all">
@@ -221,14 +221,14 @@
                 <div class="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
                     <span class="material-symbols-outlined text-[32px]">drive_file_move</span>
                 </div>
-                <h3 class="font-h3 text-h3 text-on-surface mb-2">¿Mover todos los docentes?</h3>
-                <p class="text-on-surface-variant font-body-md" id="move-description">
+                <h3 class="font-h3 text-h3 text-on-surface dark:text-gray-100 mb-2">¿Mover todos los docentes?</h3>
+                <p class="text-on-surface dark:text-gray-100-variant dark:text-gray-400 font-body-md" id="move-description">
                     Se moverán todos los horarios de atención.
                 </p>
             </div>
             
-            <div class="bg-surface-container-lowest border-t border-outline-variant px-6 py-4 flex items-center justify-end gap-3">
-                <button type="button" onclick="document.getElementById('modal-move').classList.add('hidden')" class="px-4 py-2 text-on-surface-variant font-medium hover:bg-on-surface/5 rounded-lg transition-colors">
+            <div class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 border-t border-outline-variant dark:border-gray-700 px-6 py-4 flex items-center justify-end gap-3">
+                <button type="button" onclick="document.getElementById('modal-move').classList.add('hidden')" class="px-4 py-2 text-on-surface dark:text-gray-100-variant dark:text-gray-400 font-medium hover:bg-on-surface/5 rounded-lg transition-colors">
                     Cancelar
                 </button>
                 <button type="submit" class="px-5 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 shadow-sm transition-colors flex items-center gap-2">

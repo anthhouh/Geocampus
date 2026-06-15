@@ -4,7 +4,7 @@
 
 {% block gestion_content %}
 <div class="flex items-center justify-between mb-lg">
-    <h3 class="font-h3 text-h3 text-on-surface">Gestión de Asignaturas</h3>
+    <h3 class="font-h3 text-h3 text-on-surface dark:text-gray-100">Gestión de Asignaturas</h3>
     <a href="{% url 'horarios:gestion_crear_asignatura' %}" 
        class="flex items-center gap-2 px-md py-sm bg-primary text-on-primary rounded-lg hover:bg-primary/90 transition-colors font-button text-button shadow-sm">
         <span class="material-symbols-outlined text-[18px]">add</span>
@@ -12,18 +12,18 @@
     </a>
 </div>
 
-<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
+<div class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 border border-outline-variant dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
     <table class="w-full text-left border-collapse">
         <thead>
-            <tr class="bg-surface-container-low border-b border-outline-variant">
-                <th class="px-md py-sm font-label-md text-label-md text-on-surface-variant w-[80%]">Asignatura</th>
-                <th class="px-md py-sm font-label-md text-label-md text-on-surface-variant w-[20%] text-right">Acciones</th>
+            <tr class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 border-b border-outline-variant dark:border-gray-700">
+                <th class="px-md py-sm font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400 w-[80%]">Asignatura</th>
+                <th class="px-md py-sm font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400 w-[20%] text-right">Acciones</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-outline-variant">
             {% for asignatura in asignaturas %}
-            <tr class="hover:bg-surface-container-low/50 transition-colors">
-                <td class="px-md py-sm text-on-surface font-body-md text-body-md">
+            <tr class="hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80/50 transition-colors">
+                <td class="px-md py-sm text-on-surface dark:text-gray-100 font-body-md text-body-md">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xs uppercase">
                             {{ asignatura.nombre|slice:":2" }}
@@ -46,7 +46,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="2" class="px-md py-xl text-center text-on-surface-variant">
+                <td colspan="2" class="px-md py-xl text-center text-on-surface dark:text-gray-100-variant dark:text-gray-400">
                     <span class="material-symbols-outlined text-[48px] opacity-50 mb-3">book</span>
                     <p>No hay asignaturas registradas.</p>
                 </td>
@@ -59,20 +59,20 @@
 <!-- Modal Eliminar -->
 <div id="modal-eliminar" class="fixed inset-0 z-50 hidden flex items-center justify-center p-md">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModal()"></div>
-    <div class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-2xl p-xl max-w-sm w-full">
+    <div class="relative bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-2xl border border-outline-variant dark:border-gray-700 shadow-2xl p-xl max-w-sm w-full">
         <div class="flex flex-col items-center text-center gap-md">
             <div class="w-14 h-14 rounded-full bg-error-container flex items-center justify-center">
                 <span class="material-symbols-outlined text-[28px] text-error">warning</span>
             </div>
             <div>
-                <h4 class="font-h3 text-h3 text-on-surface mb-xs">¿Eliminar Asignatura?</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">
-                    Se eliminará "<strong id="modal-asignatura-nombre" class="text-on-surface"></strong>". 
+                <h4 class="font-h3 text-h3 text-on-surface dark:text-gray-100 mb-xs">¿Eliminar Asignatura?</h4>
+                <p class="font-body-sm text-body-sm text-on-surface dark:text-gray-100-variant dark:text-gray-400">
+                    Se eliminará "<strong id="modal-asignatura-nombre" class="text-on-surface dark:text-gray-100"></strong>". 
                     <br><strong>Atención:</strong> También se borrarán todos los horarios asociados a esta asignatura.
                 </p>
             </div>
             <div class="flex gap-md w-full">
-                <button onclick="cerrarModal()" class="flex-1 py-sm border border-outline-variant rounded-lg text-on-surface hover:bg-surface-container-low transition-colors">Cancelar</button>
+                <button onclick="cerrarModal()" class="flex-1 py-sm border border-outline-variant dark:border-gray-700 rounded-lg text-on-surface dark:text-gray-100 hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 transition-colors">Cancelar</button>
                 <form id="form-eliminar" method="post" action="" class="flex-1">
                     {% csrf_token %}
                     <button type="submit" class="w-full py-sm bg-error text-on-error rounded-lg hover:bg-error/90 transition-colors">Sí, eliminar</button>

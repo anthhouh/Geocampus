@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="mb-md flex flex-wrap justify-between items-center gap-4">
-    <p class="text-on-surface-variant font-body-md w-full md:w-auto">Configura la cantidad de horas semanales que debe dar cada profesor por materia.</p>
+    <p class="text-on-surface dark:text-gray-100-variant dark:text-gray-400 font-body-md w-full md:w-auto">Configura la cantidad de horas semanales que debe dar cada profesor por materia.</p>
     
     <div class="flex flex-wrap items-center gap-3">
         <!-- Formulario oculto para borrado masivo -->
@@ -34,12 +34,12 @@
     </div>
 </div>
 
-<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden">
+<div class="bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-xl overflow-hidden">
     <table class="w-full text-left border-collapse">
         <thead>
-            <tr class="bg-surface-container-low text-on-surface-variant font-label-md border-b border-outline-variant">
+            <tr class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 text-on-surface dark:text-gray-100-variant dark:text-gray-400 font-label-md border-b border-outline-variant dark:border-gray-700">
                 <th class="p-4 font-medium w-12 text-center">
-                    <input type="checkbox" id="chk-todos" class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 cursor-pointer">
+                    <input type="checkbox" id="chk-todos" class="rounded border-outline-variant dark:border-gray-700 text-primary focus:ring-primary w-4 h-4 cursor-pointer">
                 </th>
                 <th class="p-4 font-medium w-1/4">Docente</th>
                 <th class="p-4 font-medium">Asignatura</th>
@@ -51,13 +51,13 @@
         </thead>
         <tbody>
             {% for lec in lecciones %}
-            <tr class="border-b border-outline-variant hover:bg-surface-container-low/50 transition-colors">
+            <tr class="border-b border-outline-variant dark:border-gray-700 hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80/50 transition-colors">
                 <td class="p-4 text-center">
-                    <input type="checkbox" class="chk-item rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 cursor-pointer" data-ids="{% if lec.es_grupo %}{{ lec.ids_grupo }}{% else %}{{ lec.id }}{% endif %}">
+                    <input type="checkbox" class="chk-item rounded border-outline-variant dark:border-gray-700 text-primary focus:ring-primary w-4 h-4 cursor-pointer" data-ids="{% if lec.es_grupo %}{{ lec.ids_grupo }}{% else %}{{ lec.id }}{% endif %}">
                 </td>
-                <td class="p-4 font-body-md text-on-surface">{{ lec.docente }}</td>
-                <td class="p-4 font-body-md text-on-surface">{{ lec.asignaturas_str }}</td>
-                <td class="p-4 font-body-md text-on-surface">
+                <td class="p-4 font-body-md text-on-surface dark:text-gray-100">{{ lec.docente }}</td>
+                <td class="p-4 font-body-md text-on-surface dark:text-gray-100">{{ lec.asignaturas_str }}</td>
+                <td class="p-4 font-body-md text-on-surface dark:text-gray-100">
                     {% if lec.es_grupo %}
                         <div class="flex items-center gap-1 flex-wrap">
                             <span class="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-bold">Varias Clases</span>
@@ -67,19 +67,19 @@
                         {{ lec.curso.nombre }} "{{ lec.paralelo.identificador }}"
                     {% endif %}
                 </td>
-                <td class="p-4 font-body-md text-on-surface text-center font-bold">{{ lec.horas_totales }}</td>
-                <td class="p-4 font-body-sm text-on-surface-variant text-center">
+                <td class="p-4 font-body-md text-on-surface dark:text-gray-100 text-center font-bold">{{ lec.horas_totales }}</td>
+                <td class="p-4 font-body-sm text-on-surface dark:text-gray-100-variant dark:text-gray-400 text-center">
                     Ver en detalle
                 </td>
                 <td class="p-4 text-center">
                     <div class="flex items-center justify-center gap-2">
-                        <a href="{% url 'horarios:gestion_editar_leccion' lec.id %}" class="text-on-surface-variant hover:text-primary transition-colors" title="Editar (La primera lección del grupo si son varias)">
+                        <a href="{% url 'horarios:gestion_editar_leccion' lec.id %}" class="text-on-surface dark:text-gray-100-variant dark:text-gray-400 hover:text-primary transition-colors" title="Editar (La primera lección del grupo si son varias)">
                             <span class="material-symbols-outlined text-[20px]">edit</span>
                         </a>
                         <form action="{% url 'horarios:gestion_eliminar_lecciones_masivo' %}" method="post" class="inline" onsubmit="return confirm('¿Eliminar esta lección{% if lec.es_grupo %} y todos sus paralelos vinculados{% endif %}?');">
                             {% csrf_token %}
                             <input type="hidden" name="lecciones_ids" value="{% if lec.es_grupo %}{{ lec.ids_grupo }}{% else %}{{ lec.id }}{% endif %}">
-                            <button type="submit" class="text-on-surface-variant hover:text-error transition-colors" title="Eliminar">
+                            <button type="submit" class="text-on-surface dark:text-gray-100-variant dark:text-gray-400 hover:text-error transition-colors" title="Eliminar">
                                 <span class="material-symbols-outlined text-[20px]">delete</span>
                             </button>
                         </form>
@@ -88,7 +88,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="7" class="p-8 text-center text-on-surface-variant font-body-md">
+                <td colspan="7" class="p-8 text-center text-on-surface dark:text-gray-100-variant dark:text-gray-400 font-body-md">
                     No hay lecciones configuradas. Empieza a añadir la carga horaria de los docentes.
                 </td>
             </tr>

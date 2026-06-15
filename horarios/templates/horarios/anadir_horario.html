@@ -5,52 +5,52 @@
 {% block content %}
 <div class="max-w-2xl mx-auto space-y-xl">
     <div class="flex items-center gap-md mb-lg">
-        <a href="{% url 'horarios:dashboard_docente' %}" class="w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant transition-colors">
+        <a href="{% url 'horarios:dashboard_docente' %}" class="w-10 h-10 rounded-full hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60 flex items-center justify-center text-on-surface dark:text-gray-100-variant dark:text-gray-400 transition-colors">
             <span class="material-symbols-outlined">arrow_back</span>
         </a>
-        <h2 class="font-h2 text-h2 text-on-surface">Añadir Clase al Horario</h2>
+        <h2 class="font-h2 text-h2 text-on-surface dark:text-gray-100">Añadir Clase al Horario</h2>
     </div>
 
-    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-xl shadow-sm">
+    <div class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-xl border border-outline-variant dark:border-gray-700 p-xl shadow-sm">
         <form method="post" class="space-y-lg">
             {% csrf_token %}
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
                 
                 <div class="flex flex-col gap-xs">
-                    <label for="id_curso" class="font-label-md text-label-md text-on-surface-variant">Curso</label>
+                    <label for="id_curso" class="font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400">Curso</label>
                     {{ form.curso }}
                 </div>
                 
                 <div class="flex flex-col gap-xs">
-                    <label for="id_paralelo" class="font-label-md text-label-md text-on-surface-variant">Paralelo</label>
-                    <select id="id_paralelo" name="paralelo" class="w-full px-4 py-2 bg-surface border border-outline-variant rounded-lg focus:outline-none focus:border-primary">
+                    <label for="id_paralelo" class="font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400">Paralelo</label>
+                    <select id="id_paralelo" name="paralelo" class="w-full px-4 py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg focus:outline-none focus:border-primary dark:text-white dark:bg-gray-800">
                         <option value="">— Selecciona un curso primero —</option>
                     </select>
                 </div>
 
                 <div class="flex flex-col gap-xs md:col-span-2">
-                    <label for="id_materia" class="font-label-md text-label-md text-on-surface-variant">Materia</label>
+                    <label for="id_materia" class="font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400">Materia</label>
                     {{ form.materia }}
                 </div>
                 
                 <div class="flex flex-col gap-xs md:col-span-2">
-                    <label for="id_dia" class="font-label-md text-label-md text-on-surface-variant">Día</label>
+                    <label for="id_dia" class="font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400">Día</label>
                     {{ form.dia }}
                 </div>
 
                 <div class="flex flex-col gap-xs">
-                    <label for="id_hora_inicio" class="font-label-md text-label-md text-on-surface-variant">Hora de Inicio</label>
+                    <label for="id_hora_inicio" class="font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400">Hora de Inicio</label>
                     {{ form.hora_inicio }}
                 </div>
                 
                 <div class="flex flex-col gap-xs">
-                    <label for="id_hora_fin" class="font-label-md text-label-md text-on-surface-variant">Hora de Fin</label>
+                    <label for="id_hora_fin" class="font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400">Hora de Fin</label>
                     {{ form.hora_fin }}
                 </div>
             </div>
 
-            <div class="flex justify-end gap-md pt-md border-t border-outline-variant">
+            <div class="flex justify-end gap-md pt-md border-t border-outline-variant dark:border-gray-700">
                 <a href="{% url 'horarios:dashboard_docente' %}" class="px-lg py-md rounded-lg font-button text-button text-primary hover:bg-primary/5 transition-colors">
                     Cancelar
                 </a>

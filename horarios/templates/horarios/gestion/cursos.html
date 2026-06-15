@@ -4,7 +4,7 @@
 
 {% block gestion_content %}
 <div class="flex items-center justify-between flex-wrap gap-md">
-    <h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+    <h3 class="font-h3 text-h3 text-on-surface dark:text-gray-100 flex items-center gap-2">
         <span class="material-symbols-outlined text-primary">school</span>
         Cursos y Paralelos
     </h3>
@@ -17,17 +17,17 @@
 
 <div class="space-y-md">
     {% for curso in cursos %}
-    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+    <div class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-xl border border-outline-variant dark:border-gray-700 shadow-sm overflow-hidden">
         <!-- Course header -->
         <div
-            class="px-lg py-md bg-surface-bright border-b border-outline-variant flex items-center justify-between gap-md">
+            class="px-lg py-md bg-surface dark:bg-gray-900-bright border-b border-outline-variant dark:border-gray-700 flex items-center justify-between gap-md">
             <div class="flex items-center gap-md">
                 <div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                     <span class="material-symbols-outlined text-primary text-[18px]">class</span>
                 </div>
                 <div>
-                    <p class="font-label-md text-label-md text-on-surface font-semibold">{{ curso.nombre }}</p>
-                    {% if curso.nivel %}<p class="font-body-sm text-body-sm text-on-surface-variant">{{ curso.nivel }}
+                    <p class="font-label-md text-label-md text-on-surface dark:text-gray-100 font-semibold">{{ curso.nombre }}</p>
+                    {% if curso.nivel %}<p class="font-body-sm text-body-sm text-on-surface dark:text-gray-100-variant dark:text-gray-400">{{ curso.nivel }}
                     </p>{% endif %}
                 </div>
             </div>
@@ -38,12 +38,12 @@
                     Paralelo
                 </a>
                 <a href="{% url 'horarios:gestion_editar_curso' curso.id %}"
-                    class="flex items-center gap-1 px-sm py-1 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high hover:text-primary transition-colors text-xs font-medium">
+                    class="flex items-center gap-1 px-sm py-1 rounded-lg border border-outline-variant dark:border-gray-700 text-on-surface dark:text-gray-100-variant dark:text-gray-400 hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-high dark:bg-gray-700 hover:text-primary transition-colors text-xs font-medium">
                     <span class="material-symbols-outlined text-[14px]">edit</span>
                     Editar
                 </a>
                 <button onclick="confirmarEliminarCurso({{ curso.id }}, '{{ curso.nombre|escapejs }}')"
-                    class="flex items-center gap-1 px-sm py-1 rounded-lg border border-[#E53935]/30 text-[#C62828] hover:bg-[#FFEBEE] transition-colors text-xs font-medium">
+                    class="flex items-center gap-1 px-sm py-1 rounded-lg border border-[#E53935]/30 dark:border-red-800/50 text-[#C62828] dark:text-red-400 hover:bg-[#FFEBEE] dark:hover:bg-red-900/50 dark:bg-red-900/30 transition-colors text-xs font-medium">
                     <span class="material-symbols-outlined text-[14px]">delete</span>
                     Eliminar
                 </button>
@@ -54,13 +54,13 @@
         {% if curso.paralelos.all %}
         <div class="divide-y divide-outline-variant">
             {% for p in curso.paralelos.all %}
-            <div class="px-lg py-sm flex items-center justify-between hover:bg-surface-container-low transition-colors">
+            <div class="px-lg py-sm flex items-center justify-between hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 transition-colors">
                 <div class="flex items-center gap-md">
                     <span
                         class="w-7 h-7 rounded-md bg-secondary/10 text-secondary flex items-center justify-center text-xs font-bold">
                         {{ p.identificador }}
                     </span>
-                    <span class="font-body-sm text-body-sm text-on-surface">
+                    <span class="font-body-sm text-body-sm text-on-surface dark:text-gray-100">
                         Paralelo "{{ p.identificador }}"
                         {% if p.especialidad_bachillerato %}
                         <span class="ml-2 px-2 py-0.5 rounded-full bg-[#EDE7F6] text-[#4527A0] text-xs font-bold">
@@ -71,12 +71,12 @@
                 </div>
                 <div class="flex items-center gap-sm">
                     <a href="{% url 'horarios:gestion_editar_paralelo' p.id %}"
-                        class="flex items-center gap-1 px-sm py-0.5 rounded-lg border border-outline-variant text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors text-xs">
+                        class="flex items-center gap-1 px-sm py-0.5 rounded-lg border border-outline-variant dark:border-gray-700 text-on-surface dark:text-gray-100-variant dark:text-gray-400 hover:text-primary hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-high dark:bg-gray-700 transition-colors text-xs">
                         <span class="material-symbols-outlined text-[13px]">edit</span>
                         Editar
                     </a>
                     <button onclick="confirmarEliminarParalelo({{ p.id }}, '{{ p|escapejs }}')"
-                        class="flex items-center gap-1 px-sm py-0.5 rounded-lg border border-[#E53935]/20 text-[#C62828] hover:bg-[#FFEBEE] transition-colors text-xs">
+                        class="flex items-center gap-1 px-sm py-0.5 rounded-lg border border-[#E53935]/20 text-[#C62828] dark:text-red-400 hover:bg-[#FFEBEE] dark:hover:bg-red-900/50 dark:bg-red-900/30 transition-colors text-xs">
                         <span class="material-symbols-outlined text-[13px]">delete</span>
                     </button>
                 </div>
@@ -84,13 +84,13 @@
             {% endfor %}
         </div>
         {% else %}
-        <p class="px-lg py-md text-on-surface-variant font-body-sm text-body-sm italic">No hay paralelos registrados
+        <p class="px-lg py-md text-on-surface dark:text-gray-100-variant dark:text-gray-400 font-body-sm text-body-sm italic">No hay paralelos registrados
             para este curso.</p>
         {% endif %}
     </div>
     {% empty %}
     <div
-        class="bg-surface-container-lowest rounded-xl border border-outline-variant border-dashed p-xl text-center text-on-surface-variant">
+        class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-xl border border-outline-variant dark:border-gray-700 border-dashed p-xl text-center text-on-surface dark:text-gray-100-variant dark:text-gray-400">
         <span class="material-symbols-outlined text-[48px] block mb-2 opacity-40">school</span>
         <p>No hay cursos registrados. Crea el primero.</p>
     </div>
@@ -101,21 +101,21 @@
 <div id="modal-curso" class="fixed inset-0 z-50 hidden flex items-center justify-center p-md">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModales()"></div>
     <div
-        class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-2xl p-xl max-w-sm w-full">
+        class="relative bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-2xl border border-outline-variant dark:border-gray-700 shadow-2xl p-xl max-w-sm w-full">
         <div class="flex flex-col items-center text-center gap-md">
-            <div class="w-14 h-14 rounded-full bg-[#FFEBEE] flex items-center justify-center">
-                <span class="material-symbols-outlined text-[28px] text-[#C62828]">warning</span>
+            <div class="w-14 h-14 rounded-full bg-[#FFEBEE] dark:bg-red-900/30 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[28px] text-[#C62828] dark:text-red-400">warning</span>
             </div>
             <div>
-                <h4 class="font-h3 text-h3 text-on-surface mb-xs">¿Eliminar curso?</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">
-                    Se eliminará el curso <strong id="curso-nombre" class="text-on-surface"></strong> y todos sus
+                <h4 class="font-h3 text-h3 text-on-surface dark:text-gray-100 mb-xs">¿Eliminar curso?</h4>
+                <p class="font-body-sm text-body-sm text-on-surface dark:text-gray-100-variant dark:text-gray-400">
+                    Se eliminará el curso <strong id="curso-nombre" class="text-on-surface dark:text-gray-100"></strong> y todos sus
                     paralelos y horarios asociados.
                 </p>
             </div>
             <div class="flex gap-md w-full">
                 <button onclick="cerrarModales()"
-                    class="flex-1 py-sm border border-outline-variant rounded-lg font-button text-button transition-colors hover:bg-surface-container-low">Cancelar</button>
+                    class="flex-1 py-sm border border-outline-variant dark:border-gray-700 rounded-lg font-button text-button transition-colors hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80">Cancelar</button>
                 <form id="form-eliminar-curso" method="post" action="" class="flex-1">
                     {% csrf_token %}
                     <button type="submit"
@@ -131,21 +131,21 @@
 <div id="modal-paralelo" class="fixed inset-0 z-50 hidden flex items-center justify-center p-md">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModales()"></div>
     <div
-        class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-2xl p-xl max-w-sm w-full">
+        class="relative bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-2xl border border-outline-variant dark:border-gray-700 shadow-2xl p-xl max-w-sm w-full">
         <div class="flex flex-col items-center text-center gap-md">
-            <div class="w-14 h-14 rounded-full bg-[#FFEBEE] flex items-center justify-center">
-                <span class="material-symbols-outlined text-[28px] text-[#C62828]">warning</span>
+            <div class="w-14 h-14 rounded-full bg-[#FFEBEE] dark:bg-red-900/30 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[28px] text-[#C62828] dark:text-red-400">warning</span>
             </div>
             <div>
-                <h4 class="font-h3 text-h3 text-on-surface mb-xs">¿Eliminar paralelo?</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">
-                    Se eliminará el paralelo <strong id="paralelo-nombre" class="text-on-surface"></strong> y sus
+                <h4 class="font-h3 text-h3 text-on-surface dark:text-gray-100 mb-xs">¿Eliminar paralelo?</h4>
+                <p class="font-body-sm text-body-sm text-on-surface dark:text-gray-100-variant dark:text-gray-400">
+                    Se eliminará el paralelo <strong id="paralelo-nombre" class="text-on-surface dark:text-gray-100"></strong> y sus
                     horarios.
                 </p>
             </div>
             <div class="flex gap-md w-full">
                 <button onclick="cerrarModales()"
-                    class="flex-1 py-sm border border-outline-variant rounded-lg font-button text-button transition-colors hover:bg-surface-container-low">Cancelar</button>
+                    class="flex-1 py-sm border border-outline-variant dark:border-gray-700 rounded-lg font-button text-button transition-colors hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80">Cancelar</button>
                 <form id="form-eliminar-paralelo" method="post" action="" class="flex-1">
                     {% csrf_token %}
                     <button type="submit"

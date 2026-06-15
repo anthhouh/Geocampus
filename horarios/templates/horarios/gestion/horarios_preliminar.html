@@ -367,18 +367,18 @@
 
 <!-- Header + Actions -->
 <div class="flex items-center justify-between flex-wrap gap-md mb-6 print-hidden">
-    <h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+    <h3 class="font-h3 text-h3 text-on-surface dark:text-gray-100 flex items-center gap-2">
         <span class="material-symbols-outlined text-primary">view_quilt</span>
         {{ titulo_seccion }}
     </h3>
     
     <div class="flex items-center gap-3">
-        <a href="{% url 'horarios:gestion_horarios_cursos' %}" class="flex items-center gap-2 px-4 py-2 bg-surface border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors font-medium text-sm">
+        <a href="{% url 'horarios:gestion_horarios_cursos' %}" class="flex items-center gap-2 px-4 py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg text-on-surface dark:text-gray-100-variant dark:text-gray-400 hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 transition-colors font-medium text-sm">
             <span class="material-symbols-outlined text-[20px]">arrow_back</span>
             Volver
         </a>
         
-        <button type="button" onclick="window.print()" class="flex items-center gap-2 px-4 py-2 bg-surface-container-high border border-outline-variant rounded-lg text-on-surface hover:bg-surface-variant transition-colors font-medium text-sm">
+        <button type="button" onclick="window.print()" class="flex items-center gap-2 px-4 py-2 bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-high dark:bg-gray-700 border border-outline-variant dark:border-gray-700 rounded-lg text-on-surface dark:text-gray-100 hover:bg-surface dark:bg-gray-900-variant dark:bg-gray-700 transition-colors font-medium text-sm">
             <span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
             Exportar a PDF
         </button>
@@ -391,10 +391,10 @@
 </div>
 
 <!-- Filters (Same as horarios.html but hidden on print) -->
-<form method="get" class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md shadow-sm grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-md items-end mb-6 print-hidden">
+<form method="get" class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-xl border border-outline-variant dark:border-gray-700 p-md shadow-sm grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-md items-end mb-6 print-hidden">
     <div class="flex flex-col gap-xs">
-        <label class="font-label-md text-label-md text-on-surface-variant text-xs uppercase">Curso</label>
-        <select name="curso" class="w-full px-3 py-2 bg-surface border border-outline-variant rounded-lg text-sm focus:outline-none focus:border-primary">
+        <label class="font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400 text-xs uppercase">Curso</label>
+        <select name="curso" class="w-full px-3 py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-primary dark:text-white dark:bg-gray-800">
             <option value="">Todos</option>
             {% for c in cursos %}
             <option value="{{ c.id }}" {% if filtros.curso == c.id|stringformat:"s" %}selected{% endif %}>{{ c.nombre }}</option>
@@ -403,7 +403,7 @@
     </div>
     <div class="flex gap-sm">
         <button type="submit" class="flex-1 py-2 bg-primary text-on-primary rounded-lg font-button text-button hover:bg-primary/90 transition-colors">Filtrar</button>
-        <a href="{{ request.path }}" class="flex items-center justify-center px-3 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors">
+        <a href="{{ request.path }}" class="flex items-center justify-center px-3 py-2 border border-outline-variant dark:border-gray-700 rounded-lg text-on-surface dark:text-gray-100-variant dark:text-gray-400 hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 transition-colors">
             <span class="material-symbols-outlined text-[18px]">close</span>
         </a>
     </div>
@@ -412,17 +412,17 @@
 <!-- Grid de Horarios (Pantalla) -->
 <div class="grid-container print-hidden">
     {% for grupo in grupos %}
-    <div class="schedule-card bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col">
+    <div class="schedule-card bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-xl border border-outline-variant dark:border-gray-700 shadow-sm overflow-hidden flex flex-col">
         <!-- Header del grupo (Pantalla) -->
-        <div class="bg-surface-container-low p-3 border-b border-outline-variant flex items-center gap-3">
+        <div class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 p-3 border-b border-outline-variant dark:border-gray-700 flex items-center gap-3">
             <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm shrink-0">
                 {{ grupo.titulo|first|upper }}
             </div>
-            <h4 class="font-title-md text-on-surface truncate">{{ grupo.titulo }}</h4>
+            <h4 class="font-title-md text-on-surface dark:text-gray-100 truncate">{{ grupo.titulo }}</h4>
         </div>
         
         <!-- Cuadrícula (Compacta) -->
-        <div class="p-3 overflow-x-auto flex-1 bg-surface-container-lowest">
+        <div class="p-3 overflow-x-auto flex-1 bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800">
             <div class="schedule-grid" style="font-size: 0.8em; gap: 2px;">
                 <div style="grid-column: 1; grid-row: 1;"></div>
                 <div class="day-header" style="grid-column: 2; grid-row: 1; padding: 2px; min-height: 20px;">Lu</div>
@@ -458,10 +458,10 @@
         </div>
     </div>
     {% empty %}
-    <div class="col-span-full bg-surface-container-lowest rounded-xl border border-outline-variant p-xl flex flex-col items-center justify-center text-center">
-        <span class="material-symbols-outlined text-[48px] text-on-surface-variant/40 mb-3">event_busy</span>
-        <h4 class="font-h3 text-h3 text-on-surface mb-1">No hay horarios registrados</h4>
-        <p class="font-body-sm text-body-sm text-on-surface-variant max-w-md">
+    <div class="col-span-full bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-xl border border-outline-variant dark:border-gray-700 p-xl flex flex-col items-center justify-center text-center">
+        <span class="material-symbols-outlined text-[48px] text-on-surface dark:text-gray-100-variant dark:text-gray-400/40 mb-3">event_busy</span>
+        <h4 class="font-h3 text-h3 text-on-surface dark:text-gray-100 mb-1">No hay horarios registrados</h4>
+        <p class="font-body-sm text-body-sm text-on-surface dark:text-gray-100-variant dark:text-gray-400 max-w-md">
             No se encontraron horarios con los filtros actuales.
         </p>
     </div>
@@ -567,7 +567,7 @@
 
 
 {% if hay_resultados %}
-<div class="mt-md px-lg py-sm text-right text-on-surface-variant font-body-sm text-body-sm print-hidden">
+<div class="mt-md px-lg py-sm text-right text-on-surface dark:text-gray-100-variant dark:text-gray-400 font-body-sm text-body-sm print-hidden">
     {{ grupos|length }} grupo{{ grupos|length|pluralize }} encontrado{{ grupos|length|pluralize }}
 </div>
 {% endif %}

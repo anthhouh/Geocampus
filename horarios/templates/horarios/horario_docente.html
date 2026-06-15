@@ -14,7 +14,7 @@
     </div>
 
     <!-- Profile Header -->
-    <div class="bg-white rounded-[24px] shadow-sm overflow-hidden border border-gray-100 relative">
+    <div class="bg-white dark:bg-gray-800 rounded-[24px] shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700 relative">
         <!-- Banner -->
         <!-- Gradient from dark blue to crimson red with a wavy SVG background overlay (using a simple gradient for now) -->
         <div class="h-32 bg-gradient-to-r from-[#0F1C3F] via-[#3E1A4B] to-[#C11236] relative w-full overflow-hidden">
@@ -78,41 +78,41 @@
             </div>
 
             <!-- Stats Divider -->
-            <hr class="border-gray-100 my-8">
+            <hr class="border-gray-100 dark:border-gray-700 my-8">
 
             <!-- Stats Row -->
             <div class="flex items-center justify-between px-4">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#3B82F6]">
+                    <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-[#3B82F6]">
                         <span class="material-symbols-outlined">school</span>
                     </div>
                     <div>
                         <p class="font-bold text-[#1E293B]">Docente</p>
-                        <p class="text-xs text-gray-500">Rol asignado</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Rol asignado</p>
                     </div>
                 </div>
                 
                 <div class="h-10 w-px bg-gray-100"></div>
 
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#3B82F6]">
+                    <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-[#3B82F6]">
                         <span class="material-symbols-outlined">menu_book</span>
                     </div>
                     <div>
                         <p class="font-bold text-[#1E293B]">Asignaturas</p>
-                        <p class="text-xs text-gray-500">{{ asignaturas_count }} asignadas</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ asignaturas_count }} asignadas</p>
                     </div>
                 </div>
 
                 <div class="h-10 w-px bg-gray-100"></div>
 
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#3B82F6]">
+                    <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-[#3B82F6]">
                         <span class="material-symbols-outlined">groups</span>
                     </div>
                     <div>
                         <p class="font-bold text-[#1E293B]">Cursos</p>
-                        <p class="text-xs text-gray-500">{{ cursos_count }} a cargo</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ cursos_count }} a cargo</p>
                     </div>
                 </div>
             </div>
@@ -120,25 +120,25 @@
     </div>
 
     <!-- Schedule Grid -->
-    <div class="bg-white rounded-[24px] shadow-sm overflow-hidden border border-gray-100">
+    <div class="bg-white dark:bg-gray-800 rounded-[24px] shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
         <!-- Header -->
-        <div class="p-6 border-b border-gray-100 flex items-center justify-between bg-white">
+        <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between bg-white dark:bg-gray-800">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-primary">
+                <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-primary">
                     <span class="material-symbols-outlined text-[28px]">calendar_month</span>
                 </div>
                 <div>
                     <h3 class="font-bold text-xl text-[#1E293B]">Horario Semanal</h3>
-                    <p class="text-sm text-gray-500">Vista general de tus clases por día y hora.</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Vista general de tus clases por día y hora.</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-3">
-                <a href="{% url 'horarios:imprimir_horario' %}?docente_id={{ docente.id }}" target="_blank" class="hidden md:flex items-center gap-2 border border-gray-200 text-primary font-bold text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                <a href="{% url 'horarios:imprimir_horario' %}?docente_id={{ docente.id }}" target="_blank" class="hidden md:flex items-center gap-2 border border-gray-200 dark:border-gray-700 text-primary font-bold text-sm px-4 py-2 rounded-lg hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors">
                     <span class="material-symbols-outlined text-[18px]">print</span>
                     Imprimir
                 </a>
-                <a href="?formato=lista" class="hidden md:flex items-center gap-2 border border-gray-200 text-primary font-bold text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                <a href="?formato=lista" class="hidden md:flex items-center gap-2 border border-gray-200 dark:border-gray-700 text-primary font-bold text-sm px-4 py-2 rounded-lg hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors">
                     <span class="material-symbols-outlined text-[18px]">list</span>
                     Ver en listado
                 </a>
@@ -148,7 +148,7 @@
         <!-- Grid Container -->
         <div class="p-4 overflow-x-auto">
             {% if horarios_grid %}
-            <div class="min-w-[800px] border border-gray-100 rounded-xl overflow-hidden bg-white">
+            <div class="min-w-[800px] border border-gray-100 dark:border-gray-700 rounded-xl overflow-hidden bg-white dark:bg-gray-800">
                 
                 <style>
                     .premium-grid {
@@ -390,7 +390,7 @@
             {% else %}
             <div class="flex flex-col items-center justify-center py-16 text-gray-400">
                 <span class="material-symbols-outlined text-[56px] mb-3 opacity-40">event_busy</span>
-                <p class="font-medium text-gray-600">Este docente aún no tiene horarios registrados.</p>
+                <p class="font-medium text-gray-600 dark:text-gray-400">Este docente aún no tiene horarios registrados.</p>
                 <p class="text-sm mt-1">Intenta más tarde o contacta al administrador.</p>
             </div>
             {% endif %}
@@ -398,14 +398,14 @@
     </div>
 
     <!-- Quick Tip Footer -->
-    <div class="bg-white rounded-[24px] shadow-sm border border-gray-100 p-6 flex items-center justify-between overflow-hidden relative">
+    <div class="bg-white dark:bg-gray-800 rounded-[24px] shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex items-center justify-between overflow-hidden relative">
         <div class="flex items-center gap-4 z-10">
             <div class="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-white flex-shrink-0">
                 <span class="material-symbols-outlined text-[28px]">lightbulb</span>
             </div>
             <div>
                 <h4 class="font-bold text-lg text-[#1E293B]">Consejo rápido</h4>
-                <p class="text-sm text-gray-500 mt-1">Puedes hacer clic en cada clase para ver más detalles o gestionar tu horario.</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Puedes hacer clic en cada clase para ver más detalles o gestionar tu horario.</p>
             </div>
         </div>
         <!-- Decorative element (simulated calendar icon) -->

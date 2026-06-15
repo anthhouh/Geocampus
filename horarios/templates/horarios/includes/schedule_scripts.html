@@ -114,7 +114,7 @@ function mostrarToast(mensaje, tipo = 'error') {
     const toast = document.createElement('div');
     const isError = tipo === 'error';
     toast.className = `p-4 rounded-xl shadow-lg border flex items-start gap-3 transform transition-all duration-300 -translate-y-10 opacity-0 pointer-events-auto
-                       ${isError ? 'bg-[#FFEBEE] border-[#FFCDD2] text-[#B71C1C]' : 'bg-[#E8F5E9] border-[#C8E6C9] text-[#1B5E20]'}`;
+                       ${isError ? 'bg-[#FFEBEE] border-[#FFCDD2] text-[#B71C1C]' : 'bg-[#E8F5E9] dark:bg-green-900/30 border-[#C8E6C9] text-[#1B5E20]'}`;
     
     const icon = isError ? 'error' : 'check_circle';
     const iconColor = isError ? 'text-[#D32F2F]' : 'text-[#388E3C]';

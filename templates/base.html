@@ -1,7 +1,18 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="{% if user.is_authenticated and user.modo_oscuro %}dark{% endif %}">
 <head>
+    <script>
+        (function() {
+            var isDark = false;
+            {% if user.is_authenticated %}
+                isDark = {{ user.modo_oscuro|yesno:"true,false" }};
+            {% else %}
+                isDark = localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            {% endif %}
+            if (isDark) { document.documentElement.classList.add('dark'); }
+        })();
+    </script>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>{% block title %}Gestión de Horarios - EduManager{% endblock %}</title>
@@ -194,6 +205,51 @@
             from { opacity: 1; transform: translateY(0); }
             to { opacity: 0; transform: translateY(-12px); }
         }
+
+        /* --- Dark Mode Overrides --- */
+        .dark body { background-color: #111827; color: #e5e7eb; }
+
+        /* Schedule Grid */
+        .dark .schedule-grid { background: #1f2937; border-color: #374151; }
+        .dark .grid-cell { background: #1f2937; border-color: #374151; }
+        .dark .day-header { background: #111827; color: #d1d5db; border-color: #374151; }
+        .dark .time-slot { background: #1f2937; color: #9ca3af; border-color: #374151; }
+        .dark .time-slot strong { color: #f3f4f6; }
+        .dark .schedule-recreo { background: #374151; color: #d1d5db; border-color: #4b5563; }
+        .dark .schedule-item { box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+
+        /* Toasts */
+        .dark .toast { background: #1f2937; color: #f3f4f6; border-color: #374151; }
+        .dark .toast .toast-close:hover { background: #374151; color: #f3f4f6; }
+        .dark .toast-overlay { background: rgba(0,0,0,0.6); }
+
+        
+        /* Premium & Mockup Grid Dark Mode (Overrides for inline styles in specific pages) */
+        .dark .premium-grid, .dark .schedule-grid-mockup { background-color: #1f2937 !important; border-color: #374151 !important; }
+        .dark .premium-grid > div, .dark .schedule-grid-mockup > div { background-color: #1f2937 !important; border-color: #374151 !important; }
+        .dark .premium-grid .grid-header, .dark .day-header { background-color: #111827 !important; color: #e5e7eb !important; border-color: #374151 !important; }
+        .dark .premium-grid .grid-empty-cell { color: #6b7280 !important; }
+        .dark .mockup-time-col, .dark .time-col { background-color: #111827 !important; color: #e5e7eb !important; border-color: #374151 !important; }
+        .dark .mockup-time-num, .dark .time-num { color: #f3f4f6 !important; }
+        .dark .schedule-recreo-row, .dark .recreo-row { background-color: #374151 !important; color: #d1d5db !important; border-color: #4b5563 !important; }
+        .dark [style*="background: #fff;"] { background-color: #111827 !important; border-color: #374151 !important; }
+
+        /* Mockup Cards (Search bars and alerts) */
+        .dark .mockup-card { background-color: #1f2937 !important; border-color: #374151 !important; }
+        .dark .mockup-card [class*="text-[#1e293b]"], 
+        .dark .mockup-card [class*="text-[#334155]"] { color: #f3f4f6 !important; }
+        .dark .mockup-card [class*="text-[#64748b]"], 
+        .dark .mockup-card [class*="text-[#475569]"] { color: #9ca3af !important; }
+        .dark .mockup-card.bg-gradient-to-r { background: linear-gradient(to right, #1e3a8a, #1f2937) !important; border-color: #1e3a8a !important; }
+        
+        .dark .mockup-input { background-color: #374151 !important; border-color: #4b5563 !important; color: #f3f4f6 !important; }
+        .dark .mockup-input:focus { border-color: #60a5fa !important; box-shadow: 0 0 0 1px #60a5fa !important; }
+
+
+
+
+        /* Help Modal */
+        .dark .help-fab { background: #1e40af; }
     </style>
     <script>
         // Rellena las celdas vacías del grid para crear las líneas de planilla
@@ -215,7 +271,7 @@
     </script>
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-background text-on-background font-body-md text-body-md min-h-screen">
+<body class="bg-background dark:bg-gray-900 text-on-background dark:text-gray-100 font-body-md text-body-md min-h-screen">
     <script>
         (function() {
             try {
@@ -241,7 +297,7 @@
                     {% else %}
                         <span class="material-symbols-outlined" style="font-size: 36px; color: #005dac;">info</span>
                     {% endif %}
-                    <span style="font-weight: 500; color: #181c21; margin-top: 4px;">{{ message }}</span>
+                    <span class="dark:text-gray-100" style="font-weight: 500; color: #181c21; margin-top: 4px;">{{ message }}</span>
                 </div>
             {% endfor %}
         </div>
@@ -300,7 +356,7 @@
             toast.innerHTML = `
                 <button class="toast-close material-symbols-outlined" onclick="closeToast(this)">close</button>
                 <span class="material-symbols-outlined" style="font-size: 36px; color: ${iconColor};">${iconName}</span>
-                <span style="font-weight: 500; color: #181c21; margin-top: 4px;">${message}</span>
+                <span class="dark:!text-gray-100" style="font-weight: 500; color: #181c21; margin-top: 4px;">${message}</span>
             `;
 
             container.appendChild(toast);

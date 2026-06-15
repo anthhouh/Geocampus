@@ -4,7 +4,7 @@
 
 {% block gestion_content %}
 <div class="flex items-center justify-between flex-wrap gap-md">
-    <h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+    <h3 class="font-h3 text-h3 text-on-surface dark:text-gray-100 flex items-center gap-2">
         <span class="material-symbols-outlined text-primary">person</span>
         Docentes Registrados
     </h3>
@@ -15,49 +15,49 @@
     </a>
 </div>
 
-<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-xl border border-outline-variant dark:border-gray-700 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
-                <tr class="border-b border-outline-variant bg-surface-container-low">
-                    <th class="px-lg py-sm text-left font-label-md text-label-md text-on-surface-variant">Docente</th>
-                    <th class="px-lg py-sm text-left font-label-md text-label-md text-on-surface-variant hidden md:table-cell">Especialidad</th>
-                    <th class="px-lg py-sm text-left font-label-md text-label-md text-on-surface-variant hidden md:table-cell">Ubicación</th>
-                    <th class="px-lg py-sm text-left font-label-md text-label-md text-on-surface-variant">Estado</th>
-                    <th class="px-lg py-sm text-right font-label-md text-label-md text-on-surface-variant">Acciones</th>
+                <tr class="border-b border-outline-variant dark:border-gray-700 bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80">
+                    <th class="px-lg py-sm text-left font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400">Docente</th>
+                    <th class="px-lg py-sm text-left font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400 hidden md:table-cell">Especialidad</th>
+                    <th class="px-lg py-sm text-left font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400 hidden md:table-cell">Ubicación</th>
+                    <th class="px-lg py-sm text-left font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400">Estado</th>
+                    <th class="px-lg py-sm text-right font-label-md text-label-md text-on-surface dark:text-gray-100-variant dark:text-gray-400">Acciones</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-outline-variant">
                 {% for d in docentes %}
-                <tr class="hover:bg-surface-container-low transition-colors">
+                <tr class="hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 transition-colors">
                     <td class="px-lg py-sm">
                         <div class="flex items-center gap-md">
                             <div class="w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm flex-shrink-0">
                                 {{ d.usuario.first_name|first|default:d.usuario.username|first|upper }}
                             </div>
                             <div>
-                                <p class="font-medium text-on-surface">{{ d.usuario.get_full_name|default:d.usuario.username }}</p>
-                                <p class="text-xs text-on-surface-variant">{{ d.usuario.email }}</p>
+                                <p class="font-medium text-on-surface dark:text-gray-100">{{ d.usuario.get_full_name|default:d.usuario.username }}</p>
+                                <p class="text-xs text-on-surface dark:text-gray-100-variant dark:text-gray-400">{{ d.usuario.email }}</p>
                             </div>
                         </div>
                     </td>
-                    <td class="px-lg py-sm text-on-surface-variant hidden md:table-cell">{{ d.especialidad|default:"—" }}</td>
-                    <td class="px-lg py-sm text-on-surface-variant hidden md:table-cell">{{ d.ubicacion_actual|default:"—" }}</td>
+                    <td class="px-lg py-sm text-on-surface dark:text-gray-100-variant dark:text-gray-400 hidden md:table-cell">{{ d.especialidad|default:"—" }}</td>
+                    <td class="px-lg py-sm text-on-surface dark:text-gray-100-variant dark:text-gray-400 hidden md:table-cell">{{ d.ubicacion_actual|default:"—" }}</td>
                     <td class="px-lg py-sm">
                         <span class="flex items-center gap-1.5 w-fit px-2 py-0.5 rounded-full text-xs font-bold
-                            {% if d.disponible %}bg-[#E8F5E9] text-[#2E7D32]{% else %}bg-[#FFEBEE] text-[#C62828]{% endif %}">
+                            {% if d.disponible %}bg-[#E8F5E9] dark:bg-green-900/30 text-[#2E7D32] dark:text-green-400{% else %}bg-[#FFEBEE] dark:bg-red-900/30 text-[#C62828] dark:text-red-400{% endif %}">
                             <span class="w-1.5 h-1.5 rounded-full {% if d.disponible %}bg-[#4CAF50]{% else %}bg-[#E53935]{% endif %}"></span>
                             {% if d.disponible %}Disponible{% else %}Ocupado{% endif %}
                         </span>
                     </td>
                     <td class="px-lg py-sm text-right">
                         <a href="{% url 'horarios:gestion_editar_docente' d.id %}"
-                           class="inline-flex items-center gap-1 px-sm py-1 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-high hover:text-primary transition-colors text-xs font-medium">
+                           class="inline-flex items-center gap-1 px-sm py-1 rounded-lg border border-outline-variant dark:border-gray-700 text-on-surface dark:text-gray-100-variant dark:text-gray-400 hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-high dark:bg-gray-700 hover:text-primary transition-colors text-xs font-medium">
                             <span class="material-symbols-outlined text-[15px]">edit</span>
                             Editar
                         </a>
                         <button onclick="confirmarEliminarDocente({{ d.id }}, '{{ d.usuario.get_full_name|default:d.usuario.username|escapejs }}')"
-                                class="inline-flex items-center gap-1 px-sm py-1 rounded-lg border border-[#E53935]/30 text-[#C62828] hover:bg-[#FFEBEE] transition-colors text-xs font-medium ml-1">
+                                class="inline-flex items-center gap-1 px-sm py-1 rounded-lg border border-[#E53935]/30 dark:border-red-800/50 text-[#C62828] dark:text-red-400 hover:bg-[#FFEBEE] dark:hover:bg-red-900/50 dark:bg-red-900/30 transition-colors text-xs font-medium ml-1">
                             <span class="material-symbols-outlined text-[15px]">delete</span>
                             Eliminar
                         </button>
@@ -65,13 +65,13 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="px-lg py-xl text-center text-on-surface-variant">No hay docentes registrados.</td>
+                    <td colspan="5" class="px-lg py-xl text-center text-on-surface dark:text-gray-100-variant dark:text-gray-400">No hay docentes registrados.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    <div class="px-lg py-sm border-t border-outline-variant bg-surface-container-low text-on-surface-variant font-body-sm text-body-sm">
+    <div class="px-lg py-sm border-t border-outline-variant dark:border-gray-700 bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 text-on-surface dark:text-gray-100-variant dark:text-gray-400 font-body-sm text-body-sm">
         {{ docentes|length }} docente{{ docentes|length|pluralize }} registrado{{ docentes|length|pluralize }}
     </div>
 </div>
@@ -79,19 +79,19 @@
 <!-- Modal eliminar docente -->
 <div id="modal-docente" class="fixed inset-0 z-50 hidden flex items-center justify-center p-md">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModal()"></div>
-    <div class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-2xl p-xl max-w-sm w-full">
+    <div class="relative bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-2xl border border-outline-variant dark:border-gray-700 shadow-2xl p-xl max-w-sm w-full">
         <div class="flex flex-col items-center text-center gap-md">
-            <div class="w-14 h-14 rounded-full bg-[#FFEBEE] flex items-center justify-center">
-                <span class="material-symbols-outlined text-[28px] text-[#C62828]">warning</span>
+            <div class="w-14 h-14 rounded-full bg-[#FFEBEE] dark:bg-red-900/30 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[28px] text-[#C62828] dark:text-red-400">warning</span>
             </div>
             <div>
-                <h4 class="font-h3 text-h3 text-on-surface mb-xs">¿Eliminar docente?</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">
-                    Se eliminará al docente <strong id="docente-nombre" class="text-on-surface"></strong>, y también su usuario y horarios asociados.
+                <h4 class="font-h3 text-h3 text-on-surface dark:text-gray-100 mb-xs">¿Eliminar docente?</h4>
+                <p class="font-body-sm text-body-sm text-on-surface dark:text-gray-100-variant dark:text-gray-400">
+                    Se eliminará al docente <strong id="docente-nombre" class="text-on-surface dark:text-gray-100"></strong>, y también su usuario y horarios asociados.
                 </p>
             </div>
             <div class="flex gap-md w-full">
-                <button onclick="cerrarModal()" class="flex-1 py-sm border border-outline-variant rounded-lg font-button text-button transition-colors hover:bg-surface-container-low">Cancelar</button>
+                <button onclick="cerrarModal()" class="flex-1 py-sm border border-outline-variant dark:border-gray-700 rounded-lg font-button text-button transition-colors hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80">Cancelar</button>
                 <form id="form-eliminar-docente" method="post" action="" class="flex-1">
                     {% csrf_token %}
                     <button type="submit" class="w-full py-sm bg-[#C62828] text-white rounded-lg font-button text-button hover:bg-[#B71C1C] transition-colors">Sí, eliminar</button>

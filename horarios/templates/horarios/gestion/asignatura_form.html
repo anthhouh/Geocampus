@@ -6,13 +6,13 @@
 <div class="max-w-2xl mx-auto">
     <div class="flex items-center gap-md mb-lg">
         <a href="{% url 'horarios:gestion_asignaturas' %}" 
-           class="w-10 h-10 rounded-full flex items-center justify-center border border-outline-variant text-on-surface-variant hover:bg-surface-container-low transition-colors" title="Volver">
+           class="w-10 h-10 rounded-full flex items-center justify-center border border-outline-variant dark:border-gray-700 text-on-surface dark:text-gray-100-variant dark:text-gray-400 hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 transition-colors" title="Volver">
             <span class="material-symbols-outlined">arrow_back</span>
         </a>
-        <h3 class="font-h3 text-h3 text-on-surface">{{ titulo }}</h3>
+        <h3 class="font-h3 text-h3 text-on-surface dark:text-gray-100">{{ titulo }}</h3>
     </div>
 
-    <form method="post" class="bg-surface-container-lowest border border-outline-variant shadow-sm rounded-xl p-xl space-y-md">
+    <form method="post" class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 border border-outline-variant dark:border-gray-700 shadow-sm rounded-xl p-xl space-y-md">
         {% csrf_token %}
         
         {% if form.non_field_errors %}
@@ -23,13 +23,13 @@
 
         {% for field in form %}
         <div class="flex flex-col gap-xs">
-            <label for="{{ field.id_for_label }}" class="font-label-md text-label-md text-on-surface flex items-center justify-between">
+            <label for="{{ field.id_for_label }}" class="font-label-md text-label-md text-on-surface dark:text-gray-100 flex items-center justify-between">
                 {{ field.label }}
                 {% if field.field.required %}<span class="text-error text-xs">*Requerido</span>{% endif %}
             </label>
             {{ field }}
             {% if field.help_text %}
-            <span class="text-xs text-on-surface-variant">{{ field.help_text }}</span>
+            <span class="text-xs text-on-surface dark:text-gray-100-variant dark:text-gray-400">{{ field.help_text }}</span>
             {% endif %}
             {% if field.errors %}
             <span class="text-xs text-error font-medium">{{ field.errors|join:", " }}</span>
@@ -37,9 +37,9 @@
         </div>
         {% endfor %}
 
-        <div class="pt-md border-t border-outline-variant flex justify-end gap-sm mt-lg">
+        <div class="pt-md border-t border-outline-variant dark:border-gray-700 flex justify-end gap-sm mt-lg">
             <a href="{% url 'horarios:gestion_asignaturas' %}" 
-               class="px-lg py-sm border border-outline-variant rounded-lg text-on-surface hover:bg-surface-container-low font-button text-button transition-colors">
+               class="px-lg py-sm border border-outline-variant dark:border-gray-700 rounded-lg text-on-surface dark:text-gray-100 hover:bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 font-button text-button transition-colors">
                 Cancelar
             </a>
             <button type="submit" 

@@ -3,13 +3,13 @@
 {% block title %}Registro - La Dolorosa{% endblock %}
 
 {% block auth_content %}
-<div class="w-full max-w-[440px] bg-surface-container-lowest rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.04)] border border-outline-variant/30 p-xl flex flex-col relative overflow-hidden" style="max-height: 90vh; overflow-y: auto;">
+<div class="w-full max-w-[440px] bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.04)] border border-outline-variant dark:border-gray-700/30 p-xl flex flex-col relative overflow-hidden" style="max-height: 90vh; overflow-y: auto;">
     <div class="absolute top-0 left-0 w-full h-1 bg-secondary"></div>
     
     <!-- Header Section -->
     <div class="mb-lg text-center sm:text-left flex flex-col items-center sm:items-start">
-        <h2 class="font-h2 text-h2 text-on-surface mb-xs">Crear una Cuenta</h2>
-        <p class="font-body-md text-body-md text-on-surface-variant">Únete al sistema de horarios de La Dolorosa</p>
+        <h2 class="font-h2 text-h2 text-on-surface dark:text-gray-100 mb-xs">Crear una Cuenta</h2>
+        <p class="font-body-md text-body-md text-on-surface dark:text-gray-100-variant dark:text-gray-400">Únete al sistema de horarios de La Dolorosa</p>
     </div>
 
     <!-- Form Section -->
@@ -21,35 +21,35 @@
         
         <div class="grid grid-cols-2 gap-md">
             <div class="flex flex-col gap-xs">
-                <label class="font-label-md text-label-md text-on-surface" for="first_name">Nombre</label>
-                <input class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="first_name" name="first_name" required="" type="text"/>
+                <label class="font-label-md text-label-md text-on-surface dark:text-gray-100" for="first_name">Nombre</label>
+                <input class="w-full px-md py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg font-body-sm text-body-sm text-on-surface dark:text-gray-100 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary dark:text-white" id="first_name" name="first_name" required="" type="text"/>
             </div>
             <div class="flex flex-col gap-xs">
-                <label class="font-label-md text-label-md text-on-surface" for="last_name">Apellido</label>
-                <input class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="last_name" name="last_name" required="" type="text"/>
+                <label class="font-label-md text-label-md text-on-surface dark:text-gray-100" for="last_name">Apellido</label>
+                <input class="w-full px-md py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg font-body-sm text-body-sm text-on-surface dark:text-gray-100 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary dark:text-white" id="last_name" name="last_name" required="" type="text"/>
             </div>
         </div>
 
         <div class="flex flex-col gap-xs">
-            <label class="font-label-md text-label-md text-on-surface" for="username">Nombre de Usuario</label>
+            <label class="font-label-md text-label-md text-on-surface dark:text-gray-100" for="username">Nombre de Usuario</label>
             <div class="relative flex items-center">
                 <span class="material-symbols-outlined absolute left-md text-outline-variant pointer-events-none" style="font-size: 18px;">person</span>
-                <input class="w-full pl-[40px] pr-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="username" name="username" required="" type="text"/>
+                <input class="w-full pl-[40px] pr-md py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg font-body-sm text-body-sm text-on-surface dark:text-gray-100 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary dark:text-white" id="username" name="username" required="" type="text"/>
             </div>
         </div>
 
         <div class="flex flex-col gap-xs">
-            <label class="font-label-md text-label-md text-on-surface" for="email">Correo Institucional</label>
+            <label class="font-label-md text-label-md text-on-surface dark:text-gray-100" for="email">Correo Institucional</label>
             <div class="relative flex items-center">
                 <span class="material-symbols-outlined absolute left-md text-outline-variant pointer-events-none" style="font-size: 18px;">mail</span>
-                <input class="w-full pl-[40px] pr-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="email" name="email" placeholder="ejemplo@ladolorosa-loja.edu.ec" required="" type="email"/>
+                <input class="w-full pl-[40px] pr-md py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg font-body-sm text-body-sm text-on-surface dark:text-gray-100 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary dark:text-white" id="email" name="email" placeholder="ejemplo@ladolorosa-loja.edu.ec" required="" type="email"/>
             </div>
             <small class="text-xs text-outline-variant">Solo correos terminados en @ladolorosa-loja.edu.ec</small>
         </div>
 
         <div class="flex flex-col gap-xs">
-            <label class="font-label-md text-label-md text-on-surface" for="rol">Tipo de Cuenta</label>
-            <select id="rol" name="rol" class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" required>
+            <label class="font-label-md text-label-md text-on-surface dark:text-gray-100" for="rol">Tipo de Cuenta</label>
+            <select id="rol" name="rol" class="w-full px-md py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg font-body-sm text-body-sm text-on-surface dark:text-gray-100 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary dark:text-white dark:bg-gray-800" required>
                 <option value="estudiante">Estudiante / Representante</option>
                 <option value="docente">Docente / Administrativo</option>
             </select>
@@ -57,12 +57,12 @@
 
         <div class="grid grid-cols-2 gap-md">
             <div class="flex flex-col gap-xs">
-                <label class="font-label-md text-label-md text-on-surface" for="password">Contraseña</label>
-                <input class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="password" name="password" required="" type="password"/>
+                <label class="font-label-md text-label-md text-on-surface dark:text-gray-100" for="password">Contraseña</label>
+                <input class="w-full px-md py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg font-body-sm text-body-sm text-on-surface dark:text-gray-100 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary dark:text-white" id="password" name="password" required="" type="password"/>
             </div>
             <div class="flex flex-col gap-xs">
-                <label class="font-label-md text-label-md text-on-surface" for="confirm_password">Confirmar</label>
-                <input class="w-full px-md py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="confirm_password" name="confirm_password" required="" type="password"/>
+                <label class="font-label-md text-label-md text-on-surface dark:text-gray-100" for="confirm_password">Confirmar</label>
+                <input class="w-full px-md py-2 bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg font-body-sm text-body-sm text-on-surface dark:text-gray-100 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary dark:text-white" id="confirm_password" name="confirm_password" required="" type="password"/>
             </div>
         </div>
 
@@ -76,7 +76,7 @@
 
     <!-- Footer / Help Link -->
     <div class="mt-lg pt-md border-t border-surface-variant text-center">
-        <p class="font-body-sm text-body-sm text-on-surface-variant">
+        <p class="font-body-sm text-body-sm text-on-surface dark:text-gray-100-variant dark:text-gray-400">
             ¿Ya tienes una cuenta? <a class="text-primary font-semibold hover:underline" href="{% url 'horarios:login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">Inicia sesión aquí</a>
         </p>
     </div>

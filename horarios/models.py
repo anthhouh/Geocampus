@@ -9,6 +9,8 @@ class Usuario(AbstractUser):
     )
     rol = models.CharField(max_length=20, choices=ROLES, default='estudiante')
     
+    modo_oscuro = models.BooleanField(default=False)
+    
     two_factor_enabled = models.BooleanField(default=False)
     two_factor_code = models.CharField(max_length=6, blank=True, null=True)
     two_factor_expires = models.DateTimeField(blank=True, null=True)

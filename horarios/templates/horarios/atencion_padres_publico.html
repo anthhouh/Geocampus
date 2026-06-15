@@ -6,13 +6,13 @@
 {% block content %}
 <div class="main-content">
     <!-- Hero Section -->
-    <div class="bg-surface border border-outline-variant rounded-2xl p-6 lg:p-8 mb-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm overflow-hidden relative">
+    <div class="bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-2xl p-6 lg:p-8 mb-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm overflow-hidden relative">
         <div class="z-10 max-w-2xl">
-            <h2 class="font-h2 text-h2 text-on-surface mb-3 flex items-center gap-3">
+            <h2 class="font-h2 text-h2 text-on-surface dark:text-gray-100 mb-3 flex items-center gap-3">
                 <span class="material-symbols-outlined text-primary text-[36px]">family_restroom</span>
                 Horarios de Atención a Padres
             </h2>
-            <p class="text-on-surface-variant font-body-lg">
+            <p class="text-on-surface dark:text-gray-100-variant dark:text-gray-400 font-body-lg">
                 Consulta los días y horas en los que los docentes estarán disponibles para atender a padres de familia y representantes.
             </p>
         </div>
@@ -28,13 +28,13 @@
     {% if hay_atencion_hoy %}
     <div class="mb-6 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 rounded-2xl p-5 sm:p-6 shadow-lg relative overflow-hidden">
         <!-- Decoraciones -->
-        <div class="absolute -right-8 -top-8 w-36 h-36 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="absolute -right-8 -top-8 w-36 h-36 bg-white dark:bg-gray-800/10 rounded-full blur-2xl"></div>
         <div class="absolute left-1/3 -bottom-8 w-28 h-28 bg-yellow-300/20 rounded-full blur-xl"></div>
-        <div class="absolute right-1/4 top-0 w-20 h-20 bg-white/5 rounded-full blur-lg"></div>
+        <div class="absolute right-1/4 top-0 w-20 h-20 bg-white dark:bg-gray-800/5 rounded-full blur-lg"></div>
         
         <div class="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-4">
-                <div class="w-14 h-14 shrink-0 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner">
+                <div class="w-14 h-14 shrink-0 bg-white dark:bg-gray-800/20 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner">
                     <span class="material-symbols-outlined text-white text-[28px]">notifications_active</span>
                 </div>
                 <div>
@@ -52,33 +52,33 @@
 
     <!-- Summary Cards Row -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div class="bg-surface border border-outline-variant rounded-xl p-5 flex items-center gap-4 shadow-sm">
+        <div class="bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-xl p-5 flex items-center gap-4 shadow-sm">
             <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
                 <span class="material-symbols-outlined text-[24px]">calendar_month</span>
             </div>
             <div>
-                <p class="text-xs font-medium text-on-surface-variant uppercase tracking-wider mb-0.5">Días disponibles</p>
-                <h4 class="font-title-md text-on-surface">{{ dias_texto }}</h4>
+                <p class="text-xs font-medium text-on-surface dark:text-gray-100-variant dark:text-gray-400 uppercase tracking-wider mb-0.5">Días disponibles</p>
+                <h4 class="font-title-md text-on-surface dark:text-gray-100">{{ dias_texto }}</h4>
             </div>
         </div>
         
-        <div class="bg-surface border border-outline-variant rounded-xl p-5 flex items-center gap-4 shadow-sm">
+        <div class="bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-xl p-5 flex items-center gap-4 shadow-sm">
             <div class="w-12 h-12 rounded-full bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
                 <span class="material-symbols-outlined text-[24px]">groups</span>
             </div>
             <div>
-                <p class="text-xs font-medium text-on-surface-variant uppercase tracking-wider mb-0.5">Docentes</p>
-                <h4 class="font-title-md text-on-surface">{{ total_docentes }} docente{{ total_docentes|pluralize }}</h4>
+                <p class="text-xs font-medium text-on-surface dark:text-gray-100-variant dark:text-gray-400 uppercase tracking-wider mb-0.5">Docentes</p>
+                <h4 class="font-title-md text-on-surface dark:text-gray-100">{{ total_docentes }} docente{{ total_docentes|pluralize }}</h4>
             </div>
         </div>
         
-        <div class="bg-surface border border-outline-variant rounded-xl p-5 flex items-center gap-4 shadow-sm">
+        <div class="bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-xl p-5 flex items-center gap-4 shadow-sm">
             <div class="w-12 h-12 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0">
                 <span class="material-symbols-outlined text-[24px]">handshake</span>
             </div>
             <div>
-                <p class="text-xs font-medium text-on-surface-variant uppercase tracking-wider mb-0.5">Atención</p>
-                <h4 class="font-title-md text-on-surface">Personalizada 1 a 1</h4>
+                <p class="text-xs font-medium text-on-surface dark:text-gray-100-variant dark:text-gray-400 uppercase tracking-wider mb-0.5">Atención</p>
+                <h4 class="font-title-md text-on-surface dark:text-gray-100">Personalizada 1 a 1</h4>
             </div>
         </div>
     </div>
@@ -86,21 +86,21 @@
     <!-- Cuadrícula por días -->
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
         {% for dia_id, dia_nombre, horarios_dia in dias_ordenados %}
-        <div class="bg-surface border border-outline-variant rounded-xl flex flex-col h-full overflow-hidden shadow-sm {% if dia_id == dia_hoy and hay_atencion_hoy %}ring-2 ring-amber-400 ring-offset-2{% endif %}">
+        <div class="bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-xl flex flex-col h-full overflow-hidden shadow-sm {% if dia_id == dia_hoy and hay_atencion_hoy %}ring-2 ring-amber-400 dark:ring-amber-600 ring-offset-2{% endif %}">
             <!-- Header Día -->
-            <div class="border-b border-outline-variant p-4 flex items-center justify-between {% if dia_id == dia_hoy and hay_atencion_hoy %}bg-gradient-to-r from-amber-50 to-orange-50{% else %}bg-surface-container-low{% endif %}">
+            <div class="border-b border-outline-variant dark:border-gray-700 p-4 flex items-center justify-between {% if dia_id == dia_hoy and hay_atencion_hoy %}bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30{% else %}bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80{% endif %}">
                 <div class="flex items-center gap-2">
                     <span class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm {% if dia_id == dia_hoy and hay_atencion_hoy %}bg-amber-500 text-white{% else %}bg-primary/10 text-primary{% endif %}">
                         {{ dia_nombre|first }}
                     </span>
                     <div>
-                        <h4 class="font-title-md text-on-surface leading-tight">{{ dia_nombre }}</h4>
+                        <h4 class="font-title-md text-on-surface dark:text-gray-100 leading-tight">{{ dia_nombre }}</h4>
                         {% if dia_id == dia_hoy and hay_atencion_hoy %}
                         <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600">Hoy</span>
                         {% endif %}
                     </div>
                 </div>
-                <span class="text-xs font-medium bg-surface-variant text-on-surface-variant px-2 py-1 rounded-md">
+                <span class="text-xs font-medium bg-surface dark:bg-gray-900-variant dark:bg-gray-700 text-on-surface dark:text-gray-100-variant dark:text-gray-400 px-2 py-1 rounded-md">
                     {{ horarios_dia|length }}
                 </span>
             </div>
@@ -108,15 +108,15 @@
             <!-- Lista de Docentes -->
             <div class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto max-h-[600px] min-h-[150px]">
                 {% for h in horarios_dia %}
-                <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3 shadow-sm hover:shadow-md hover:border-primary/40 transition-all">
+                <div class="bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 border border-outline-variant dark:border-gray-700 rounded-lg p-3 shadow-sm hover:shadow-md hover:border-primary/40 transition-all">
                     <!-- Docente -->
                     <div class="flex items-start gap-2.5">
-                        <div class="w-9 h-9 rounded-full bg-surface-variant flex items-center justify-center shrink-0 overflow-hidden border border-outline-variant">
-                            <span class="material-symbols-outlined text-[22px] text-on-surface-variant/60 pt-0.5">person</span>
+                        <div class="w-9 h-9 rounded-full bg-surface dark:bg-gray-900-variant dark:bg-gray-700 flex items-center justify-center shrink-0 overflow-hidden border border-outline-variant dark:border-gray-700">
+                            <span class="material-symbols-outlined text-[22px] text-on-surface dark:text-gray-100-variant dark:text-gray-400/60 pt-0.5">person</span>
                         </div>
                         <div class="min-w-0 flex-1">
-                            <h5 class="text-sm font-semibold text-on-surface truncate leading-tight">{{ h.docente.usuario.get_full_name|default:h.docente.usuario.username }}</h5>
-                            <p class="text-xs text-on-surface-variant flex items-center gap-1 mt-1 truncate">
+                            <h5 class="text-sm font-semibold text-on-surface dark:text-gray-100 truncate leading-tight">{{ h.docente.usuario.get_full_name|default:h.docente.usuario.username }}</h5>
+                            <p class="text-xs text-on-surface dark:text-gray-100-variant dark:text-gray-400 flex items-center gap-1 mt-1 truncate">
                                 <span class="material-symbols-outlined text-[12px] text-primary/70">location_on</span>
                                 {{ h.lugar_atencion|default:"No especificado" }}
                             </p>
@@ -124,16 +124,16 @@
                     </div>
                     
                     <!-- Horario -->
-                    <div class="mt-2.5 pt-2 border-t border-outline-variant/60 flex items-center justify-between">
+                    <div class="mt-2.5 pt-2 border-t border-outline-variant dark:border-gray-700/60 flex items-center justify-between">
                         <div class="flex items-center gap-1.5 text-xs font-medium text-primary">
                             <span class="material-symbols-outlined text-[14px]">schedule</span>
                             {{ h.hora_inicio|time:"H:i" }} - {{ h.hora_fin|time:"H:i" }}
                         </div>
-                        <span class="text-[10px] font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded">Disponible</span>
+                        <span class="text-[10px] font-semibold text-green-700 dark:text-green-400 bg-green-100 px-2 py-0.5 rounded">Disponible</span>
                     </div>
                 </div>
                 {% empty %}
-                <div class="flex flex-col items-center justify-center text-center p-6 text-on-surface-variant/50 my-auto">
+                <div class="flex flex-col items-center justify-center text-center p-6 text-on-surface dark:text-gray-100-variant dark:text-gray-400/50 my-auto">
                     <span class="material-symbols-outlined text-[32px] mb-2 opacity-40">event_busy</span>
                     <span class="text-sm">Sin atención<br>este día</span>
                 </div>
@@ -144,13 +144,13 @@
     </div>
 
     <!-- Consejo Bottom -->
-    <div class="mt-8 bg-surface-container-low border border-outline-variant rounded-xl p-4 flex items-center gap-4">
+    <div class="mt-8 bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80 border border-outline-variant dark:border-gray-700 rounded-xl p-4 flex items-center gap-4">
         <div class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center shrink-0">
             <span class="material-symbols-outlined">info</span>
         </div>
         <div class="flex-1">
             <h4 class="font-title-sm text-primary mb-0.5">Consejo</h4>
-            <p class="text-sm text-on-surface-variant">Recuerda llegar puntualmente a tu horario de atención. La puntualidad garantiza un mejor servicio.</p>
+            <p class="text-sm text-on-surface dark:text-gray-100-variant dark:text-gray-400">Recuerda llegar puntualmente a tu horario de atención. La puntualidad garantiza un mejor servicio.</p>
         </div>
     </div>
 </div>

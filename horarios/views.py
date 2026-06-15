@@ -378,6 +378,22 @@ def configuracion_view(request):
         'password_form': password_form,
     })
 
+from django.http import JsonResponse
+import json
+
+@login_required
+def toggle_modo_oscuro(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            modo_oscuro = data.get('modo_oscuro', False)
+            request.user.modo_oscuro = modo_oscuro
+            request.user.save()
+            return JsonResponse({'status': 'success', 'modo_oscuro': request.user.modo_oscuro})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+
 @login_required
 def index(request):
     # Directorio de Docentes y Disponibilidad

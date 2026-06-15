@@ -7,12 +7,12 @@
 
 <!-- Modal Container -->
 <div id="help-modal" class="fixed inset-0 z-[9001] hidden items-center justify-center p-4 sm:p-6 md:p-10">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden border border-gray-200 transform scale-95 opacity-0 transition-all duration-300" id="help-modal-content">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700 transform scale-95 opacity-0 transition-all duration-300" id="help-modal-content">
 
         <!-- ─── Header ─── -->
         <div class="bg-gradient-to-r from-[#4450CF] to-[#1d4ed8] px-6 py-5 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                <div class="w-10 h-10 rounded-xl bg-white dark:bg-gray-800/20 flex items-center justify-center backdrop-blur-sm">
                     <span class="material-symbols-outlined text-white text-[24px]">menu_book</span>
                 </div>
                 <div>
@@ -20,7 +20,7 @@
                     <p class="text-blue-200 text-xs font-medium">Sistema de Gestión de Horarios — La Dolorosa</p>
                 </div>
             </div>
-            <button onclick="cerrarAyuda()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer border-none">
+            <button onclick="cerrarAyuda()" class="w-9 h-9 rounded-full bg-white dark:bg-gray-800/10 hover:bg-white dark:bg-gray-800/20 flex items-center justify-center transition-colors cursor-pointer border-none">
                 <span class="material-symbols-outlined text-white text-[20px]">close</span>
             </button>
         </div>
@@ -29,7 +29,7 @@
         <div class="flex flex-1 overflow-hidden min-h-0">
 
             <!-- Sidebar Navigation -->
-            <nav class="hidden md:flex flex-col w-56 shrink-0 bg-gray-50 border-r border-gray-200 py-4 px-3 overflow-y-auto gap-1" id="help-nav">
+            <nav class="hidden md:flex flex-col w-56 shrink-0 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 py-4 px-3 overflow-y-auto gap-1" id="help-nav">
                 <button onclick="scrollToSection('help-intro')" class="help-nav-btn active">
                     <span class="material-symbols-outlined text-[18px]">home</span>
                     Introducción
@@ -73,8 +73,8 @@
             </nav>
 
             <!-- Mobile Nav Dropdown -->
-            <div class="md:hidden sticky top-0 bg-white border-b border-gray-200 px-4 py-3 z-10 shrink-0">
-                <select id="help-mobile-nav" onchange="scrollToSection(this.value)" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:border-blue-500">
+            <div class="md:hidden sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 z-10 shrink-0">
+                <select id="help-mobile-nav" onchange="scrollToSection(this.value)" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 focus:outline-none focus:border-blue-500">
                     <option value="help-intro">📖 Introducción</option>
                     <option value="help-registro">👤 Registro</option>
                     <option value="help-login">🔐 Iniciar Sesión</option>
@@ -99,24 +99,24 @@
                         <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center">
                             <span class="material-symbols-outlined text-blue-600 text-[20px]">home</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900">Introducción</h3>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Introducción</h3>
                     </div>
-                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-4">
-                        <p class="text-sm text-gray-700 leading-relaxed">
+                    <div class="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-xl p-5 mb-4">
+                        <p class="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
                             Bienvenido al <strong>Sistema de Gestión de Horarios</strong> de la Unidad Educativa Particular 
                             <strong>"La Dolorosa"</strong>. Esta plataforma web permite consultar horarios de clases, 
                             conocer la disponibilidad de los docentes en tiempo real, gestionar horarios de atención a padres 
                             de familia y administrar toda la estructura académica de la institución.
                         </p>
                     </div>
-                    <h4 class="font-semibold text-gray-800 mb-2 text-sm">Roles del sistema</h4>
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 text-sm">Roles del sistema</h4>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div class="bg-green-50 dark:bg-green-900/30 border border-green-200 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-2">
                                 <span class="material-symbols-outlined text-green-600 text-[18px]">school</span>
                                 <span class="font-bold text-green-800 text-sm">Estudiante / Representante</span>
                             </div>
-                            <p class="text-xs text-green-700 leading-relaxed">Puede consultar el directorio de docentes, ver horarios de clases por curso y paralelo, y revisar los horarios de atención a padres.</p>
+                            <p class="text-xs text-green-700 dark:text-green-400 leading-relaxed">Puede consultar el directorio de docentes, ver horarios de clases por curso y paralelo, y revisar los horarios de atención a padres.</p>
                         </div>
                         <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-2">
@@ -133,14 +133,14 @@
                             <p class="text-xs text-amber-700 leading-relaxed">Tiene control total: gestiona docentes, cursos, paralelos, asignaturas, horarios, lecciones, disponibilidad y el generador automático de horarios.</p>
                         </div>
                     </div>
-                    <h4 class="font-semibold text-gray-800 mb-2 text-sm">Navegación principal</h4>
-                    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 text-sm">Navegación principal</h4>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
                         La aplicación cuenta con una <strong>barra lateral desplegable</strong> que se abre haciendo clic en el icono 
                         <span class="inline-flex items-center px-1.5 py-0.5 bg-gray-100 rounded text-xs font-mono">☰ menú</span> 
                         en la esquina superior izquierda. Desde allí puedes acceder a todas las secciones disponibles según tu rol.
                     </p>
-                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                        <p class="text-xs text-gray-500 flex items-center gap-2">
+                    <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
                             <span class="material-symbols-outlined text-[16px]">lightbulb</span>
                             <strong>Tip:</strong> En pantallas grandes, la imagen de fondo de la página de inicio de sesión muestra las instalaciones de la institución.
                         </p>
@@ -155,39 +155,39 @@
                         <div class="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center">
                             <span class="material-symbols-outlined text-green-600 text-[20px]">person_add</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900">Registro de Cuenta</h3>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Registro de Cuenta</h3>
                     </div>
-                    <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
                         Para crear una cuenta en el sistema, sigue estos pasos:
                     </p>
                     <ol class="space-y-3 mb-4">
                         <li class="flex gap-3 items-start">
                             <span class="w-6 h-6 shrink-0 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">1</span>
-                            <div class="text-sm text-gray-700">
+                            <div class="text-sm text-gray-700 dark:text-gray-200">
                                 <strong>Nombre y Apellido:</strong> Ingresa tu nombre y apellido real. Estos datos se mostrarán en el directorio y en los horarios.
                             </div>
                         </li>
                         <li class="flex gap-3 items-start">
                             <span class="w-6 h-6 shrink-0 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">2</span>
-                            <div class="text-sm text-gray-700">
+                            <div class="text-sm text-gray-700 dark:text-gray-200">
                                 <strong>Nombre de usuario:</strong> Elige un identificador único para acceder al sistema (ej: <code class="bg-gray-100 px-1 rounded text-xs">jperez</code>).
                             </div>
                         </li>
                         <li class="flex gap-3 items-start">
                             <span class="w-6 h-6 shrink-0 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">3</span>
-                            <div class="text-sm text-gray-700">
+                            <div class="text-sm text-gray-700 dark:text-gray-200">
                                 <strong>Correo institucional:</strong> Debes usar un correo terminado en <code class="bg-gray-100 px-1 rounded text-xs">@ladolorosa-loja.edu.ec</code>. El sistema no aceptará otros dominios.
                             </div>
                         </li>
                         <li class="flex gap-3 items-start">
                             <span class="w-6 h-6 shrink-0 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">4</span>
-                            <div class="text-sm text-gray-700">
+                            <div class="text-sm text-gray-700 dark:text-gray-200">
                                 <strong>Tipo de Cuenta:</strong> Selecciona si eres <em>Estudiante/Representante</em> o <em>Docente/Administrativo</em>. Esto determina los permisos que tendrás.
                             </div>
                         </li>
                         <li class="flex gap-3 items-start">
                             <span class="w-6 h-6 shrink-0 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">5</span>
-                            <div class="text-sm text-gray-700">
+                            <div class="text-sm text-gray-700 dark:text-gray-200">
                                 <strong>Contraseña:</strong> Crea una contraseña segura y confírmala en el segundo campo. Ambos campos deben coincidir.
                             </div>
                         </li>
@@ -208,32 +208,32 @@
                         <div class="w-9 h-9 rounded-lg bg-indigo-100 flex items-center justify-center">
                             <span class="material-symbols-outlined text-indigo-600 text-[20px]">login</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900">Iniciar Sesión</h3>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Iniciar Sesión</h3>
                     </div>
-                    <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
                         Para acceder al sistema, ingresa tus credenciales institucionales:
                     </p>
-                    <div class="bg-white border border-gray-200 rounded-lg divide-y divide-gray-100 mb-4">
+                    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg divide-y divide-gray-100 dark:divide-gray-700 mb-4">
                         <div class="flex items-center gap-3 px-4 py-3">
                             <span class="material-symbols-outlined text-gray-400 text-[18px]">person</span>
                             <div>
-                                <p class="text-sm font-semibold text-gray-800">Nombre de Usuario</p>
-                                <p class="text-xs text-gray-500">El nombre de usuario que elegiste al registrarte.</p>
+                                <p class="text-sm font-semibold text-gray-800 dark:text-gray-100">Nombre de Usuario</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">El nombre de usuario que elegiste al registrarte.</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-3 px-4 py-3">
                             <span class="material-symbols-outlined text-gray-400 text-[18px]">lock</span>
                             <div>
-                                <p class="text-sm font-semibold text-gray-800">Contraseña</p>
-                                <p class="text-xs text-gray-500">Tu contraseña personal. Asegúrate de no compartirla.</p>
+                                <p class="text-sm font-semibold text-gray-800 dark:text-gray-100">Contraseña</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Tu contraseña personal. Asegúrate de no compartirla.</p>
                             </div>
                         </div>
                     </div>
-                    <p class="text-sm text-gray-600 leading-relaxed mb-2">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-2">
                         Haz clic en <strong>"Iniciar Sesión"</strong> para entrar. Si no tienes cuenta, puedes crearla haciendo clic en 
                         <em>"Regístrate aquí"</em> al final del formulario.
                     </p>
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
+                    <div class="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 flex items-start gap-3">
                         <span class="material-symbols-outlined text-blue-600 text-[18px] mt-0.5">info</span>
                         <p class="text-xs text-blue-800 leading-relaxed">
                             <strong>Nota:</strong> No es obligatorio iniciar sesión para consultar el directorio de docentes, los horarios de clases o la atención a padres. Estas secciones son de acceso público.
@@ -249,43 +249,43 @@
                         <div class="w-9 h-9 rounded-lg bg-teal-100 flex items-center justify-center">
                             <span class="material-symbols-outlined text-teal-600 text-[20px]">group</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900">Directorio de Docentes</h3>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Directorio de Docentes</h3>
                     </div>
-                    <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
                         El Directorio de Docentes es la página principal del sistema. Muestra tarjetas con la información de cada docente 
                         registrado, incluyendo su estado de disponibilidad <strong>en tiempo real</strong>.
                     </p>
-                    <h4 class="font-semibold text-gray-800 mb-2 text-sm">¿Qué puedes ver en cada tarjeta?</h4>
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 text-sm">¿Qué puedes ver en cada tarjeta?</h4>
                     <ul class="space-y-2 mb-4">
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-green-500 text-[16px] mt-0.5">circle</span>
                             <span><strong>Estado:</strong> Un indicador verde ("Disponible") o rojo ("Ocupado") muestra si el docente se encuentra en clase o libre.</span>
                         </li>
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-blue-500 text-[16px] mt-0.5">person</span>
                             <span><strong>Foto y nombre:</strong> Foto de perfil (si la tiene) y nombre completo del docente.</span>
                         </li>
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-purple-500 text-[16px] mt-0.5">school</span>
                             <span><strong>Especialidad:</strong> El área o materia en la que se especializa el docente.</span>
                         </li>
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-orange-500 text-[16px] mt-0.5">location_on</span>
                             <span><strong>Ubicación:</strong> El lugar donde se encuentra actualmente (aula, laboratorio, sala de profesores, etc.).</span>
                         </li>
                     </ul>
-                    <h4 class="font-semibold text-gray-800 mb-2 text-sm">Búsqueda y filtros</h4>
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 text-sm">Búsqueda y filtros</h4>
                     <ul class="space-y-2 mb-4">
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-gray-400 text-[16px] mt-0.5">search</span>
                             <span><strong>Barra de búsqueda:</strong> Escribe el nombre o especialidad del docente para filtrarlo rápidamente.</span>
                         </li>
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-gray-400 text-[16px] mt-0.5">filter_list</span>
                             <span><strong>Filtros:</strong> Usa el botón "Filtros" para mostrar solo docentes <em>disponibles</em> o <em>ocupados</em>.</span>
                         </li>
                     </ul>
-                    <p class="text-sm text-gray-600 leading-relaxed">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                         Al hacer clic en <strong>"Ver detalles"</strong> en una tarjeta, accederás al <strong>horario completo</strong> de ese docente, 
                         mostrado en formato de planilla semanal (lunes a viernes).
                     </p>
@@ -299,47 +299,47 @@
                         <div class="w-9 h-9 rounded-lg bg-cyan-100 flex items-center justify-center">
                             <span class="material-symbols-outlined text-cyan-600 text-[20px]">calendar_month</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900">Horarios de Clases</h3>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Horarios de Clases</h3>
                     </div>
-                    <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
                         En esta sección puedes consultar el horario semanal de cualquier curso y paralelo de la institución.
                     </p>
-                    <h4 class="font-semibold text-gray-800 mb-2 text-sm">¿Cómo consultar un horario?</h4>
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 text-sm">¿Cómo consultar un horario?</h4>
                     <ol class="space-y-3 mb-4">
                         <li class="flex gap-3 items-start">
                             <span class="w-6 h-6 shrink-0 rounded-full bg-cyan-600 text-white flex items-center justify-center text-xs font-bold">1</span>
-                            <div class="text-sm text-gray-700">
+                            <div class="text-sm text-gray-700 dark:text-gray-200">
                                 Selecciona el <strong>curso</strong> del menú desplegable (Ej: Octavo, Noveno, Décimo...).
                             </div>
                         </li>
                         <li class="flex gap-3 items-start">
                             <span class="w-6 h-6 shrink-0 rounded-full bg-cyan-600 text-white flex items-center justify-center text-xs font-bold">2</span>
-                            <div class="text-sm text-gray-700">
+                            <div class="text-sm text-gray-700 dark:text-gray-200">
                                 Opcionalmente, selecciona un <strong>paralelo</strong> específico ("A", "B", "C"...).
                             </div>
                         </li>
                         <li class="flex gap-3 items-start">
                             <span class="w-6 h-6 shrink-0 rounded-full bg-cyan-600 text-white flex items-center justify-center text-xs font-bold">3</span>
-                            <div class="text-sm text-gray-700">
+                            <div class="text-sm text-gray-700 dark:text-gray-200">
                                 Haz clic en <strong>"Buscar"</strong>. Se mostrará la planilla horaria con las 9 horas de clase (07:00 a 13:45) y el recreo (10:00 a 10:25).
                             </div>
                         </li>
                     </ol>
-                    <h4 class="font-semibold text-gray-800 mb-2 text-sm">Lectura de la planilla</h4>
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 text-sm">Lectura de la planilla</h4>
                     <ul class="space-y-2 mb-4">
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-gray-400 text-[16px] mt-0.5">view_column</span>
                             <span>Las <strong>columnas</strong> representan los días de la semana (Lu, Ma, Mi, Ju, Vi).</span>
                         </li>
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-gray-400 text-[16px] mt-0.5">view_list</span>
                             <span>Las <strong>filas</strong> representan las horas de clase (1ª a 9ª hora).</span>
                         </li>
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-gray-400 text-[16px] mt-0.5">palette</span>
                             <span>Cada <strong>bloque de color</strong> indica una asignatura, con el nombre del docente debajo.</span>
                         </li>
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-gray-400 text-[16px] mt-0.5">print</span>
                             <span>Puedes <strong>imprimir</strong> el horario haciendo clic en el botón "Imprimir" dentro de cada horario.</span>
                         </li>
@@ -354,27 +354,27 @@
                         <div class="w-9 h-9 rounded-lg bg-orange-100 flex items-center justify-center">
                             <span class="material-symbols-outlined text-orange-600 text-[20px]">family_restroom</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900">Atención a Padres de Familia</h3>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Atención a Padres de Familia</h3>
                     </div>
-                    <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
                         Esta sección muestra los horarios disponibles para que los padres de familia o representantes 
                         puedan reunirse con los docentes.
                     </p>
-                    <h4 class="font-semibold text-gray-800 mb-2 text-sm">¿Cómo funciona?</h4>
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 text-sm">¿Cómo funciona?</h4>
                     <ul class="space-y-2 mb-4">
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-orange-500 text-[16px] mt-0.5">calendar_today</span>
                             <span>Los horarios están organizados por <strong>día de la semana</strong> (Lunes a Viernes), cada uno en su propia columna.</span>
                         </li>
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-orange-500 text-[16px] mt-0.5">person</span>
                             <span>Cada tarjeta muestra el <strong>nombre del docente</strong>, el <strong>lugar de atención</strong> y el <strong>horario</strong>.</span>
                         </li>
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-orange-500 text-[16px] mt-0.5">notifications_active</span>
                             <span>Si <strong>hoy</strong> hay atención disponible, se mostrará un banner especial en la parte superior de la página y en el directorio.</span>
                         </li>
-                        <li class="flex items-start gap-2 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
                             <span class="material-symbols-outlined text-orange-500 text-[16px] mt-0.5">today</span>
                             <span>El día actual se resalta con un <strong>borde dorado</strong> para identificarlo fácilmente.</span>
                         </li>
@@ -389,7 +389,7 @@
                         <div class="w-9 h-9 rounded-lg bg-violet-100 flex items-center justify-center">
                             <span class="material-symbols-outlined text-violet-600 text-[20px]">dashboard</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900">Panel del Docente (Mi Panel)</h3>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Panel del Docente (Mi Panel)</h3>
                     </div>
                     <div class="bg-violet-50 border border-violet-200 rounded-lg p-4 mb-4 flex items-start gap-3">
                         <span class="material-symbols-outlined text-violet-600 text-[18px] mt-0.5">lock</span>
@@ -397,45 +397,45 @@
                             <strong>Acceso restringido:</strong> Esta sección solo está disponible para usuarios con rol de <em>Docente</em> o <em>Administrador</em>.
                         </p>
                     </div>
-                    <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
                         El panel personal del docente permite gestionar tu presencia en el sistema.
                     </p>
-                    <h4 class="font-semibold text-gray-800 mb-2 text-sm">Funcionalidades</h4>
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 text-sm">Funcionalidades</h4>
                     <div class="space-y-3 mb-4">
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="material-symbols-outlined text-green-500 text-[16px]">toggle_on</span>
-                                <span class="font-semibold text-sm text-gray-800">Estado de disponibilidad</span>
+                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-100">Estado de disponibilidad</span>
                             </div>
-                            <p class="text-xs text-gray-600 pl-6">Cambia tu estado entre <strong>"Disponible"</strong> y <strong>"Ocupado"</strong> con los botones en la parte superior. Este estado se refleja en tiempo real en el directorio.</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 pl-6">Cambia tu estado entre <strong>"Disponible"</strong> y <strong>"Ocupado"</strong> con los botones en la parte superior. Este estado se refleja en tiempo real en el directorio.</p>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="material-symbols-outlined text-blue-500 text-[16px]">location_on</span>
-                                <span class="font-semibold text-sm text-gray-800">Ubicación actual</span>
+                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-100">Ubicación actual</span>
                             </div>
-                            <p class="text-xs text-gray-600 pl-6">Escribe tu ubicación actual (ej: "Laboratorio 1", "Sala de profesores") y presiona <strong>"Guardar ubicación"</strong>. Esto ayuda a que estudiantes y colegas te localicen.</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 pl-6">Escribe tu ubicación actual (ej: "Laboratorio 1", "Sala de profesores") y presiona <strong>"Guardar ubicación"</strong>. Esto ayuda a que estudiantes y colegas te localicen.</p>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="material-symbols-outlined text-purple-500 text-[16px]">photo_camera</span>
-                                <span class="font-semibold text-sm text-gray-800">Foto de perfil</span>
+                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-100">Foto de perfil</span>
                             </div>
-                            <p class="text-xs text-gray-600 pl-6">Haz clic sobre tu avatar para subir o cambiar tu foto de perfil. La imagen se actualizará automáticamente en el directorio.</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 pl-6">Haz clic sobre tu avatar para subir o cambiar tu foto de perfil. La imagen se actualizará automáticamente en el directorio.</p>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="material-symbols-outlined text-indigo-500 text-[16px]">calendar_month</span>
-                                <span class="font-semibold text-sm text-gray-800">Mi horario de clases</span>
+                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-100">Mi horario de clases</span>
                             </div>
-                            <p class="text-xs text-gray-600 pl-6">Visualiza tu planilla horaria semanal completa. Las celdas vacías muestran un <strong>"+"</strong> al pasar el cursor, permitiéndote añadir clases. También puedes editar o eliminar clases existentes haciendo clic sobre ellas.</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 pl-6">Visualiza tu planilla horaria semanal completa. Las celdas vacías muestran un <strong>"+"</strong> al pasar el cursor, permitiéndote añadir clases. También puedes editar o eliminar clases existentes haciendo clic sobre ellas.</p>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="material-symbols-outlined text-teal-500 text-[16px]">print</span>
-                                <span class="font-semibold text-sm text-gray-800">Imprimir / Guardar horario</span>
+                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-100">Imprimir / Guardar horario</span>
                             </div>
-                            <p class="text-xs text-gray-600 pl-6">Usa los botones <strong>"Imprimir"</strong> para abrir la vista de impresión, o <strong>"Guardar horario"</strong> para descargar tu planilla en formato PDF.</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 pl-6">Usa los botones <strong>"Imprimir"</strong> para abrir la vista de impresión, o <strong>"Guardar horario"</strong> para descargar tu planilla en formato PDF.</p>
                         </div>
                     </div>
                 </section>
@@ -448,75 +448,75 @@
                         <div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center">
                             <span class="material-symbols-outlined text-amber-700 text-[20px]">shield_person</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900">Panel de Gestión (Administrador)</h3>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Panel de Gestión (Administrador)</h3>
                     </div>
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 flex items-start gap-3">
+                    <div class="bg-red-50 dark:bg-red-900/30 border border-red-200 rounded-lg p-4 mb-4 flex items-start gap-3">
                         <span class="material-symbols-outlined text-red-600 text-[18px] mt-0.5">admin_panel_settings</span>
                         <p class="text-xs text-red-800 leading-relaxed">
                             <strong>Solo Administradores:</strong> Esta sección requiere permisos de administrador. Si no los tienes, verás un mensaje de error al intentar acceder.
                         </p>
                     </div>
-                    <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
                         El Panel de Gestión es el centro de control de toda la información del sistema. Se accede desde la barra lateral haciendo clic en <strong>"Gestión Horaria"</strong>.
                     </p>
 
-                    <h4 class="font-semibold text-gray-800 mb-2 text-sm">Sub-secciones disponibles</h4>
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 text-sm">Sub-secciones disponibles</h4>
                     <div class="space-y-3 mb-4">
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="material-symbols-outlined text-blue-600 text-[16px]">dashboard</span>
-                                <span class="font-semibold text-sm text-gray-800">Resumen</span>
+                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-100">Resumen</span>
                             </div>
-                            <p class="text-xs text-gray-600 pl-6">Muestra estadísticas generales: total de docentes, cursos, paralelos, horarios registrados, etc. También incluye accesos rápidos a las acciones más comunes y los últimos horarios registrados.</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 pl-6">Muestra estadísticas generales: total de docentes, cursos, paralelos, horarios registrados, etc. También incluye accesos rápidos a las acciones más comunes y los últimos horarios registrados.</p>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="material-symbols-outlined text-blue-600 text-[16px]">badge</span>
-                                <span class="font-semibold text-sm text-gray-800">Horarios Docentes</span>
+                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-100">Horarios Docentes</span>
                             </div>
-                            <p class="text-xs text-gray-600 pl-6">Visualiza y gestiona la planilla horaria de cada docente con la posibilidad de editar, crear y eliminar horarios directamente sobre la cuadrícula.</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 pl-6">Visualiza y gestiona la planilla horaria de cada docente con la posibilidad de editar, crear y eliminar horarios directamente sobre la cuadrícula.</p>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="material-symbols-outlined text-blue-600 text-[16px]">calendar_month</span>
-                                <span class="font-semibold text-sm text-gray-800">Horarios Cursos</span>
+                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-100">Horarios Cursos</span>
                             </div>
-                            <p class="text-xs text-gray-600 pl-6">Visualiza los horarios agrupados por curso y paralelo. Permite imprimir y exportar a Excel.</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 pl-6">Visualiza los horarios agrupados por curso y paralelo. Permite imprimir y exportar a Excel.</p>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="material-symbols-outlined text-blue-600 text-[16px]">person</span>
-                                <span class="font-semibold text-sm text-gray-800">Docentes</span>
+                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-100">Docentes</span>
                             </div>
-                            <p class="text-xs text-gray-600 pl-6">Administra la lista de docentes del sistema: crea nuevos docentes con sus credenciales, edita sus datos (nombre, especialidad, ubicación) o elimínalos del sistema.</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 pl-6">Administra la lista de docentes del sistema: crea nuevos docentes con sus credenciales, edita sus datos (nombre, especialidad, ubicación) o elimínalos del sistema.</p>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="material-symbols-outlined text-blue-600 text-[16px]">school</span>
-                                <span class="font-semibold text-sm text-gray-800">Cursos & Paralelos</span>
+                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-100">Cursos & Paralelos</span>
                             </div>
-                            <p class="text-xs text-gray-600 pl-6">Gestiona la estructura académica: crea cursos (Octavo, Noveno, etc.) y sus paralelos ("A", "B", "C"). Cada paralelo puede tener una especialidad de bachillerato (BGU, Informática, Electricidad) y un docente tutor asignado.</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 pl-6">Gestiona la estructura académica: crea cursos (Octavo, Noveno, etc.) y sus paralelos ("A", "B", "C"). Cada paralelo puede tener una especialidad de bachillerato (BGU, Informática, Electricidad) y un docente tutor asignado.</p>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="material-symbols-outlined text-blue-600 text-[16px]">book</span>
-                                <span class="font-semibold text-sm text-gray-800">Asignaturas</span>
+                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-100">Asignaturas</span>
                             </div>
-                            <p class="text-xs text-gray-600 pl-6">Crea, edita y elimina las materias/asignaturas que se imparten en la institución (ej: Matemáticas, Lengua, Ciencias Naturales, etc.).</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 pl-6">Crea, edita y elimina las materias/asignaturas que se imparten en la institución (ej: Matemáticas, Lengua, Ciencias Naturales, etc.).</p>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="material-symbols-outlined text-blue-600 text-[16px]">family_restroom</span>
-                                <span class="font-semibold text-sm text-gray-800">Atención a Padres</span>
+                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-100">Atención a Padres</span>
                             </div>
-                            <p class="text-xs text-gray-600 pl-6">Administra los horarios de atención a padres de familia: asigna días, horas y lugar de atención a cada docente.</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 pl-6">Administra los horarios de atención a padres de familia: asigna días, horas y lugar de atención a cada docente.</p>
                         </div>
-                        <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="material-symbols-outlined text-blue-600 text-[16px]">download</span>
-                                <span class="font-semibold text-sm text-gray-800">Exportar a Excel</span>
+                                <span class="font-semibold text-sm text-gray-800 dark:text-gray-100">Exportar a Excel</span>
                             </div>
-                            <p class="text-xs text-gray-600 pl-6">Desde la sección de Horarios Cursos, utiliza el botón de exportación para descargar todos los horarios en formato Excel.</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 pl-6">Desde la sección de Horarios Cursos, utiliza el botón de exportación para descargar todos los horarios en formato Excel.</p>
                         </div>
                     </div>
                 </section>
@@ -529,7 +529,7 @@
                         <div class="w-9 h-9 rounded-lg bg-yellow-100 flex items-center justify-center">
                             <span class="material-symbols-outlined text-yellow-700 text-[20px]">bolt</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900">Generador Automático de Horarios</h3>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Generador Automático de Horarios</h3>
                     </div>
                     <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4 flex items-start gap-3">
                         <span class="material-symbols-outlined text-yellow-700 text-[18px] mt-0.5">admin_panel_settings</span>
@@ -537,39 +537,39 @@
                             <strong>Solo Administradores.</strong> Este módulo avanzado requiere que los datos previos (lecciones, disponibilidad) estén configurados correctamente.
                         </p>
                     </div>
-                    <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
                         El generador automático crea horarios completos de forma inteligente, respetando la disponibilidad de los docentes 
                         y evitando conflictos.
                     </p>
-                    <h4 class="font-semibold text-gray-800 mb-2 text-sm">Flujo de trabajo</h4>
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 text-sm">Flujo de trabajo</h4>
                     <ol class="space-y-3 mb-4">
                         <li class="flex gap-3 items-start">
                             <span class="w-6 h-6 shrink-0 rounded-full bg-yellow-600 text-white flex items-center justify-center text-xs font-bold">1</span>
-                            <div class="text-sm text-gray-700">
+                            <div class="text-sm text-gray-700 dark:text-gray-200">
                                 <strong>Configurar Lecciones:</strong> Define qué asignatura imparte cada docente a cada curso/paralelo, cuántas horas semanales necesita, si permite horas dobles y si requiere aula específica (ej: laboratorio).
                             </div>
                         </li>
                         <li class="flex gap-3 items-start">
                             <span class="w-6 h-6 shrink-0 rounded-full bg-yellow-600 text-white flex items-center justify-center text-xs font-bold">2</span>
-                            <div class="text-sm text-gray-700">
+                            <div class="text-sm text-gray-700 dark:text-gray-200">
                                 <strong>Configurar Disponibilidad:</strong> Marca los bloques horarios en que cada docente NO puede dar clases (bloqueados) o prefiere dar clases (preferidos).
                             </div>
                         </li>
                         <li class="flex gap-3 items-start">
                             <span class="w-6 h-6 shrink-0 rounded-full bg-yellow-600 text-white flex items-center justify-center text-xs font-bold">3</span>
-                            <div class="text-sm text-gray-700">
+                            <div class="text-sm text-gray-700 dark:text-gray-200">
                                 <strong>Verificar coherencia:</strong> El sistema validará que los datos sean coherentes antes de generar (sin sobrecargas, sin conflictos evidentes).
                             </div>
                         </li>
                         <li class="flex gap-3 items-start">
                             <span class="w-6 h-6 shrink-0 rounded-full bg-yellow-600 text-white flex items-center justify-center text-xs font-bold">4</span>
-                            <div class="text-sm text-gray-700">
+                            <div class="text-sm text-gray-700 dark:text-gray-200">
                                 <strong>Ejecutar generador:</strong> El sistema genera un borrador de horario completo. El progreso se muestra en tiempo real.
                             </div>
                         </li>
                         <li class="flex gap-3 items-start">
                             <span class="w-6 h-6 shrink-0 rounded-full bg-yellow-600 text-white flex items-center justify-center text-xs font-bold">5</span>
-                            <div class="text-sm text-gray-700">
+                            <div class="text-sm text-gray-700 dark:text-gray-200">
                                 <strong>Revisar borrador:</strong> Revisa el horario generado. Si estás conforme, haz clic en <strong>"Publicar"</strong> para hacerlo oficial. Si no, puedes <strong>"Descartar"</strong> y volver a generar.
                             </div>
                         </li>
@@ -584,69 +584,69 @@
                         <div class="w-9 h-9 rounded-lg bg-pink-100 flex items-center justify-center">
                             <span class="material-symbols-outlined text-pink-600 text-[20px]">quiz</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900">Preguntas Frecuentes</h3>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Preguntas Frecuentes</h3>
                     </div>
                     <div class="space-y-3">
-                        <details class="bg-white border border-gray-200 rounded-lg overflow-hidden group">
-                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors list-none">
+                        <details class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden group">
+                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors list-none">
                                 ¿Necesito una cuenta para consultar los horarios?
                                 <span class="material-symbols-outlined text-gray-400 text-[18px] transition-transform group-open:rotate-180">expand_more</span>
                             </summary>
-                            <div class="px-4 pb-3 text-sm text-gray-600 border-t border-gray-100 pt-3">
+                            <div class="px-4 pb-3 text-sm text-gray-600 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-3">
                                 No. Las secciones de <strong>Directorio de Docentes</strong>, <strong>Horarios de Clases</strong> y <strong>Atención a Padres</strong> son de acceso público y no requieren iniciar sesión.
                             </div>
                         </details>
-                        <details class="bg-white border border-gray-200 rounded-lg overflow-hidden group">
-                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors list-none">
+                        <details class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden group">
+                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors list-none">
                                 ¿Cómo sé si un docente está disponible?
                                 <span class="material-symbols-outlined text-gray-400 text-[18px] transition-transform group-open:rotate-180">expand_more</span>
                             </summary>
-                            <div class="px-4 pb-3 text-sm text-gray-600 border-t border-gray-100 pt-3">
+                            <div class="px-4 pb-3 text-sm text-gray-600 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-3">
                                 En el <strong>Directorio de Docentes</strong>, cada tarjeta tiene un indicador de estado. Si es <span class="text-green-600 font-semibold">verde</span>, el docente está disponible. Si es <span class="text-red-600 font-semibold">rojo</span>, se encuentra en clase o se marcó como ocupado. El estado se actualiza automáticamente según el horario registrado.
                             </div>
                         </details>
-                        <details class="bg-white border border-gray-200 rounded-lg overflow-hidden group">
-                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors list-none">
+                        <details class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden group">
+                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors list-none">
                                 ¿Puedo imprimir mi horario?
                                 <span class="material-symbols-outlined text-gray-400 text-[18px] transition-transform group-open:rotate-180">expand_more</span>
                             </summary>
-                            <div class="px-4 pb-3 text-sm text-gray-600 border-t border-gray-100 pt-3">
+                            <div class="px-4 pb-3 text-sm text-gray-600 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-3">
                                 Sí. Desde el <strong>Panel del Docente</strong>, puedes usar los botones <em>"Imprimir"</em> o <em>"Guardar horario"</em> para obtener tu planilla en formato imprimible o PDF. Los horarios de curso también tienen opción de impresión.
                             </div>
                         </details>
-                        <details class="bg-white border border-gray-200 rounded-lg overflow-hidden group">
-                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors list-none">
+                        <details class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden group">
+                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors list-none">
                                 ¿Qué correo debo usar para registrarme?
                                 <span class="material-symbols-outlined text-gray-400 text-[18px] transition-transform group-open:rotate-180">expand_more</span>
                             </summary>
-                            <div class="px-4 pb-3 text-sm text-gray-600 border-t border-gray-100 pt-3">
+                            <div class="px-4 pb-3 text-sm text-gray-600 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-3">
                                 Solo se aceptan correos institucionales con el dominio <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs">@ladolorosa-loja.edu.ec</code>. Si no dispones de uno, consulta con la administración de la institución.
                             </div>
                         </details>
-                        <details class="bg-white border border-gray-200 rounded-lg overflow-hidden group">
-                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors list-none">
+                        <details class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden group">
+                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors list-none">
                                 ¿Cómo puedo cambiar mi foto de perfil?
                                 <span class="material-symbols-outlined text-gray-400 text-[18px] transition-transform group-open:rotate-180">expand_more</span>
                             </summary>
-                            <div class="px-4 pb-3 text-sm text-gray-600 border-t border-gray-100 pt-3">
+                            <div class="px-4 pb-3 text-sm text-gray-600 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-3">
                                 Inicia sesión como docente y ve a <strong>"Mi Panel"</strong>. Haz clic sobre tu avatar (el círculo con tu inicial o foto). Se abrirá un selector de archivos donde podrás elegir tu nueva imagen.
                             </div>
                         </details>
-                        <details class="bg-white border border-gray-200 rounded-lg overflow-hidden group">
-                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors list-none">
+                        <details class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden group">
+                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors list-none">
                                 ¿Qué hago si olvidé mi contraseña?
                                 <span class="material-symbols-outlined text-gray-400 text-[18px] transition-transform group-open:rotate-180">expand_more</span>
                             </summary>
-                            <div class="px-4 pb-3 text-sm text-gray-600 border-t border-gray-100 pt-3">
+                            <div class="px-4 pb-3 text-sm text-gray-600 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-3">
                                 Actualmente, la recuperación de contraseña debe gestionarse a través del administrador del sistema. Contacta a la administración de la institución para que restablezcan tus credenciales.
                             </div>
                         </details>
-                        <details class="bg-white border border-gray-200 rounded-lg overflow-hidden group">
-                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors list-none">
+                        <details class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden group">
+                            <summary class="px-4 py-3 cursor-pointer flex items-center justify-between text-sm font-semibold text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors list-none">
                                 ¿Se puede exportar la información a Excel?
                                 <span class="material-symbols-outlined text-gray-400 text-[18px] transition-transform group-open:rotate-180">expand_more</span>
                             </summary>
-                            <div class="px-4 pb-3 text-sm text-gray-600 border-t border-gray-100 pt-3">
+                            <div class="px-4 pb-3 text-sm text-gray-600 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-3">
                                 Sí. Los administradores pueden exportar todos los horarios a formato Excel desde la sección <strong>Gestión Horaria → Horarios Cursos</strong> usando el botón de exportación.
                             </div>
                         </details>
@@ -654,7 +654,7 @@
                 </section>
 
                 <!-- Footer del manual -->
-                <div class="border-t border-gray-200 pt-4 mt-6 text-center">
+                <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-6 text-center">
                     <p class="text-xs text-gray-400">
                         Sistema de Gestión de Horarios — Unidad Educativa Particular "La Dolorosa" · Loja, Ecuador
                     </p>
