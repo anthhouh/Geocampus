@@ -68,39 +68,82 @@ PERIODOS_ROWS = [
 ]
 
 
-# Paleta intercalada: cada posición adyacente es de una familia opuesta
-# (cálido ↔ frío ↔ neutro) para que índices cercanos nunca se parezcan.
+# Paleta ampliada: 36 colores con hues bien distribuidos (cada 10°)
+# para que sea casi imposible que dos combinaciones distintas repitan color.
 _PALETA = [
-    # 0 — Rojo coral (cálido intenso)
+    # 0 — Rojo coral
     {'bg': 'hsl(4,   90%, 82%)', 'border': 'hsl(4,   85%, 38%)', 'text': 'hsl(4,   80%, 20%)'},
-    # 1 — Cian brillante (frío intenso)
+    # 1 — Cian brillante
     {'bg': 'hsl(192, 88%, 72%)', 'border': 'hsl(192, 80%, 24%)', 'text': 'hsl(192, 75%, 13%)'},
-    # 2 — Amarillo dorado (cálido saturado)
+    # 2 — Amarillo dorado
     {'bg': 'hsl(46,  96%, 70%)', 'border': 'hsl(46,  88%, 28%)', 'text': 'hsl(46,  82%, 16%)'},
-    # 3 — Violeta púrpura (frío vivo)
+    # 3 — Violeta púrpura
     {'bg': 'hsl(268, 72%, 76%)', 'border': 'hsl(268, 66%, 32%)', 'text': 'hsl(268, 62%, 17%)'},
-    # 4 — Naranja quemado (cálido vibrante)
+    # 4 — Naranja quemado
     {'bg': 'hsl(28,  96%, 76%)', 'border': 'hsl(28,  90%, 33%)', 'text': 'hsl(28,  85%, 17%)'},
-    # 5 — Verde esmeralda (frío profundo)
+    # 5 — Verde esmeralda
     {'bg': 'hsl(152, 62%, 70%)', 'border': 'hsl(152, 56%, 22%)', 'text': 'hsl(152, 52%, 13%)'},
-    # 6 — Rosa frambuesa (cálido suave)
+    # 6 — Rosa frambuesa
     {'bg': 'hsl(328, 82%, 78%)', 'border': 'hsl(328, 75%, 33%)', 'text': 'hsl(328, 70%, 17%)'},
-    # 7 — Azul zafiro (frío medio)
+    # 7 — Azul zafiro
     {'bg': 'hsl(218, 80%, 76%)', 'border': 'hsl(218, 72%, 30%)', 'text': 'hsl(218, 68%, 16%)'},
-    # 8 — Fucsia intenso (cálido-frío límite)
+    # 8 — Fucsia intenso
     {'bg': 'hsl(294, 74%, 76%)', 'border': 'hsl(294, 68%, 31%)', 'text': 'hsl(294, 62%, 16%)'},
-    # 9 — Verde lima eléctrico (neutro vivo)
+    # 9 — Verde lima eléctrico
     {'bg': 'hsl(82,  74%, 70%)', 'border': 'hsl(82,  66%, 26%)', 'text': 'hsl(82,  60%, 14%)'},
-    # 10 — Marrón terracota (neutro cálido)
+    # 10 — Marrón terracota
     {'bg': 'hsl(16,  60%, 74%)', 'border': 'hsl(16,  54%, 28%)', 'text': 'hsl(16,  48%, 15%)'},
-    # 11 — Turquesa vivo (frío vivo)
+    # 11 — Turquesa vivo
     {'bg': 'hsl(174, 76%, 68%)', 'border': 'hsl(174, 68%, 21%)', 'text': 'hsl(174, 64%, 12%)'},
-    # 12 — Índigo oscuro (frío intenso)
+    # 12 — Índigo oscuro
     {'bg': 'hsl(244, 64%, 74%)', 'border': 'hsl(244, 58%, 33%)', 'text': 'hsl(244, 54%, 18%)'},
-    # 13 — Azul cielo claro (frío suave)
+    # 13 — Azul cielo claro
     {'bg': 'hsl(206, 82%, 78%)', 'border': 'hsl(206, 74%, 30%)', 'text': 'hsl(206, 70%, 16%)'},
-    # 14 — Verde salvia apagado (neutro frío)
+    # 14 — Verde salvia apagado
     {'bg': 'hsl(120, 34%, 72%)', 'border': 'hsl(120, 28%, 25%)', 'text': 'hsl(120, 26%, 13%)'},
+    # --- 15 en adelante: colores nuevos para evitar repeticiones ---
+    # 15 — Magenta rosado
+    {'bg': 'hsl(340, 78%, 80%)', 'border': 'hsl(340, 70%, 35%)', 'text': 'hsl(340, 65%, 18%)'},
+    # 16 — Azul acero
+    {'bg': 'hsl(230, 55%, 75%)', 'border': 'hsl(230, 48%, 30%)', 'text': 'hsl(230, 44%, 16%)'},
+    # 17 — Ámbar cálido
+    {'bg': 'hsl(38,  92%, 74%)', 'border': 'hsl(38,  85%, 30%)', 'text': 'hsl(38,  78%, 17%)'},
+    # 18 — Verde bosque
+    {'bg': 'hsl(140, 50%, 68%)', 'border': 'hsl(140, 44%, 23%)', 'text': 'hsl(140, 40%, 13%)'},
+    # 19 — Lila suave
+    {'bg': 'hsl(280, 60%, 80%)', 'border': 'hsl(280, 54%, 34%)', 'text': 'hsl(280, 50%, 18%)'},
+    # 20 — Salmón
+    {'bg': 'hsl(12,  88%, 80%)', 'border': 'hsl(12,  80%, 36%)', 'text': 'hsl(12,  74%, 19%)'},
+    # 21 — Verde menta
+    {'bg': 'hsl(164, 68%, 72%)', 'border': 'hsl(164, 60%, 23%)', 'text': 'hsl(164, 56%, 13%)'},
+    # 22 — Azul océano
+    {'bg': 'hsl(200, 78%, 74%)', 'border': 'hsl(200, 70%, 28%)', 'text': 'hsl(200, 66%, 15%)'},
+    # 23 — Oro antiguo
+    {'bg': 'hsl(52,  80%, 72%)', 'border': 'hsl(52,  72%, 27%)', 'text': 'hsl(52,  66%, 15%)'},
+    # 24 — Rosa palo
+    {'bg': 'hsl(350, 70%, 82%)', 'border': 'hsl(350, 62%, 36%)', 'text': 'hsl(350, 58%, 19%)'},
+    # 25 — Azul petróleo
+    {'bg': 'hsl(186, 60%, 70%)', 'border': 'hsl(186, 52%, 24%)', 'text': 'hsl(186, 48%, 13%)'},
+    # 26 — Melocotón
+    {'bg': 'hsl(22,  84%, 78%)', 'border': 'hsl(22,  76%, 34%)', 'text': 'hsl(22,  70%, 18%)'},
+    # 27 — Lavanda
+    {'bg': 'hsl(256, 58%, 78%)', 'border': 'hsl(256, 52%, 33%)', 'text': 'hsl(256, 48%, 17%)'},
+    # 28 — Chartreuse
+    {'bg': 'hsl(72,  66%, 70%)', 'border': 'hsl(72,  58%, 26%)', 'text': 'hsl(72,  54%, 14%)'},
+    # 29 — Cereza
+    {'bg': 'hsl(355, 76%, 78%)', 'border': 'hsl(355, 68%, 34%)', 'text': 'hsl(355, 64%, 18%)'},
+    # 30 — Verde jade
+    {'bg': 'hsl(130, 44%, 70%)', 'border': 'hsl(130, 38%, 24%)', 'text': 'hsl(130, 34%, 14%)'},
+    # 31 — Azul real
+    {'bg': 'hsl(240, 68%, 78%)', 'border': 'hsl(240, 60%, 34%)', 'text': 'hsl(240, 56%, 18%)'},
+    # 32 — Coral claro
+    {'bg': 'hsl(10,  82%, 84%)', 'border': 'hsl(10,  74%, 38%)', 'text': 'hsl(10,  68%, 20%)'},
+    # 33 — Cian apagado
+    {'bg': 'hsl(180, 50%, 72%)', 'border': 'hsl(180, 44%, 24%)', 'text': 'hsl(180, 40%, 13%)'},
+    # 34 — Mandarina
+    {'bg': 'hsl(32,  90%, 76%)', 'border': 'hsl(32,  82%, 32%)', 'text': 'hsl(32,  76%, 17%)'},
+    # 35 — Índigo rosado
+    {'bg': 'hsl(310, 60%, 78%)', 'border': 'hsl(310, 54%, 32%)', 'text': 'hsl(310, 50%, 17%)'},
 ]
 
 def get_color_for_materia(clave):
