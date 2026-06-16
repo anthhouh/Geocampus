@@ -127,8 +127,12 @@
             <div class="flex items-center gap-3">
                 {% if user.is_authenticated %}
                 <span class="text-sm font-medium text-white hidden sm:block">Hola, {{ user.first_name|default:user.username }}</span>
-                <div class="w-10 h-10 rounded-full bg-[#002382] border border-white/20 flex items-center justify-center text-white font-bold cursor-pointer shadow-sm">
-                    {{ user.first_name|first|default:user.username|first|upper }}
+                <div class="w-10 h-10 rounded-full bg-[#002382] border border-white/20 flex items-center justify-center text-white font-bold cursor-pointer shadow-sm overflow-hidden">
+                    {% if user_avatar_url %}
+                        <img src="{{ user_avatar_url }}" alt="Foto de {{ user.first_name|default:user.username }}" class="w-full h-full object-cover">
+                    {% else %}
+                        {{ user.first_name|first|default:user.username|first|upper }}
+                    {% endif %}
                 </div>
                 {% endif %}
             </div>
