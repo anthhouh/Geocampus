@@ -147,7 +147,6 @@
 
         <!-- Grid Container -->
         <div class="p-4 overflow-x-auto">
-            {% if horarios_grid %}
             <div class="min-w-[800px] border border-gray-100 dark:border-gray-700 rounded-xl overflow-hidden bg-white dark:bg-gray-800">
                 
                 <style>
@@ -359,9 +358,9 @@
                     <div class="class-block" style="
                             grid-column: {{ item.grid_col }};
                             grid-row: {{ item.grid_row_start }} / {{ item.grid_row_end }};
-                            background-color: {% if 'ciencias' in materia %}#F0FDF4{% elif 'religión' in materia or 'religion' in materia %}#FEF2F2{% elif 'física' in materia or 'matemática' in materia %}#EFF6FF{% elif 'c.a.i.a' in materia or 'programacion' in materia %}#FFFBEB{% else %}{{ item.color_bg|default:'#F8FAFC' }}{% endif %};
-                            border: 1px solid {% if 'ciencias' in materia %}#BBF7D0{% elif 'religión' in materia or 'religion' in materia %}#FECACA{% elif 'física' in materia or 'matemática' in materia %}#BFDBFE{% elif 'c.a.i.a' in materia or 'programacion' in materia %}#FEF08A{% else %}{{ item.color_border|default:'#E2E8F0' }}{% endif %};
-                            color: {% if 'ciencias' in materia %}#166534{% elif 'religión' in materia or 'religion' in materia %}#991B1B{% elif 'física' in materia or 'matemática' in materia %}#1E40AF{% elif 'c.a.i.a' in materia or 'programacion' in materia %}#9A3412{% else %}{{ item.color_text|default:'#334155' }}{% endif %};
+                            background-color: {{ item.color_bg|default:'#F8FAFC' }};
+                            border: 1px solid {{ item.color_border|default:'#E2E8F0' }};
+                            color: {{ item.color_text|default:'#334155' }};
                         ">
                         <span class="material-symbols-outlined class-icon text-[18px]">
                             {% if 'ciencias' in materia %}eco
@@ -387,13 +386,7 @@
                 </div>
             </div>
 
-            {% else %}
-            <div class="flex flex-col items-center justify-center py-16 text-gray-400">
-                <span class="material-symbols-outlined text-[56px] mb-3 opacity-40">event_busy</span>
-                <p class="font-medium text-gray-600 dark:text-gray-400">Este docente aún no tiene horarios registrados.</p>
-                <p class="text-sm mt-1">Intenta más tarde o contacta al administrador.</p>
-            </div>
-            {% endif %}
+
         </div>
     </div>
 

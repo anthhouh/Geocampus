@@ -71,46 +71,38 @@ PERIODOS_ROWS = [
 # Paleta ampliada: 36 colores con hues bien distribuidos (cada 10°)
 # para que sea casi imposible que dos combinaciones distintas repitan color.
 _PALETA = [
-    # 0 - Rojo Suave
-    {'bg': 'hsl(0, 85%, 85%)', 'border': 'hsl(0, 75%, 45%)', 'text': 'hsl(0, 80%, 20%)'},
-    # 1 - Naranja
-    {'bg': 'hsl(30, 90%, 80%)', 'border': 'hsl(30, 85%, 40%)', 'text': 'hsl(30, 85%, 20%)'},
-    # 2 - Amarillo Mostaza
-    {'bg': 'hsl(45, 90%, 75%)', 'border': 'hsl(45, 85%, 35%)', 'text': 'hsl(45, 85%, 15%)'},
-    # 3 - Verde Lima
-    {'bg': 'hsl(80, 75%, 75%)', 'border': 'hsl(80, 70%, 30%)', 'text': 'hsl(80, 75%, 15%)'},
-    # 4 - Verde Esmeralda
-    {'bg': 'hsl(140, 60%, 75%)', 'border': 'hsl(140, 55%, 30%)', 'text': 'hsl(140, 65%, 15%)'},
-    # 5 - Verde Menta
-    {'bg': 'hsl(165, 70%, 75%)', 'border': 'hsl(165, 65%, 30%)', 'text': 'hsl(165, 75%, 15%)'},
-    # 6 - Cian
-    {'bg': 'hsl(190, 80%, 75%)', 'border': 'hsl(190, 75%, 35%)', 'text': 'hsl(190, 85%, 15%)'},
-    # 7 - Azul Claro
-    {'bg': 'hsl(210, 85%, 80%)', 'border': 'hsl(210, 75%, 45%)', 'text': 'hsl(210, 85%, 20%)'},
-    # 8 - Índigo
-    {'bg': 'hsl(235, 80%, 82%)', 'border': 'hsl(235, 70%, 50%)', 'text': 'hsl(235, 80%, 25%)'},
-    # 9 - Púrpura
-    {'bg': 'hsl(270, 75%, 82%)', 'border': 'hsl(270, 65%, 45%)', 'text': 'hsl(270, 75%, 20%)'},
-    # 10 - Magenta
-    {'bg': 'hsl(315, 80%, 82%)', 'border': 'hsl(315, 70%, 45%)', 'text': 'hsl(315, 80%, 20%)'},
-    # 11 - Rosa
-    {'bg': 'hsl(340, 85%, 84%)', 'border': 'hsl(340, 75%, 45%)', 'text': 'hsl(340, 85%, 20%)'},
-    # 12 - Marrón Terracota
-    {'bg': 'hsl(15, 60%, 75%)', 'border': 'hsl(15, 55%, 35%)', 'text': 'hsl(15, 65%, 20%)'},
-    # 13 - Verde Oliva
-    {'bg': 'hsl(60, 50%, 75%)', 'border': 'hsl(60, 45%, 35%)', 'text': 'hsl(60, 55%, 15%)'},
-    # 14 - Azul Pizarra (Slate)
-    {'bg': 'hsl(220, 40%, 75%)', 'border': 'hsl(220, 45%, 40%)', 'text': 'hsl(220, 50%, 20%)'},
-    # 15 - Violeta Suave
-    {'bg': 'hsl(290, 50%, 82%)', 'border': 'hsl(290, 45%, 45%)', 'text': 'hsl(290, 55%, 20%)'},
-    # 16 - Turquesa Oscuro
-    {'bg': 'hsl(175, 55%, 72%)', 'border': 'hsl(175, 50%, 35%)', 'text': 'hsl(175, 60%, 15%)'},
-    # 17 - Coral
-    {'bg': 'hsl(5, 75%, 80%)', 'border': 'hsl(5, 70%, 45%)', 'text': 'hsl(5, 80%, 20%)'},
-    # 18 - Verde Militar Claro
-    {'bg': 'hsl(100, 45%, 75%)', 'border': 'hsl(100, 40%, 35%)', 'text': 'hsl(100, 50%, 15%)'},
-    # 19 - Azul Marino Suave
-    {'bg': 'hsl(215, 60%, 75%)', 'border': 'hsl(215, 55%, 40%)', 'text': 'hsl(215, 65%, 20%)'},
+    {'bg': 'hsl(0, 80%, 45%)', 'border': 'hsl(0, 90%, 30%)', 'text': '#ffffff'},
+    {'bg': 'hsl(210, 85%, 70%)', 'border': 'hsl(210, 80%, 40%)', 'text': 'hsl(210, 90%, 15%)'},
+    {'bg': 'hsl(120, 80%, 35%)', 'border': 'hsl(120, 90%, 20%)', 'text': '#ffffff'},
+    {'bg': 'hsl(45, 90%, 65%)', 'border': 'hsl(45, 85%, 35%)', 'text': 'hsl(45, 90%, 15%)'},
+    {'bg': 'hsl(280, 80%, 50%)', 'border': 'hsl(280, 90%, 30%)', 'text': '#ffffff'},
+    {'bg': 'hsl(15, 85%, 65%)', 'border': 'hsl(15, 80%, 35%)', 'text': 'hsl(15, 90%, 15%)'},
+    {'bg': 'hsl(180, 85%, 40%)', 'border': 'hsl(180, 90%, 25%)', 'text': '#ffffff'},
+    {'bg': 'hsl(330, 85%, 70%)', 'border': 'hsl(330, 80%, 40%)', 'text': 'hsl(330, 90%, 15%)'},
+    {'bg': 'hsl(80, 80%, 45%)', 'border': 'hsl(80, 90%, 25%)', 'text': '#ffffff'},
+    {'bg': 'hsl(240, 80%, 65%)', 'border': 'hsl(240, 80%, 40%)', 'text': 'hsl(240, 90%, 15%)'},
+    {'bg': 'hsl(30, 90%, 50%)', 'border': 'hsl(30, 90%, 30%)', 'text': '#ffffff'},
+    {'bg': 'hsl(300, 85%, 70%)', 'border': 'hsl(300, 80%, 40%)', 'text': 'hsl(300, 90%, 15%)'},
+    {'bg': 'hsl(150, 80%, 35%)', 'border': 'hsl(150, 90%, 20%)', 'text': '#ffffff'},
+    {'bg': 'hsl(260, 85%, 65%)', 'border': 'hsl(260, 80%, 40%)', 'text': 'hsl(260, 90%, 15%)'},
+    {'bg': 'hsl(345, 80%, 50%)', 'border': 'hsl(345, 90%, 30%)', 'text': '#ffffff'},
+    {'bg': 'hsl(60, 85%, 65%)', 'border': 'hsl(60, 80%, 35%)', 'text': 'hsl(60, 90%, 15%)'},
+    {'bg': 'hsl(195, 80%, 45%)', 'border': 'hsl(195, 90%, 25%)', 'text': '#ffffff'},
+    {'bg': 'hsl(315, 85%, 70%)', 'border': 'hsl(315, 80%, 40%)', 'text': 'hsl(315, 90%, 15%)'},
+    {'bg': 'hsl(10, 80%, 45%)', 'border': 'hsl(10, 90%, 25%)', 'text': '#ffffff'},
+    {'bg': 'hsl(220, 85%, 65%)', 'border': 'hsl(220, 80%, 40%)', 'text': 'hsl(220, 90%, 15%)'},
+    {'bg': 'hsl(100, 80%, 35%)', 'border': 'hsl(100, 90%, 20%)', 'text': '#ffffff'},
+    {'bg': 'hsl(40, 90%, 65%)', 'border': 'hsl(40, 85%, 35%)', 'text': 'hsl(40, 90%, 15%)'},
+    {'bg': 'hsl(270, 80%, 50%)', 'border': 'hsl(270, 90%, 30%)', 'text': '#ffffff'},
+    {'bg': 'hsl(350, 85%, 70%)', 'border': 'hsl(350, 80%, 40%)', 'text': 'hsl(350, 90%, 15%)'},
+    {'bg': 'hsl(170, 80%, 35%)', 'border': 'hsl(170, 90%, 20%)', 'text': '#ffffff'},
+    {'bg': 'hsl(230, 85%, 65%)', 'border': 'hsl(230, 80%, 40%)', 'text': 'hsl(230, 90%, 15%)'},
+    {'bg': 'hsl(70, 80%, 40%)', 'border': 'hsl(70, 90%, 25%)', 'text': '#ffffff'},
+    {'bg': 'hsl(320, 85%, 70%)', 'border': 'hsl(320, 80%, 40%)', 'text': 'hsl(320, 90%, 15%)'},
+    {'bg': 'hsl(140, 80%, 35%)', 'border': 'hsl(140, 90%, 20%)', 'text': '#ffffff'},
+    {'bg': 'hsl(250, 85%, 65%)', 'border': 'hsl(250, 80%, 40%)', 'text': 'hsl(250, 90%, 15%)'},
+    {'bg': 'hsl(20, 80%, 45%)', 'border': 'hsl(20, 90%, 25%)', 'text': '#ffffff'},
+    {'bg': 'hsl(200, 85%, 65%)', 'border': 'hsl(200, 80%, 40%)', 'text': 'hsl(200, 90%, 15%)'}
 ]
 
 def get_color_for_materia(clave):
@@ -457,7 +449,7 @@ def dashboard_docente(request):
     horarios = Horario.objects.filter(docente=docente).exclude(tipo='atencion').order_by('dia', 'hora_inicio')
     
     # Para el grid interactivo, fusionamos bloques y necesitamos celdas vacías
-    horarios_grid, celdas_vacias = preparar_horarios_grid(horarios, incluir_vacios=True, fusionar_bloques=True, color_by='curso')
+    horarios_grid, celdas_vacias = preparar_horarios_grid(horarios, incluir_vacios=True, fusionar_bloques=True, color_by='default')
     
     context = {
         'docente': docente,
@@ -544,19 +536,20 @@ def horarios_curso(request):
     
     grupos = []
     
-    if curso_id or paralelo_ident:
-        paralelos = Paralelo.objects.select_related('curso').all()
-        if curso_id:
-            paralelos = paralelos.filter(curso_id=curso_id)
-        if paralelo_ident:
-            paralelos = paralelos.filter(identificador=paralelo_ident)
-            
-        # Mostrar todos los horarios (docente y clase) en la vista del curso,
-        # ya que la validación de choques previene duplicados.
-        horarios_qs = Horario.objects.select_related('docente__usuario', 'asignatura')
+    paralelos = Paralelo.objects.select_related('curso').all()
+    if curso_id:
+        paralelos = paralelos.filter(curso_id=curso_id)
+    if paralelo_ident:
+        paralelos = paralelos.filter(identificador=paralelo_ident)
         
-        for p in paralelos:
-            hs = horarios_qs.filter(curso=p.curso, paralelo=p).order_by('dia', 'hora_inicio')
+    # Mostrar todos los horarios (docente y clase) en la vista del curso,
+    # ya que la validación de choques previene duplicados.
+    horarios_qs = Horario.objects.select_related('docente__usuario', 'asignatura')
+    
+    for p in paralelos:
+        hs = horarios_qs.filter(curso=p.curso, paralelo=p).order_by('dia', 'hora_inicio')
+        # Sólo mostrar grupos que tienen algún horario para evitar listas larguísimas vacías
+        if hs.exists() or (curso_id or paralelo_ident): 
             horarios_grid = preparar_horarios_grid(hs, fusionar_bloques=True, color_by='asignatura')
             
             grupos.append({
@@ -566,8 +559,8 @@ def horarios_curso(request):
                 'titulo': f"{p.curso.nombre} '{p.identificador}'",
                 'horarios_grid': horarios_grid,
             })
-                
-        grupos.sort(key=lambda x: (_get_curso_order(x['titulo']), x['titulo']))
+            
+    grupos.sort(key=lambda x: (_get_curso_order(x['titulo']), x['titulo']))
         
     context = {
         'cursos': cursos,
@@ -581,13 +574,13 @@ def horario_docente(request, docente_id):
     """Vista pública (para docentes y estudiantes) del horario de un docente específico."""
     docente = get_object_or_404(Docente, pk=docente_id)
     horarios = Horario.objects.filter(
-        docente=docente, tipo='docente'
-    ).order_by('dia', 'hora_inicio')
+        docente=docente
+    ).exclude(tipo='atencion').order_by('dia', 'hora_inicio')
     
     asignaturas_count = horarios.values('asignatura').distinct().count()
     cursos_count = horarios.values('curso', 'paralelo').distinct().count()
     
-    horarios_grid = preparar_horarios_grid(horarios, fusionar_bloques=True, color_by='asignatura')
+    horarios_grid = preparar_horarios_grid(horarios, fusionar_bloques=True, color_by='default')
 
     context = {
         'docente': docente,
@@ -836,7 +829,7 @@ def _render_horarios_list(request, tipo_agrupacion, titulo, template_name='horar
         for d in docentes_qs:
             hs = horarios_qs.filter(docente=d).order_by('dia', 'hora_inicio')
             atencion_hs = atencion_qs.filter(docente=d).order_by('dia', 'hora_inicio')
-            filled, empty = preparar_horarios_grid(hs, incluir_vacios=True, fusionar_bloques=True, color_by='curso')
+            filled, empty = preparar_horarios_grid(hs, incluir_vacios=True, fusionar_bloques=True, color_by='default')
             grupos.append({
                 'id': f"docente_{d.id}",
                 'titulo': d.usuario.get_full_name() or d.usuario.username,
