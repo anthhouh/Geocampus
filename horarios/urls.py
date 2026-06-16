@@ -13,6 +13,9 @@ urlpatterns = [
     path('verificar-registro/', views.verify_registro_view, name='verify_registro'),
     path('configuracion/', views.configuracion_view, name='configuracion'),
     path('api/toggle-modo-oscuro/', views.toggle_modo_oscuro, name='toggle_modo_oscuro'),
+    path('api/reset-password/enviar/', views.api_reset_password_enviar, name='api_reset_password_enviar'),
+    path('api/reset-password/verificar/', views.api_reset_password_verificar, name='api_reset_password_verificar'),
+    path('api/reset-password/cambiar/', views.api_reset_password_cambiar, name='api_reset_password_cambiar'),
 
     # Docente
     path('dashboard/', views.dashboard_docente, name='dashboard_docente'),

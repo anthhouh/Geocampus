@@ -7,7 +7,7 @@
             var isDark = false;
             {% if user.is_authenticated %}
                 isDark = {{ user.modo_oscuro|yesno:"true,false" }};
-            {% else %}
+            {% elif not force_light_mode %}
                 isDark = localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
             {% endif %}
             if (isDark) { document.documentElement.classList.add('dark'); }

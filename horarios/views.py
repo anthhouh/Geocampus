@@ -1,6 +1,7 @@
 import json
 import datetime
 import random
+import uuid
 from django.utils import timezone
 from datetime import timedelta
 from django.core.mail import send_mail, EmailMultiAlternatives, get_connection
@@ -216,7 +217,7 @@ def login_view(request):
         if user is not None:
             if not user.is_superuser and not user.email.endswith('@ladolorosa-loja.edu.ec'):
                 messages.warning(request, 'El correo asociado a esta cuenta no pertenece a la institución (@ladolorosa-loja.edu.ec). Acceso denegado.')
-                return render(request, 'horarios/login.html')
+                return render(request, 'horarios/login.html', {'force_light_mode': True})
                 
             if user.two_factor_enabled:
                 code = str(random.randint(100000, 999999))
@@ -268,7 +269,7 @@ def login_view(request):
                 return redirect('horarios:index')
         else:
             messages.error(request, 'Usuario o contraseña incorrectos.')
-    return render(request, 'horarios/login.html')
+    return render(request, 'horarios/login.html', {'force_light_mode': True})
 
 def _send_registro_code(email, first_name, code):
     """Envía el correo de verificación de registro."""
@@ -312,19 +313,19 @@ def registro_view(request):
         # Validaciones
         if password != confirm_password:
             messages.error(request, 'Las contraseñas no coinciden.')
-            return render(request, 'horarios/registro.html')
+            return render(request, 'horarios/registro.html', {'force_light_mode': True})
 
         if not email.endswith('@ladolorosa-loja.edu.ec'):
             messages.warning(request, 'El correo debe pertenecer a la institución (@ladolorosa-loja.edu.ec).')
-            return render(request, 'horarios/registro.html')
+            return render(request, 'horarios/registro.html', {'force_light_mode': True})
 
         if Usuario.objects.filter(username=username).exists():
             messages.error(request, 'Este nombre de usuario ya está en uso.')
-            return render(request, 'horarios/registro.html')
+            return render(request, 'horarios/registro.html', {'force_light_mode': True})
 
         if Usuario.objects.filter(email=email).exists():
             messages.error(request, 'Ya existe una cuenta con ese correo electrónico.')
-            return render(request, 'horarios/registro.html')
+            return render(request, 'horarios/registro.html', {'force_light_mode': True})
 
         # Generar código y guardar datos en sesión (no crear cuenta aún)
         code = str(random.randint(100000, 999999))
@@ -343,11 +344,11 @@ def registro_view(request):
             _send_registro_code(email, first_name, code)
         except Exception as e:
             messages.error(request, f'No se pudo enviar el correo de verificación: {str(e)}')
-            return render(request, 'horarios/registro.html')
+            return render(request, 'horarios/registro.html', {'force_light_mode': True})
 
         return redirect('horarios:verify_registro')
 
-    return render(request, 'horarios/registro.html')
+    return render(request, 'horarios/registro.html', {'force_light_mode': True})
 
 
 def verify_registro_view(request):
@@ -389,11 +390,11 @@ def verify_registro_view(request):
 
         if code_input != stored_code:
             messages.error(request, 'Código incorrecto. Inténtalo de nuevo.')
-            return render(request, 'horarios/verify_registro.html', {'email': email})
+            return render(request, 'horarios/verify_registro.html', {'email': email, 'force_light_mode': True})
 
         if timezone.now() > expires:
             messages.error(request, 'El código ha expirado. Solicita uno nuevo.')
-            return render(request, 'horarios/verify_registro.html', {'email': email})
+            return render(request, 'horarios/verify_registro.html', {'email': email, 'force_light_mode': True})
 
         # Código válido → crear la cuenta
         try:
@@ -419,7 +420,7 @@ def verify_registro_view(request):
         except Exception as e:
             messages.error(request, f'Ocurrió un error al crear la cuenta: {str(e)}')
 
-    return render(request, 'horarios/verify_registro.html', {'email': email})
+    return render(request, 'horarios/verify_registro.html', {'email': email, 'force_light_mode': True})
 
 
 
@@ -453,7 +454,7 @@ def verify_2fa_view(request):
         else:
             messages.error(request, 'Código inválido o expirado.')
             
-    return render(request, 'horarios/verify_2fa.html', {'user_email': user.email})
+    return render(request, 'horarios/verify_2fa.html', {'user_email': user.email, 'force_light_mode': True})
 
 @login_required
 def configuracion_view(request):
@@ -2199,3 +2200,110 @@ def cron_notificar_padres_view(request):
     )
     
     return JsonResponse({'status': 'ok', 'message': f'Notificaciones enviadas a {len(correos)} usuarios.'})
+
+# ── Endpoints Recuperar Contraseña ───────────────────────────────────────
+
+@require_POST
+def api_reset_password_enviar(request):
+    try:
+        data = json.loads(request.body)
+        email = data.get('email', '').strip()
+        user = Usuario.objects.filter(email=email).first()
+        if not user:
+            # Prevent email enumeration by returning a generic message, but for UX here we say not found
+            return JsonResponse({'ok': False, 'error': 'No se encontró una cuenta con ese correo.'})
+            
+        code = str(random.randint(100000, 999999))
+        request.session['pwd_reset_code'] = code
+        request.session['pwd_reset_email'] = email
+        request.session['pwd_reset_expires'] = (timezone.now() + timedelta(minutes=15)).isoformat()
+        
+        # Enviar correo
+        html_content = render_to_string('horarios/emails/reset_password.html', {
+            'username': user.first_name or user.username,
+            'code': code,
+        })
+        text_content = f"Tu código para recuperar la contraseña es: {code}. Expirará en 15 minutos."
+        from_email_formatted = f"GeoCampus La Dolorosa <{settings.EMAIL_HOST_USER}>"
+        msg = EmailMultiAlternatives(
+            subject="Recuperación de contraseña - La Dolorosa",
+            body=text_content,
+            from_email=from_email_formatted,
+            to=[email],
+            reply_to=[settings.EMAIL_HOST_USER],
+        )
+        msg.attach_alternative(html_content, "text/html")
+        logo_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'logo_dolorosa.png')
+        if os.path.exists(logo_path):
+            with open(logo_path, 'rb') as f:
+                logo_img = MIMEImage(f.read())
+                logo_img.add_header('Content-ID', '<logo>')
+                logo_img.add_header('Content-Disposition', 'inline', filename='logo_dolorosa.png')
+                msg.attach(logo_img)
+        msg.send(fail_silently=False)
+        
+        return JsonResponse({'ok': True})
+    except Exception as e:
+        return JsonResponse({'ok': False, 'error': str(e)})
+
+@require_POST
+def api_reset_password_verificar(request):
+    try:
+        data = json.loads(request.body)
+        email = data.get('email', '').strip()
+        code_input = data.get('code', '').strip()
+        
+        stored_code = request.session.get('pwd_reset_code')
+        stored_email = request.session.get('pwd_reset_email')
+        expires_str = request.session.get('pwd_reset_expires')
+        
+        if not stored_code or not stored_email or email != stored_email:
+            return JsonResponse({'ok': False, 'error': 'No hay una solicitud activa o los datos no coinciden.'})
+            
+        from datetime import datetime
+        try:
+            expires = datetime.fromisoformat(expires_str).replace(tzinfo=timezone.utc)
+        except Exception:
+            expires = timezone.now() - timedelta(seconds=1)
+            
+        if timezone.now() > expires:
+            return JsonResponse({'ok': False, 'error': 'El código ha expirado.'})
+            
+        if code_input != stored_code:
+            return JsonResponse({'ok': False, 'error': 'Código incorrecto.'})
+            
+        # Código verificado, generar token temporal
+        token = str(uuid.uuid4())
+        request.session['pwd_reset_token'] = token
+        return JsonResponse({'ok': True, 'token': token})
+    except Exception as e:
+        return JsonResponse({'ok': False, 'error': str(e)})
+
+@require_POST
+def api_reset_password_cambiar(request):
+    try:
+        data = json.loads(request.body)
+        token_input = data.get('token', '')
+        new_password = data.get('password', '')
+        
+        stored_token = request.session.get('pwd_reset_token')
+        email = request.session.get('pwd_reset_email')
+        
+        if not stored_token or not token_input or token_input != stored_token or not email:
+            return JsonResponse({'ok': False, 'error': 'Sesión inválida o expirada.'})
+            
+        user = Usuario.objects.filter(email=email).first()
+        if not user:
+            return JsonResponse({'ok': False, 'error': 'Usuario no encontrado.'})
+            
+        user.set_password(new_password)
+        user.save()
+        
+        # Limpiar sesión
+        for k in ['pwd_reset_code', 'pwd_reset_email', 'pwd_reset_expires', 'pwd_reset_token']:
+            if k in request.session:
+                del request.session[k]
+                
+        return JsonResponse({'ok': True})
+    except Exception as e:
+        return JsonResponse({'ok': False, 'error': str(e)})
