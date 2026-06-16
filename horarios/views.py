@@ -230,11 +230,13 @@ def login_view(request):
                 })
                 text_content = f"Tu código de inicio de sesión es: {code}. Expirará en 10 minutos."
                 
+                from_email_formatted = f"GeoCampus La Dolorosa <{settings.EMAIL_HOST_USER}>"
                 msg = EmailMultiAlternatives(
                     subject="Tu código de verificación - La Dolorosa",
                     body=text_content,
-                    from_email=settings.EMAIL_HOST_USER,
-                    to=[user.email]
+                    from_email=from_email_formatted,
+                    to=[user.email],
+                    reply_to=[settings.EMAIL_HOST_USER]
                 )
                 msg.attach_alternative(html_content, "text/html")
                 
@@ -2020,19 +2022,19 @@ def send_mass_html_email_thread(subject, text_content, template_name, context, r
         with open(logo_path, 'rb') as f:
             logo_data = f.read()
 
-    # Enviar en lotes de 90 usando Copia Oculta (BCC)
-    tamano_lote = 90
-    for i in range(0, len(recipient_list), tamano_lote):
-        lote_correos = recipient_list[i:i + tamano_lote]
-        if not lote_correos:
+    from_email_formatted = f"GeoCampus La Dolorosa <{settings.EMAIL_HOST_USER}>"
+
+    # Enviar correos de forma individual pero sobre la misma conexión SMTP (evita Spam por BCC)
+    for correo in recipient_list:
+        if not correo:
             continue
             
         msg = EmailMultiAlternatives(
             subject=subject,
             body=text_content,
-            from_email=settings.EMAIL_HOST_USER,
-            to=[settings.EMAIL_HOST_USER], # Enviar a nosotros mismos
-            bcc=lote_correos               # Copia oculta a los estudiantes
+            from_email=from_email_formatted,
+            to=[correo],
+            reply_to=[settings.EMAIL_HOST_USER]
         )
         msg.attach_alternative(html_content, "text/html")
         
