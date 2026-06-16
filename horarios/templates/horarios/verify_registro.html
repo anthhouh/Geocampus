@@ -1,0 +1,82 @@
+{% extends 'base_auth.html' %}
+
+{% block title %}Verificar Correo - La Dolorosa{% endblock %}
+
+{% block auth_content %}
+<div class="w-full max-w-[440px] bg-surface dark:bg-gray-800 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.04)] border border-outline-variant dark:border-gray-700/30 p-xl flex flex-col relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-1 bg-secondary"></div>
+
+    <!-- Header -->
+    <div class="mb-xl text-center flex flex-col items-center">
+        <div class="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center mb-4 border border-blue-100 dark:border-blue-800">
+            <span class="material-symbols-outlined text-primary dark:text-blue-400 text-[32px]" style="font-variation-settings: 'FILL' 1;">mark_email_unread</span>
+        </div>
+        <h2 class="font-h2 text-h2 text-on-surface dark:text-gray-100 mb-xs">Verifica tu correo</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant dark:text-gray-400 text-center">
+            Hemos enviado un código de 6 dígitos a<br>
+            <strong class="text-on-surface dark:text-white">{{ email }}</strong>
+        </p>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">Revisa también tu carpeta de spam.</p>
+    </div>
+
+    {% if messages %}
+    <div class="mb-md flex flex-col gap-2">
+        {% for message in messages %}
+        <div class="px-4 py-3 rounded-lg text-sm font-medium
+            {% if message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800
+            {% else %}bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Code Form -->
+    <form action="{% url 'horarios:verify_registro' %}" method="POST" class="flex flex-col gap-lg">
+        {% csrf_token %}
+
+        <div class="flex flex-col gap-xs">
+            <label class="font-label-md text-label-md text-on-surface dark:text-gray-100" for="code">Código de Verificación</label>
+            <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-md text-outline-variant pointer-events-none">pin</span>
+                <input
+                    class="w-full pl-[48px] pr-md py-[12px] bg-surface dark:bg-gray-900 border border-outline-variant dark:border-gray-700 rounded-lg font-body-md text-body-md text-on-surface dark:text-white placeholder:text-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors tracking-widest text-center text-xl"
+                    id="code" name="code"
+                    placeholder="------"
+                    required
+                    type="text"
+                    maxlength="6"
+                    pattern="\d{6}"
+                    title="Debe ingresar 6 dígitos numéricos"
+                    autocomplete="one-time-code"
+                    autofocus
+                />
+            </div>
+            <small class="text-xs text-outline-variant text-center">El código expira en 15 minutos.</small>
+        </div>
+
+        <div class="pt-sm flex flex-col gap-md">
+            <button class="w-full py-[14px] px-lg bg-primary text-on-primary rounded-lg font-button text-button shadow-sm hover:shadow-md hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-sm group" type="submit">
+                Verificar y Crear Cuenta
+                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">check_circle</span>
+            </button>
+        </div>
+    </form>
+
+    <!-- Resend / Cancel -->
+    <div class="mt-xl pt-lg border-t border-surface-variant flex flex-col items-center gap-3 text-center">
+        <form action="{% url 'horarios:verify_registro' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="resend">
+            <button type="submit" class="text-primary font-semibold text-sm hover:underline flex items-center gap-1 bg-transparent border-none cursor-pointer">
+                <span class="material-symbols-outlined text-[16px]">refresh</span>
+                Reenviar código
+            </button>
+        </form>
+        <a class="text-error font-semibold text-sm hover:underline flex items-center gap-1" href="{% url 'horarios:registro' %}">
+            <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+            Volver al registro
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -270,18 +270,44 @@ def login_view(request):
             messages.error(request, 'Usuario o contraseña incorrectos.')
     return render(request, 'horarios/login.html')
 
+def _send_registro_code(email, first_name, code):
+    """Envía el correo de verificación de registro."""
+    html_content = render_to_string('horarios/emails/registro_verificacion.html', {
+        'username': first_name,
+        'code': code,
+    })
+    text_content = f"Tu código de verificación para crear tu cuenta es: {code}. Expirará en 15 minutos."
+    from_email_formatted = f"GeoCampus La Dolorosa <{settings.EMAIL_HOST_USER}>"
+    msg = EmailMultiAlternatives(
+        subject="Código de verificación para tu nueva cuenta - La Dolorosa",
+        body=text_content,
+        from_email=from_email_formatted,
+        to=[email],
+        reply_to=[settings.EMAIL_HOST_USER],
+    )
+    msg.attach_alternative(html_content, "text/html")
+    logo_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'logo_dolorosa.png')
+    if os.path.exists(logo_path):
+        with open(logo_path, 'rb') as f:
+            logo_img = MIMEImage(f.read())
+            logo_img.add_header('Content-ID', '<logo>')
+            logo_img.add_header('Content-Disposition', 'inline', filename='logo_dolorosa.png')
+            msg.attach(logo_img)
+    msg.send(fail_silently=False)
+
+
 def registro_view(request):
     if request.user.is_authenticated:
         return redirect('horarios:index')
 
     if request.method == 'POST':
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        rol = request.POST.get('rol')
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
+        first_name = request.POST.get('first_name', '').strip()
+        last_name  = request.POST.get('last_name', '').strip()
+        username   = request.POST.get('username', '').strip()
+        email      = request.POST.get('email', '').strip()
+        rol        = request.POST.get('rol', 'estudiante')
+        password   = request.POST.get('password', '')
+        confirm_password = request.POST.get('confirm_password', '')
 
         # Validaciones
         if password != confirm_password:
@@ -296,30 +322,106 @@ def registro_view(request):
             messages.error(request, 'Este nombre de usuario ya está en uso.')
             return render(request, 'horarios/registro.html')
 
-        # Crear Usuario
+        if Usuario.objects.filter(email=email).exists():
+            messages.error(request, 'Ya existe una cuenta con ese correo electrónico.')
+            return render(request, 'horarios/registro.html')
+
+        # Generar código y guardar datos en sesión (no crear cuenta aún)
+        code = str(random.randint(100000, 999999))
+        request.session['registro_pending'] = {
+            'first_name': first_name,
+            'last_name':  last_name,
+            'username':   username,
+            'email':      email,
+            'rol':        rol,
+            'password':   password,
+            'code':       code,
+            'expires':    (timezone.now() + timedelta(minutes=15)).isoformat(),
+        }
+
+        try:
+            _send_registro_code(email, first_name, code)
+        except Exception as e:
+            messages.error(request, f'No se pudo enviar el correo de verificación: {str(e)}')
+            return render(request, 'horarios/registro.html')
+
+        return redirect('horarios:verify_registro')
+
+    return render(request, 'horarios/registro.html')
+
+
+def verify_registro_view(request):
+    pending = request.session.get('registro_pending')
+    if not pending:
+        messages.error(request, 'No hay un registro pendiente. Por favor, completa el formulario primero.')
+        return redirect('horarios:registro')
+
+    email = pending.get('email', '')
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        # Reenviar código
+        if action == 'resend':
+            code = str(random.randint(100000, 999999))
+            pending['code'] = code
+            pending['expires'] = (timezone.now() + timedelta(minutes=15)).isoformat()
+            request.session['registro_pending'] = pending
+            request.session.modified = True
+            try:
+                _send_registro_code(email, pending.get('first_name', ''), code)
+                messages.success(request, 'Se ha reenviado un nuevo código a tu correo.')
+            except Exception as e:
+                messages.error(request, f'Error al reenviar el código: {str(e)}')
+            return redirect('horarios:verify_registro')
+
+        # Verificar código
+        code_input = request.POST.get('code', '').strip()
+        stored_code = pending.get('code')
+        expires_str = pending.get('expires')
+
+        # Comprobar expiración
+        from datetime import datetime
+        try:
+            expires = datetime.fromisoformat(expires_str).replace(tzinfo=timezone.utc)
+        except Exception:
+            expires = timezone.now() - timedelta(seconds=1)
+
+        if code_input != stored_code:
+            messages.error(request, 'Código incorrecto. Inténtalo de nuevo.')
+            return render(request, 'horarios/verify_registro.html', {'email': email})
+
+        if timezone.now() > expires:
+            messages.error(request, 'El código ha expirado. Solicita uno nuevo.')
+            return render(request, 'horarios/verify_registro.html', {'email': email})
+
+        # Código válido → crear la cuenta
         try:
             user = Usuario.objects.create_user(
-                username=username,
-                email=email,
-                password=password,
-                first_name=first_name,
-                last_name=last_name,
-                rol=rol
+                username=pending['username'],
+                email=pending['email'],
+                password=pending['password'],
+                first_name=pending['first_name'],
+                last_name=pending['last_name'],
+                rol=pending['rol'],
             )
-            
-            # Si es docente, crear su perfil automáticamente
-            if rol == 'docente':
+            if pending['rol'] == 'docente':
                 Docente.objects.create(usuario=user)
-                
+
+            # Limpiar sesión
+            del request.session['registro_pending']
+
             messages.success(request, '¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.')
-            next_url = request.POST.get('next') or request.GET.get('next')
+            next_url = request.session.pop('registro_next', None)
             if next_url:
                 return redirect(f"{reverse('horarios:login')}?next={next_url}")
             return redirect('horarios:login')
         except Exception as e:
             messages.error(request, f'Ocurrió un error al crear la cuenta: {str(e)}')
 
-    return render(request, 'horarios/registro.html')
+    return render(request, 'horarios/verify_registro.html', {'email': email})
+
+
 
 def logout_view(request):
     logout(request)

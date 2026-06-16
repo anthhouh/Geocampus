@@ -10,6 +10,7 @@ urlpatterns = [
     path('registro/', views.registro_view, name='registro'),
     path('logout/', views.logout_view, name='logout'),
     path('verificar-2fa/', views.verify_2fa_view, name='verify_2fa'),
+    path('verificar-registro/', views.verify_registro_view, name='verify_registro'),
     path('configuracion/', views.configuracion_view, name='configuracion'),
     path('api/toggle-modo-oscuro/', views.toggle_modo_oscuro, name='toggle_modo_oscuro'),
 
