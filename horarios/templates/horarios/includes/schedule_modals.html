@@ -1,7 +1,7 @@
 <!-- Delete Confirmation Modal -->
 <div id="modal-eliminar" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-md">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModal()"></div>
-    <div class="relative bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-2xl border border-outline-variant dark:border-gray-700 shadow-2xl p-xl max-w-sm w-full">
+    <div class="relative bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-2xl border border-outline-variant dark:border-gray-700 shadow-2xl p-6 sm:p-8 max-w-sm w-full">
         <div class="flex flex-col items-center text-center gap-md">
             <div class="w-14 h-14 rounded-full bg-[#FFEBEE] dark:bg-red-900/30 flex items-center justify-center">
                 <span class="material-symbols-outlined text-[28px] text-[#C62828] dark:text-red-400">warning</span>
@@ -33,7 +33,7 @@
 <!-- Modal Interactivo para Crear/Editar Horario -->
 <div id="modal-horario" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-md">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="cerrarModalHorario()"></div>
-    <div class="relative bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-2xl border border-outline-variant dark:border-gray-700 shadow-2xl p-xl max-w-md w-full">
+    <div class="relative bg-surface dark:bg-gray-900-container dark:bg-gray-800/60-low dark:bg-gray-800/80est dark:bg-gray-800 rounded-2xl border border-outline-variant dark:border-gray-700 shadow-2xl p-6 sm:p-8 max-w-md w-full">
         <h4 id="modal-horario-titulo" class="font-h3 text-h3 text-on-surface dark:text-gray-100 mb-md">Gestión de Horario</h4>
         
         <form id="form-horario" method="post" action="{% url 'horarios:api_guardar_horario' %}">

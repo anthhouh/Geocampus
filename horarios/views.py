@@ -71,79 +71,46 @@ PERIODOS_ROWS = [
 # Paleta ampliada: 36 colores con hues bien distribuidos (cada 10°)
 # para que sea casi imposible que dos combinaciones distintas repitan color.
 _PALETA = [
-    # 0 — Rojo coral
-    {'bg': 'hsl(4,   90%, 82%)', 'border': 'hsl(4,   85%, 38%)', 'text': 'hsl(4,   80%, 20%)'},
-    # 1 — Cian brillante
-    {'bg': 'hsl(192, 88%, 72%)', 'border': 'hsl(192, 80%, 24%)', 'text': 'hsl(192, 75%, 13%)'},
-    # 2 — Amarillo dorado
-    {'bg': 'hsl(46,  96%, 70%)', 'border': 'hsl(46,  88%, 28%)', 'text': 'hsl(46,  82%, 16%)'},
-    # 3 — Violeta púrpura
-    {'bg': 'hsl(268, 72%, 76%)', 'border': 'hsl(268, 66%, 32%)', 'text': 'hsl(268, 62%, 17%)'},
-    # 4 — Naranja quemado
-    {'bg': 'hsl(28,  96%, 76%)', 'border': 'hsl(28,  90%, 33%)', 'text': 'hsl(28,  85%, 17%)'},
-    # 5 — Verde esmeralda
-    {'bg': 'hsl(152, 62%, 70%)', 'border': 'hsl(152, 56%, 22%)', 'text': 'hsl(152, 52%, 13%)'},
-    # 6 — Rosa frambuesa
-    {'bg': 'hsl(328, 82%, 78%)', 'border': 'hsl(328, 75%, 33%)', 'text': 'hsl(328, 70%, 17%)'},
-    # 7 — Azul zafiro
-    {'bg': 'hsl(218, 80%, 76%)', 'border': 'hsl(218, 72%, 30%)', 'text': 'hsl(218, 68%, 16%)'},
-    # 8 — Fucsia intenso
-    {'bg': 'hsl(294, 74%, 76%)', 'border': 'hsl(294, 68%, 31%)', 'text': 'hsl(294, 62%, 16%)'},
-    # 9 — Verde lima eléctrico
-    {'bg': 'hsl(82,  74%, 70%)', 'border': 'hsl(82,  66%, 26%)', 'text': 'hsl(82,  60%, 14%)'},
-    # 10 — Marrón terracota
-    {'bg': 'hsl(16,  60%, 74%)', 'border': 'hsl(16,  54%, 28%)', 'text': 'hsl(16,  48%, 15%)'},
-    # 11 — Turquesa vivo
-    {'bg': 'hsl(174, 76%, 68%)', 'border': 'hsl(174, 68%, 21%)', 'text': 'hsl(174, 64%, 12%)'},
-    # 12 — Índigo oscuro
-    {'bg': 'hsl(244, 64%, 74%)', 'border': 'hsl(244, 58%, 33%)', 'text': 'hsl(244, 54%, 18%)'},
-    # 13 — Azul cielo claro
-    {'bg': 'hsl(206, 82%, 78%)', 'border': 'hsl(206, 74%, 30%)', 'text': 'hsl(206, 70%, 16%)'},
-    # 14 — Verde salvia apagado
-    {'bg': 'hsl(120, 34%, 72%)', 'border': 'hsl(120, 28%, 25%)', 'text': 'hsl(120, 26%, 13%)'},
-    # --- 15 en adelante: colores nuevos para evitar repeticiones ---
-    # 15 — Magenta rosado
-    {'bg': 'hsl(340, 78%, 80%)', 'border': 'hsl(340, 70%, 35%)', 'text': 'hsl(340, 65%, 18%)'},
-    # 16 — Azul acero
-    {'bg': 'hsl(230, 55%, 75%)', 'border': 'hsl(230, 48%, 30%)', 'text': 'hsl(230, 44%, 16%)'},
-    # 17 — Ámbar cálido
-    {'bg': 'hsl(38,  92%, 74%)', 'border': 'hsl(38,  85%, 30%)', 'text': 'hsl(38,  78%, 17%)'},
-    # 18 — Verde bosque
-    {'bg': 'hsl(140, 50%, 68%)', 'border': 'hsl(140, 44%, 23%)', 'text': 'hsl(140, 40%, 13%)'},
-    # 19 — Lila suave
-    {'bg': 'hsl(280, 60%, 80%)', 'border': 'hsl(280, 54%, 34%)', 'text': 'hsl(280, 50%, 18%)'},
-    # 20 — Salmón
-    {'bg': 'hsl(12,  88%, 80%)', 'border': 'hsl(12,  80%, 36%)', 'text': 'hsl(12,  74%, 19%)'},
-    # 21 — Verde menta
-    {'bg': 'hsl(164, 68%, 72%)', 'border': 'hsl(164, 60%, 23%)', 'text': 'hsl(164, 56%, 13%)'},
-    # 22 — Azul océano
-    {'bg': 'hsl(200, 78%, 74%)', 'border': 'hsl(200, 70%, 28%)', 'text': 'hsl(200, 66%, 15%)'},
-    # 23 — Oro antiguo
-    {'bg': 'hsl(52,  80%, 72%)', 'border': 'hsl(52,  72%, 27%)', 'text': 'hsl(52,  66%, 15%)'},
-    # 24 — Rosa palo
-    {'bg': 'hsl(350, 70%, 82%)', 'border': 'hsl(350, 62%, 36%)', 'text': 'hsl(350, 58%, 19%)'},
-    # 25 — Azul petróleo
-    {'bg': 'hsl(186, 60%, 70%)', 'border': 'hsl(186, 52%, 24%)', 'text': 'hsl(186, 48%, 13%)'},
-    # 26 — Melocotón
-    {'bg': 'hsl(22,  84%, 78%)', 'border': 'hsl(22,  76%, 34%)', 'text': 'hsl(22,  70%, 18%)'},
-    # 27 — Lavanda
-    {'bg': 'hsl(256, 58%, 78%)', 'border': 'hsl(256, 52%, 33%)', 'text': 'hsl(256, 48%, 17%)'},
-    # 28 — Chartreuse
-    {'bg': 'hsl(72,  66%, 70%)', 'border': 'hsl(72,  58%, 26%)', 'text': 'hsl(72,  54%, 14%)'},
-    # 29 — Cereza
-    {'bg': 'hsl(355, 76%, 78%)', 'border': 'hsl(355, 68%, 34%)', 'text': 'hsl(355, 64%, 18%)'},
-    # 30 — Verde jade
-    {'bg': 'hsl(130, 44%, 70%)', 'border': 'hsl(130, 38%, 24%)', 'text': 'hsl(130, 34%, 14%)'},
-    # 31 — Azul real
-    {'bg': 'hsl(240, 68%, 78%)', 'border': 'hsl(240, 60%, 34%)', 'text': 'hsl(240, 56%, 18%)'},
-    # 32 — Coral claro
-    {'bg': 'hsl(10,  82%, 84%)', 'border': 'hsl(10,  74%, 38%)', 'text': 'hsl(10,  68%, 20%)'},
-    # 33 — Cian apagado
-    {'bg': 'hsl(180, 50%, 72%)', 'border': 'hsl(180, 44%, 24%)', 'text': 'hsl(180, 40%, 13%)'},
-    # 34 — Mandarina
-    {'bg': 'hsl(32,  90%, 76%)', 'border': 'hsl(32,  82%, 32%)', 'text': 'hsl(32,  76%, 17%)'},
-    # 35 — Índigo rosado
-    {'bg': 'hsl(310, 60%, 78%)', 'border': 'hsl(310, 54%, 32%)', 'text': 'hsl(310, 50%, 17%)'},
+    # 0 - Rojo Suave
+    {'bg': 'hsl(0, 85%, 85%)', 'border': 'hsl(0, 75%, 45%)', 'text': 'hsl(0, 80%, 20%)'},
+    # 1 - Naranja
+    {'bg': 'hsl(30, 90%, 80%)', 'border': 'hsl(30, 85%, 40%)', 'text': 'hsl(30, 85%, 20%)'},
+    # 2 - Amarillo Mostaza
+    {'bg': 'hsl(45, 90%, 75%)', 'border': 'hsl(45, 85%, 35%)', 'text': 'hsl(45, 85%, 15%)'},
+    # 3 - Verde Lima
+    {'bg': 'hsl(80, 75%, 75%)', 'border': 'hsl(80, 70%, 30%)', 'text': 'hsl(80, 75%, 15%)'},
+    # 4 - Verde Esmeralda
+    {'bg': 'hsl(140, 60%, 75%)', 'border': 'hsl(140, 55%, 30%)', 'text': 'hsl(140, 65%, 15%)'},
+    # 5 - Verde Menta
+    {'bg': 'hsl(165, 70%, 75%)', 'border': 'hsl(165, 65%, 30%)', 'text': 'hsl(165, 75%, 15%)'},
+    # 6 - Cian
+    {'bg': 'hsl(190, 80%, 75%)', 'border': 'hsl(190, 75%, 35%)', 'text': 'hsl(190, 85%, 15%)'},
+    # 7 - Azul Claro
+    {'bg': 'hsl(210, 85%, 80%)', 'border': 'hsl(210, 75%, 45%)', 'text': 'hsl(210, 85%, 20%)'},
+    # 8 - Índigo
+    {'bg': 'hsl(235, 80%, 82%)', 'border': 'hsl(235, 70%, 50%)', 'text': 'hsl(235, 80%, 25%)'},
+    # 9 - Púrpura
+    {'bg': 'hsl(270, 75%, 82%)', 'border': 'hsl(270, 65%, 45%)', 'text': 'hsl(270, 75%, 20%)'},
+    # 10 - Magenta
+    {'bg': 'hsl(315, 80%, 82%)', 'border': 'hsl(315, 70%, 45%)', 'text': 'hsl(315, 80%, 20%)'},
+    # 11 - Rosa
+    {'bg': 'hsl(340, 85%, 84%)', 'border': 'hsl(340, 75%, 45%)', 'text': 'hsl(340, 85%, 20%)'},
+    # 12 - Marrón Terracota
+    {'bg': 'hsl(15, 60%, 75%)', 'border': 'hsl(15, 55%, 35%)', 'text': 'hsl(15, 65%, 20%)'},
+    # 13 - Verde Oliva
+    {'bg': 'hsl(60, 50%, 75%)', 'border': 'hsl(60, 45%, 35%)', 'text': 'hsl(60, 55%, 15%)'},
+    # 14 - Azul Pizarra (Slate)
+    {'bg': 'hsl(220, 40%, 75%)', 'border': 'hsl(220, 45%, 40%)', 'text': 'hsl(220, 50%, 20%)'},
+    # 15 - Violeta Suave
+    {'bg': 'hsl(290, 50%, 82%)', 'border': 'hsl(290, 45%, 45%)', 'text': 'hsl(290, 55%, 20%)'},
+    # 16 - Turquesa Oscuro
+    {'bg': 'hsl(175, 55%, 72%)', 'border': 'hsl(175, 50%, 35%)', 'text': 'hsl(175, 60%, 15%)'},
+    # 17 - Coral
+    {'bg': 'hsl(5, 75%, 80%)', 'border': 'hsl(5, 70%, 45%)', 'text': 'hsl(5, 80%, 20%)'},
+    # 18 - Verde Militar Claro
+    {'bg': 'hsl(100, 45%, 75%)', 'border': 'hsl(100, 40%, 35%)', 'text': 'hsl(100, 50%, 15%)'},
+    # 19 - Azul Marino Suave
+    {'bg': 'hsl(215, 60%, 75%)', 'border': 'hsl(215, 55%, 40%)', 'text': 'hsl(215, 65%, 20%)'},
 ]
 
 def get_color_for_materia(clave):
@@ -165,7 +132,7 @@ def get_color_for_materia(clave):
 
 
 
-def preparar_horarios_grid(horarios_qs, incluir_vacios=False, fusionar_bloques=False):
+def preparar_horarios_grid(horarios_qs, incluir_vacios=False, fusionar_bloques=False, color_by='default'):
     base_items = []
     filled_map = {}
     
@@ -177,9 +144,14 @@ def preparar_horarios_grid(horarios_qs, incluir_vacios=False, fusionar_bloques=F
         row_end = TIME_TO_ROW.get(end_str, row_start + 1)
         col = DAY_TO_COL.get(h.dia.lower(), 2)
 
-        # Color único por combinación materia + curso + paralelo
-        clave_color = f"{h.asignatura.nombre if h.asignatura else ''}|{h.curso_id}|{h.paralelo_id}"
-        colors = get_color_for_materia(clave_color)
+        if color_by == 'curso':
+            color_index = (h.paralelo_id * 7) if h.paralelo_id else 0
+        elif color_by == 'asignatura':
+            color_index = (h.asignatura_id * 7) if h.asignatura_id else 0
+        else:
+            color_index = (h.asignatura_id or 0) * 11 + (h.paralelo_id or 0) * 7
+            
+        colors = _PALETA[color_index % len(_PALETA)]
         
         base_items.append({
             'horario': h,
@@ -485,7 +457,7 @@ def dashboard_docente(request):
     horarios = Horario.objects.filter(docente=docente).exclude(tipo='atencion').order_by('dia', 'hora_inicio')
     
     # Para el grid interactivo, fusionamos bloques y necesitamos celdas vacías
-    horarios_grid, celdas_vacias = preparar_horarios_grid(horarios, incluir_vacios=True, fusionar_bloques=True)
+    horarios_grid, celdas_vacias = preparar_horarios_grid(horarios, incluir_vacios=True, fusionar_bloques=True, color_by='curso')
     
     context = {
         'docente': docente,
@@ -585,7 +557,7 @@ def horarios_curso(request):
         
         for p in paralelos:
             hs = horarios_qs.filter(curso=p.curso, paralelo=p).order_by('dia', 'hora_inicio')
-            horarios_grid = preparar_horarios_grid(hs, fusionar_bloques=True)
+            horarios_grid = preparar_horarios_grid(hs, fusionar_bloques=True, color_by='asignatura')
             
             grupos.append({
                 'id': f"curso_{p.curso_id}_paralelo_{p.id}",
@@ -615,7 +587,7 @@ def horario_docente(request, docente_id):
     asignaturas_count = horarios.values('asignatura').distinct().count()
     cursos_count = horarios.values('curso', 'paralelo').distinct().count()
     
-    horarios_grid = preparar_horarios_grid(horarios, fusionar_bloques=True)
+    horarios_grid = preparar_horarios_grid(horarios, fusionar_bloques=True, color_by='asignatura')
 
     context = {
         'docente': docente,
@@ -839,7 +811,7 @@ def _render_horarios_list(request, tipo_agrupacion, titulo, template_name='horar
         for p in paralelos:
             hs = horarios_qs.filter(curso=p.curso, paralelo=p).order_by('dia', 'hora_inicio')
             atencion_hs = atencion_qs.filter(curso=p.curso, paralelo=p).order_by('dia', 'hora_inicio')
-            filled, empty = preparar_horarios_grid(hs, incluir_vacios=True, fusionar_bloques=True)
+            filled, empty = preparar_horarios_grid(hs, incluir_vacios=True, fusionar_bloques=True, color_by='asignatura')
             tutor_nombre = ""
             if p.tutor:
                 tutor_nombre = p.tutor.usuario.get_full_name() or p.tutor.usuario.username
@@ -864,7 +836,7 @@ def _render_horarios_list(request, tipo_agrupacion, titulo, template_name='horar
         for d in docentes_qs:
             hs = horarios_qs.filter(docente=d).order_by('dia', 'hora_inicio')
             atencion_hs = atencion_qs.filter(docente=d).order_by('dia', 'hora_inicio')
-            filled, empty = preparar_horarios_grid(hs, incluir_vacios=True, fusionar_bloques=True)
+            filled, empty = preparar_horarios_grid(hs, incluir_vacios=True, fusionar_bloques=True, color_by='curso')
             grupos.append({
                 'id': f"docente_{d.id}",
                 'titulo': d.usuario.get_full_name() or d.usuario.username,
