@@ -1,0 +1,188 @@
+<!-- ══════════════════════════════════════════════════════════════════════
+     MODAL DE CONFIGURACIÓN — GeoCampus "La Dolorosa"
+     ══════════════════════════════════════════════════════════════════════ -->
+
+<!-- Overlay -->
+<div id="config-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9000] hidden opacity-0 transition-opacity duration-300" onclick="cerrarConfig()"></div>
+
+<!-- Modal Container -->
+<div id="config-modal" class="fixed inset-0 z-[9001] hidden items-center justify-center p-4 sm:p-6 md:p-10">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700 transform scale-95 opacity-0 transition-all duration-300" id="config-modal-content">
+
+        <!-- ─── Header ─── -->
+        <div class="bg-gradient-to-r from-[#4450CF] to-[#1d4ed8] px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between shrink-0 gap-2">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-white dark:bg-gray-800/20 hidden sm:flex items-center justify-center backdrop-blur-sm shrink-0 shadow-sm">
+                    <span class="material-symbols-outlined text-[#4450CF] dark:text-white text-[22px]">settings</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-white font-bold text-lg sm:text-xl leading-tight">Configuración de Cuenta</h2>
+                    <p class="text-blue-200 text-xs font-medium">Seguridad, apariencia y sesión</p>
+                </div>
+            </div>
+            <button onclick="cerrarConfig()" class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-full bg-white dark:bg-gray-800/10 hover:bg-gray-100 shadow-sm flex items-center justify-center transition-colors cursor-pointer border-none">
+                <span class="material-symbols-outlined text-[#4450CF] dark:text-white text-[20px]">close</span>
+            </button>
+        </div>
+
+        <!-- ─── Scrollable Body ─── -->
+        <div class="flex-1 overflow-y-auto px-4 sm:px-6 py-5 space-y-5 scroll-smooth">
+
+            <!-- Apariencia -->
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+                <h3 class="font-bold text-base text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#4450CF] dark:text-blue-400 text-[20px]">palette</span>
+                    Apariencia
+                </h3>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-semibold text-sm text-gray-700 dark:text-gray-200">Modo Oscuro</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Activa o desactiva el tema oscuro.</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="darkModeToggleModal" class="sr-only peer" {% if user.modo_oscuro %}checked{% endif %}>
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#4450CF] dark:peer-checked:bg-blue-600"></div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Cambiar Contraseña -->
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+                <h3 class="font-bold text-base text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#4450CF] dark:text-blue-400 text-[20px]">lock</span>
+                    Cambiar Contraseña
+                </h3>
+                <form method="POST" action="{% url 'horarios:configuracion' %}" class="flex flex-col gap-3" id="config-password-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="change_password">
+                    {% for field in password_form %}
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-semibold text-gray-600 dark:text-gray-300" for="modal_{{ field.id_for_label }}">{{ field.label }}</label>
+                        <input type="password" name="{{ field.html_name }}" id="modal_{{ field.id_for_label }}"
+                            class="w-full px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-[#4450CF] dark:focus:border-blue-500 focus:ring-1 focus:ring-[#4450CF] dark:focus:ring-blue-500 dark:text-white" required>
+                        {% if field.errors %}
+                        <span class="text-red-500 text-xs">{{ field.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="mt-1 py-2 px-5 bg-[#4450CF] text-white rounded-lg text-sm font-semibold hover:bg-[#3a45b0] transition-colors w-fit">
+                        Actualizar Contraseña
+                    </button>
+                </form>
+            </div>
+
+            <!-- 2FA -->
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+                <h3 class="font-bold text-base text-gray-800 dark:text-white mb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#4450CF] dark:text-blue-400 text-[20px]">security</span>
+                    Verificación de Dos Pasos (2FA)
+                </h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                    Envía un código a tu correo en cada inicio de sesión.
+                    Estado actual:
+                    {% if request.user.two_factor_enabled %}
+                        <span class="font-bold text-[#4450CF] dark:text-blue-400">Activada</span>
+                    {% else %}
+                        <span class="font-bold text-gray-400">Desactivada</span>
+                    {% endif %}
+                </p>
+                <form method="POST" action="{% url 'horarios:configuracion' %}" class="flex flex-col gap-3 bg-white dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="toggle_2fa">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-semibold text-gray-600 dark:text-gray-300" for="password_2fa_modal">Confirma tu contraseña actual:</label>
+                        <input type="password" name="password" id="password_2fa_modal"
+                            class="w-full px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-[#4450CF] dark:focus:border-blue-500 focus:ring-1 focus:ring-[#4450CF] dark:text-white" required>
+                    </div>
+                    <button type="submit" class="mt-1 py-2 px-5 rounded-lg text-sm font-semibold transition-colors w-fit {% if request.user.two_factor_enabled %}bg-red-600 text-white hover:bg-red-700{% else %}bg-[#4450CF] text-white hover:bg-[#3a45b0]{% endif %}">
+                        {% if request.user.two_factor_enabled %}Desactivar 2FA{% else %}Activar 2FA{% endif %}
+                    </button>
+                </form>
+            </div>
+
+            <!-- Cerrar Sesión -->
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-xl border border-l-4 border-red-200 border-l-red-500 dark:border-gray-700 dark:border-l-red-500 p-5">
+                <h3 class="font-bold text-base text-red-600 dark:text-red-400 mb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">logout</span>
+                    Cerrar Sesión
+                </h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Termina tu sesión actual de forma segura.</p>
+                <a href="{% url 'horarios:logout' %}" class="inline-flex items-center gap-2 py-2 px-5 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">logout</span>
+                    Cerrar Sesión
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+function abrirConfig() {
+    const overlay = document.getElementById('config-overlay');
+    const modal   = document.getElementById('config-modal');
+    const content = document.getElementById('config-modal-content');
+
+    overlay.classList.remove('hidden');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    setTimeout(() => {
+        overlay.classList.remove('opacity-0');
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+    }, 10);
+
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarConfig() {
+    const overlay = document.getElementById('config-overlay');
+    const modal   = document.getElementById('config-modal');
+    const content = document.getElementById('config-modal-content');
+
+    overlay.classList.add('opacity-0');
+    content.classList.add('scale-95', 'opacity-0');
+    content.classList.remove('scale-100', 'opacity-100');
+
+    setTimeout(() => {
+        overlay.classList.add('hidden');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+    }, 300);
+}
+
+// Dark mode toggle inside modal
+document.addEventListener('DOMContentLoaded', function() {
+    const toggle = document.getElementById('darkModeToggleModal');
+    if (toggle) {
+        toggle.addEventListener('change', function() {
+            const isDark = this.checked;
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+            fetch("{% url 'horarios:toggle_modo_oscuro' %}", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+                body: JSON.stringify({'modo_oscuro': isDark})
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (typeof showGlobalToast === 'function') {
+                    showGlobalToast(data.status === 'success' ? 'Tema actualizado.' : 'Error al guardar tema.', data.status === 'success' ? 'success' : 'error');
+                }
+            });
+        });
+    }
+
+    // Escape key closes modal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') cerrarConfig();
+    });
+});
+</script>
